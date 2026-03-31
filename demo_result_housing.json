@@ -1,0 +1,2067 @@
+{
+  "version": 1,
+  "demo_dataset_path": "datasets/sample_housing_regression.csv",
+  "demo_goal": "Predict median house value from housing features (demo)",
+  "result": {
+    "status": "complete",
+    "eda": {
+      "overview": {
+        "rows": 600,
+        "columns": 8,
+        "numeric_cols": 6,
+        "categorical_cols": 2,
+        "duplicate_rows": 0,
+        "memory_mb": 0.09008216857910156,
+        "column_names": [
+          "sqft",
+          "bedrooms",
+          "bathrooms",
+          "age_years",
+          "garage_spaces",
+          "neighborhood",
+          "condition",
+          "price"
+        ]
+      },
+      "columns": {
+        "sqft": {
+          "dtype": "int64",
+          "dtype_group": "numeric",
+          "missing": 0,
+          "n_unique": 564,
+          "mean": 2564.108333333333,
+          "std": 1070.1966710789827,
+          "min": 623.0,
+          "max": 4499.0,
+          "median": 2573.0,
+          "skewness": 0.03561779681436486
+        },
+        "bedrooms": {
+          "dtype": "int64",
+          "dtype_group": "numeric",
+          "missing": 0,
+          "n_unique": 5,
+          "mean": 3.0283333333333333,
+          "std": 1.412157050324145,
+          "min": 1.0,
+          "max": 5.0,
+          "median": 3.0,
+          "skewness": -0.025307566881084567
+        },
+        "bathrooms": {
+          "dtype": "float64",
+          "dtype_group": "numeric",
+          "missing": 0,
+          "n_unique": 6,
+          "mean": 2.1991666666666667,
+          "std": 0.8462325259853908,
+          "min": 1.0,
+          "max": 3.5,
+          "median": 2.0,
+          "skewness": 0.061742786244594346
+        },
+        "age_years": {
+          "dtype": "float64",
+          "dtype_group": "numeric",
+          "missing": 30,
+          "n_unique": 60,
+          "mean": 30.589473684210525,
+          "std": 17.10126650476417,
+          "min": 0.0,
+          "max": 59.0,
+          "median": 32.0,
+          "skewness": -0.1053416928261383
+        },
+        "garage_spaces": {
+          "dtype": "float64",
+          "dtype_group": "numeric",
+          "missing": 26,
+          "n_unique": 3,
+          "mean": 0.9529616724738676,
+          "std": 0.8076099281739645,
+          "min": 0.0,
+          "max": 2.0,
+          "median": 1.0,
+          "skewness": 0.0857734877615075
+        },
+        "neighborhood": {
+          "dtype": "object",
+          "dtype_group": "categorical",
+          "missing": 0,
+          "n_unique": 3,
+          "top_value": "Urban",
+          "top_freq": 205,
+          "value_counts": {
+            "Urban": 205,
+            "Rural": 203,
+            "Suburban": 192
+          }
+        },
+        "condition": {
+          "dtype": "object",
+          "dtype_group": "categorical",
+          "missing": 0,
+          "n_unique": 4,
+          "top_value": "Good",
+          "top_freq": 173,
+          "value_counts": {
+            "Good": 173,
+            "Excellent": 150,
+            "Fair": 150,
+            "Poor": 127
+          }
+        },
+        "price": {
+          "dtype": "int64",
+          "dtype_group": "numeric",
+          "missing": 0,
+          "n_unique": 600,
+          "mean": 408573.35833333334,
+          "std": 125132.5198891944,
+          "min": 95356.0,
+          "max": 687540.0,
+          "median": 407219.5,
+          "skewness": 0.03820771443496304
+        }
+      },
+      "missing": {
+        "total_missing": 56,
+        "columns_with_missing": 2,
+        "by_column": {
+          "age_years": {
+            "count": 30,
+            "pct": 5.0
+          },
+          "garage_spaces": {
+            "count": 26,
+            "pct": 4.33
+          }
+        }
+      },
+      "sample": [
+        {
+          "sqft": 3538,
+          "bedrooms": 1,
+          "bathrooms": 1.0,
+          "age_years": 17.0,
+          "garage_spaces": 2.0,
+          "neighborhood": "Urban",
+          "condition": "Good",
+          "price": 546707
+        },
+        {
+          "sqft": 1675,
+          "bedrooms": 2,
+          "bathrooms": 1.5,
+          "age_years": 45.0,
+          "garage_spaces": 0.0,
+          "neighborhood": "Rural",
+          "condition": "Poor",
+          "price": 255746
+        },
+        {
+          "sqft": 3607,
+          "bedrooms": 5,
+          "bathrooms": 2.5,
+          "age_years": 23.0,
+          "garage_spaces": 0.0,
+          "neighborhood": "Suburban",
+          "condition": "Excellent",
+          "price": 579080
+        },
+        {
+          "sqft": 3156,
+          "bedrooms": 4,
+          "bathrooms": 3.0,
+          "age_years": 22.0,
+          "garage_spaces": NaN,
+          "neighborhood": "Urban",
+          "condition": "Poor",
+          "price": 481062
+        },
+        {
+          "sqft": 2750,
+          "bedrooms": 5,
+          "bathrooms": 1.5,
+          "age_years": 50.0,
+          "garage_spaces": 2.0,
+          "neighborhood": "Suburban",
+          "condition": "Good",
+          "price": 449185
+        }
+      ],
+      "quality_flags": [],
+      "recommendations": [
+        "Impute missing numeric values (median recommended for skewed data).",
+        "Impute missing categorical values with mode or a dedicated 'Unknown' category.",
+        "One-hot encode `neighborhood` (3 categories).",
+        "One-hot encode `condition` (4 categories).",
+        "Scale numeric features with StandardScaler or MinMaxScaler before training."
+      ]
+    },
+    "task": {
+      "target_col": "price",
+      "task_type": "regression",
+      "confidence": "high",
+      "reasoning": "Target column `price` matched from user description. Column name suggests a continuous numeric target \u2192 regression.",
+      "alternatives": [
+        "garage_spaces",
+        "age_years",
+        "bedrooms"
+      ],
+      "n_classes": null,
+      "target_dtype": "int64"
+    },
+    "prep": {
+      "feature_names": [
+        "sqft",
+        "bedrooms",
+        "bathrooms",
+        "age_years",
+        "garage_spaces",
+        "neighborhood_Rural",
+        "neighborhood_Suburban",
+        "neighborhood_Urban",
+        "condition_Excellent",
+        "condition_Fair",
+        "condition_Good",
+        "condition_Poor"
+      ],
+      "task_type": "regression",
+      "dropped_cols": [],
+      "encoding_summary": {
+        "sqft": "median imputation + standard scaling",
+        "bedrooms": "median imputation + standard scaling",
+        "bathrooms": "median imputation + standard scaling",
+        "age_years": "median imputation + standard scaling",
+        "garage_spaces": "median imputation + standard scaling",
+        "neighborhood": "mode imputation + one-hot encoding",
+        "condition": "mode imputation + one-hot encoding"
+      },
+      "preprocessing_log": [
+        "Numeric columns (5): median imputation + standard scaling.",
+        "Categorical columns (2): mode imputation + one-hot encoding.",
+        "Train/test split: 480 train rows, 120 test rows (20% test).",
+        "Final feature matrix: 12 features."
+      ],
+      "num_cols": [
+        "sqft",
+        "bedrooms",
+        "bathrooms",
+        "age_years",
+        "garage_spaces"
+      ],
+      "cat_cols": [
+        "neighborhood",
+        "condition"
+      ],
+      "n_classes": null,
+      "log_transformed_cols": [],
+      "smote_applied": false,
+      "smote_log": ""
+    },
+    "train": {
+      "best_name": "Linear Regression",
+      "best_metrics": {
+        "rmse": 19244.3993848345,
+        "mae": 15054.32546750226,
+        "r2": 0.9704270192549539,
+        "train_score": 0.9756910409906572,
+        "test_score": 0.9704270192549539,
+        "generalization_gap": 0.005264021735703284,
+        "overfit": false
+      },
+      "metric_name": "r2",
+      "task_type": "regression",
+      "comparison_df": [
+        {
+          "Model": "Linear Regression",
+          "Train Score": 0.9757,
+          "Test Score": 0.9704,
+          "Gap": 0.0053,
+          "CV Mean": 0.9741,
+          "CV Std": 0.0031,
+          "CV Train Mean": 0.9758,
+          "CV Overfit": "No",
+          "Overfit": "No",
+          "Train Time(s)": 0.01
+        },
+        {
+          "Model": "Random Forest",
+          "Train Score": 0.9636,
+          "Test Score": 0.9075,
+          "Gap": 0.0561,
+          "CV Mean": 0.9326,
+          "CV Std": 0.004,
+          "CV Train Mean": 0.9671,
+          "CV Overfit": "No",
+          "Overfit": "No",
+          "Train Time(s)": 0.09
+        },
+        {
+          "Model": "XGBoost",
+          "Train Score": 0.9922,
+          "Test Score": 0.9476,
+          "Gap": 0.0445,
+          "CV Mean": 0.9567,
+          "CV Std": 0.0034,
+          "CV Train Mean": 0.994,
+          "CV Overfit": "No",
+          "Overfit": "No",
+          "Train Time(s)": 0.06
+        },
+        {
+          "Model": "LightGBM",
+          "Train Score": 0.986,
+          "Test Score": 0.9518,
+          "Gap": 0.0342,
+          "CV Mean": 0.9608,
+          "CV Std": 0.0038,
+          "CV Train Mean": 0.9851,
+          "CV Overfit": "No",
+          "Overfit": "No",
+          "Train Time(s)": 0.03
+        }
+      ],
+      "feature_importances": {
+        "sqft": 0.4456435087879694,
+        "condition_Excellent": 0.09867448822812258,
+        "condition_Poor": 0.0986206784824437,
+        "neighborhood_Rural": 0.08315954104508148,
+        "neighborhood_Urban": 0.0716489877463011,
+        "bedrooms": 0.046274064304399475,
+        "garage_spaces": 0.04394295807733568,
+        "bathrooms": 0.037811195041493086,
+        "age_years": 0.027697291642748048,
+        "condition_Fair": 0.01753527154492642,
+        "condition_Good": 0.0174814617999633,
+        "neighborhood_Suburban": 0.01151055329921564
+      },
+      "training_log": [
+        "Training 4 models for regression task.",
+        "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
+        "  Training Linear Regression...",
+        "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
+        "  Training Random Forest...",
+        "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.09s]",
+        "  Training XGBoost...",
+        "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.06s]",
+        "  Training LightGBM...",
+        "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
+        "\nBest model: Linear Regression (r2=0.9704)",
+        "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
+      ],
+      "overfitting_warnings": [],
+      "cv_summary": "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704",
+      "cv_folds_used": 5,
+      "results": [
+        {
+          "name": "Linear Regression",
+          "metrics": {
+            "rmse": 19244.30726602296,
+            "mae": 15054.427702432535,
+            "r2": 0.9704273023733059,
+            "train_time_s": 0.011,
+            "train_score": 0.9756910416636839,
+            "test_score": 0.9704273023733059,
+            "generalization_gap": 0.0052637392903780444,
+            "overfit": false
+          },
+          "train_score": 0.9756910416636839,
+          "generalization_gap": 0.0052637392903780444,
+          "overfit": false,
+          "cv_scores": [
+            0.9710294992504257,
+            0.9781035991057532,
+            0.9771028471539891,
+            0.9739904674462987,
+            0.9704762542683623
+          ],
+          "cv_mean": 0.9741405334449658,
+          "cv_std": 0.003085747474762751,
+          "cv_train_scores": [
+            0.9766145909757923,
+            0.9748610876644823,
+            0.9751200991005268,
+            0.9757688552112045,
+            0.9767345324333215
+          ],
+          "cv_train_mean": 0.9758198330770655,
+          "cv_overfit": false
+        },
+        {
+          "name": "Random Forest",
+          "metrics": {
+            "rmse": 34041.310371799285,
+            "mae": 27600.138340497615,
+            "r2": 0.9074665155441052,
+            "train_time_s": 0.089,
+            "train_score": 0.9635729463513367,
+            "test_score": 0.9074665155441052,
+            "generalization_gap": 0.056106430807231544,
+            "overfit": false
+          },
+          "train_score": 0.9635729463513367,
+          "generalization_gap": 0.056106430807231544,
+          "overfit": false,
+          "cv_scores": [
+            0.9357359945589842,
+            0.9382614289622773,
+            0.9301892382602968,
+            0.9268878476820184,
+            0.9318488429287124
+          ],
+          "cv_mean": 0.9325846704784577,
+          "cv_std": 0.004022182442727374,
+          "cv_train_scores": [
+            0.967156970877803,
+            0.967581448731281,
+            0.9650487207467973,
+            0.9680221872002721,
+            0.9676417562858995
+          ],
+          "cv_train_mean": 0.9670902167684107,
+          "cv_overfit": false
+        },
+        {
+          "name": "XGBoost",
+          "metrics": {
+            "rmse": 25605.403548893355,
+            "mae": 20573.833333333332,
+            "r2": 0.9476460290782922,
+            "train_time_s": 0.059,
+            "train_score": 0.9921668774926053,
+            "test_score": 0.9476460290782922,
+            "generalization_gap": 0.04452084841431314,
+            "overfit": false
+          },
+          "train_score": 0.9921668774926053,
+          "generalization_gap": 0.04452084841431314,
+          "overfit": false,
+          "cv_scores": [
+            0.9564472610777743,
+            0.9624837677039059,
+            0.9578105825027486,
+            0.952828336453084,
+            0.9539833529591583
+          ],
+          "cv_mean": 0.9567106601393341,
+          "cv_std": 0.003379900024649941,
+          "cv_train_scores": [
+            0.9943620674093794,
+            0.9939179417068826,
+            0.9930728083566575,
+            0.9941910326518375,
+            0.9944765624332212
+          ],
+          "cv_train_mean": 0.9940040825115956,
+          "cv_overfit": false
+        },
+        {
+          "name": "LightGBM",
+          "metrics": {
+            "rmse": 24557.54614248733,
+            "mae": 19483.402159085697,
+            "r2": 0.9518433447340738,
+            "train_time_s": 0.031,
+            "train_score": 0.9860135698556134,
+            "test_score": 0.9518433447340738,
+            "generalization_gap": 0.034170225121539555,
+            "overfit": false
+          },
+          "train_score": 0.9860135698556134,
+          "generalization_gap": 0.034170225121539555,
+          "overfit": false,
+          "cv_scores": [
+            0.9645952804827025,
+            0.9598903361108475,
+            0.9637275951657004,
+            0.9540209656863238,
+            0.961609264856611
+          ],
+          "cv_mean": 0.960768688460437,
+          "cv_std": 0.003752539661600903,
+          "cv_train_scores": [
+            0.9852874580944649,
+            0.9846055359075653,
+            0.9847562253726434,
+            0.9855759230625724,
+            0.9853512046454515
+          ],
+          "cv_train_mean": 0.9851152694165396,
+          "cv_overfit": false
+        }
+      ]
+    },
+    "eval": {
+      "metrics": {
+        "r2": 0.9704270192549539,
+        "rmse": 19244.3993848345,
+        "mae": 15054.32546750226,
+        "mape": 4.092251039954261
+      },
+      "plot_paths": {
+        "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
+        "residuals": "outputs/housing_residuals.png",
+        "feature_importance": "outputs/housing_feature_importance.png",
+        "shap_bar": "outputs/housing_shap_bar.png",
+        "shap_summary": "outputs/housing_shap_summary.png",
+        "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+        "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+        "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+        "shap_waterfall": "outputs/housing_shap_waterfall.png"
+      },
+      "eval_log": [
+        "Computed evaluation metrics.",
+        "Saved actual vs predicted \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_actual_vs_predicted.png",
+        "Saved residuals plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_residuals.png",
+        "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_feature_importance.png",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_bar.png (shap_bar)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_summary.png (shap_summary)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_sqft.png (shap_dependence_sqft)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_bedrooms.png (shap_dependence_bedrooms)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_condition_Excellent.png (shap_dependence_condition_Excellent)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_waterfall.png (shap_waterfall)"
+      ],
+      "task_type": "regression",
+      "has_shap": true,
+      "shap_explanation_text": "This prediction is mainly influenced by sqft, garage_spaces, and bedrooms."
+    },
+    "target_col": "price",
+    "task_type": "regression",
+    "best_model_name": "Linear Regression",
+    "best_metrics": {
+      "rmse": 19244.3993848345,
+      "mae": 15054.32546750226,
+      "r2": 0.9704270192549539,
+      "train_score": 0.9756910409906572,
+      "test_score": 0.9704270192549539,
+      "generalization_gap": 0.005264021735703284,
+      "overfit": false
+    },
+    "comparison_df": [
+      {
+        "Model": "Linear Regression",
+        "Train Score": 0.9757,
+        "Test Score": 0.9704,
+        "Gap": 0.0053,
+        "CV Mean": 0.9741,
+        "CV Std": 0.0031,
+        "CV Train Mean": 0.9758,
+        "CV Overfit": "No",
+        "Overfit": "No",
+        "Train Time(s)": 0.01
+      },
+      {
+        "Model": "Random Forest",
+        "Train Score": 0.9636,
+        "Test Score": 0.9075,
+        "Gap": 0.0561,
+        "CV Mean": 0.9326,
+        "CV Std": 0.004,
+        "CV Train Mean": 0.9671,
+        "CV Overfit": "No",
+        "Overfit": "No",
+        "Train Time(s)": 0.09
+      },
+      {
+        "Model": "XGBoost",
+        "Train Score": 0.9922,
+        "Test Score": 0.9476,
+        "Gap": 0.0445,
+        "CV Mean": 0.9567,
+        "CV Std": 0.0034,
+        "CV Train Mean": 0.994,
+        "CV Overfit": "No",
+        "Overfit": "No",
+        "Train Time(s)": 0.06
+      },
+      {
+        "Model": "LightGBM",
+        "Train Score": 0.986,
+        "Test Score": 0.9518,
+        "Gap": 0.0342,
+        "CV Mean": 0.9608,
+        "CV Std": 0.0038,
+        "CV Train Mean": 0.9851,
+        "CV Overfit": "No",
+        "Overfit": "No",
+        "Train Time(s)": 0.03
+      }
+    ],
+    "feature_importances": {
+      "sqft": 0.4456435087879694,
+      "condition_Excellent": 0.09867448822812258,
+      "condition_Poor": 0.0986206784824437,
+      "neighborhood_Rural": 0.08315954104508148,
+      "neighborhood_Urban": 0.0716489877463011,
+      "bedrooms": 0.046274064304399475,
+      "garage_spaces": 0.04394295807733568,
+      "bathrooms": 0.037811195041493086,
+      "age_years": 0.027697291642748048,
+      "condition_Fair": 0.01753527154492642,
+      "condition_Good": 0.0174814617999633,
+      "neighborhood_Suburban": 0.01151055329921564
+    },
+    "plot_paths": {
+      "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
+      "residuals": "outputs/housing_residuals.png",
+      "feature_importance": "outputs/housing_feature_importance.png",
+      "shap_bar": "outputs/housing_shap_bar.png",
+      "shap_summary": "outputs/housing_shap_summary.png",
+      "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+      "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+      "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+      "shap_waterfall": "outputs/housing_shap_waterfall.png"
+    },
+    "metrics": {
+      "r2": 0.9704270192549539,
+      "rmse": 19244.3993848345,
+      "mae": 15054.32546750226,
+      "mape": 4.092251039954261
+    },
+    "tune": {
+      "success": true,
+      "best_params": {
+        "alpha": 0.010128544009274777
+      },
+      "best_score": 0.9704270192549539,
+      "baseline_score": 0.9704273023733059,
+      "improvement": -2.8311835198469026e-07,
+      "n_trials_run": 20,
+      "tuning_time_s": 0.06037402153015137,
+      "generalization_gap": 0.005264021735703284,
+      "overfit": false,
+      "tuning_log": [
+        "Dataset has 480 training rows (<1000); using n_trials=20.",
+        "Optuna completed 20 trials in 0.1s.",
+        "Best test score: 0.9704 (baseline 0.9704, improvement -0.0000)."
+      ],
+      "test_metrics_full": {
+        "rmse": 19244.3993848345,
+        "mae": 15054.32546750226,
+        "r2": 0.9704270192549539
+      },
+      "train_metrics_full": {
+        "rmse": 19947.328180899563,
+        "mae": 16177.14425128797,
+        "r2": 0.9756910409906572
+      }
+    },
+    "plan": {
+      "recommended_models": [
+        "Linear Regression",
+        "Random Forest",
+        "XGBoost",
+        "LightGBM"
+      ],
+      "skip_models": [],
+      "skip_reasons": {},
+      "adjusted_params": {
+        "Random Forest": {
+          "n_estimators": 100,
+          "max_depth": 5
+        },
+        "XGBoost": {
+          "n_estimators": 100,
+          "max_depth": 4,
+          "learning_rate": 0.1
+        },
+        "LightGBM": {
+          "n_estimators": 100,
+          "num_leaves": 31
+        }
+      },
+      "primary_metric": "r2",
+      "metric_reasoning": "Regression task \u2014 R\u00b2 measures explained variance.",
+      "n_trials": 20,
+      "timeout": 60,
+      "warnings": [
+        "Small dataset \u2014 using conservative parameters to reduce overfitting risk."
+      ],
+      "notes": [
+        "Small dataset (600 rows): Optuna budget set to 20 trials and 60s timeout to avoid overfitting."
+      ],
+      "plan_summary": "The dataset has 600 rows and 12 features after preprocessing. Task: regression Missing values were present in the raw data. Recommended models: Linear Regression, Random Forest, XGBoost, LightGBM. Primary evaluation metric: r2. Tuning budget: 20 trials, 60s.",
+      "dataset_profile": {
+        "n_rows": 600,
+        "n_features": 12,
+        "is_small": true,
+        "is_large": false,
+        "is_wide": false,
+        "is_binary": false,
+        "imbalance_ratio": 1.0,
+        "smote_applied": false
+      }
+    }
+  },
+  "pipeline_track": [
+    {
+      "step": 1,
+      "name": "run_eda",
+      "label": "EDA",
+      "status": "done",
+      "data": {
+        "eda": {
+          "overview": {
+            "rows": 600,
+            "columns": 8,
+            "numeric_cols": 6,
+            "categorical_cols": 2,
+            "duplicate_rows": 0,
+            "memory_mb": 0.09008216857910156,
+            "column_names": [
+              "sqft",
+              "bedrooms",
+              "bathrooms",
+              "age_years",
+              "garage_spaces",
+              "neighborhood",
+              "condition",
+              "price"
+            ]
+          },
+          "columns": {
+            "sqft": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 564,
+              "mean": 2564.108333333333,
+              "std": 1070.1966710789827,
+              "min": 623.0,
+              "max": 4499.0,
+              "median": 2573.0,
+              "skewness": 0.03561779681436486
+            },
+            "bedrooms": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 5,
+              "mean": 3.0283333333333333,
+              "std": 1.412157050324145,
+              "min": 1.0,
+              "max": 5.0,
+              "median": 3.0,
+              "skewness": -0.025307566881084567
+            },
+            "bathrooms": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 6,
+              "mean": 2.1991666666666667,
+              "std": 0.8462325259853908,
+              "min": 1.0,
+              "max": 3.5,
+              "median": 2.0,
+              "skewness": 0.061742786244594346
+            },
+            "age_years": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 30,
+              "n_unique": 60,
+              "mean": 30.589473684210525,
+              "std": 17.10126650476417,
+              "min": 0.0,
+              "max": 59.0,
+              "median": 32.0,
+              "skewness": -0.1053416928261383
+            },
+            "garage_spaces": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 26,
+              "n_unique": 3,
+              "mean": 0.9529616724738676,
+              "std": 0.8076099281739645,
+              "min": 0.0,
+              "max": 2.0,
+              "median": 1.0,
+              "skewness": 0.0857734877615075
+            },
+            "neighborhood": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 3,
+              "top_value": "Urban",
+              "top_freq": 205,
+              "value_counts": {
+                "Urban": 205,
+                "Rural": 203,
+                "Suburban": 192
+              }
+            },
+            "condition": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 4,
+              "top_value": "Good",
+              "top_freq": 173,
+              "value_counts": {
+                "Good": 173,
+                "Excellent": 150,
+                "Fair": 150,
+                "Poor": 127
+              }
+            },
+            "price": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 600,
+              "mean": 408573.35833333334,
+              "std": 125132.5198891944,
+              "min": 95356.0,
+              "max": 687540.0,
+              "median": 407219.5,
+              "skewness": 0.03820771443496304
+            }
+          },
+          "missing": {
+            "total_missing": 56,
+            "columns_with_missing": 2,
+            "by_column": {
+              "age_years": {
+                "count": 30,
+                "pct": 5.0
+              },
+              "garage_spaces": {
+                "count": 26,
+                "pct": 4.33
+              }
+            }
+          },
+          "sample": [
+            {
+              "sqft": 3538,
+              "bedrooms": 1,
+              "bathrooms": 1.0,
+              "age_years": 17.0,
+              "garage_spaces": 2.0,
+              "neighborhood": "Urban",
+              "condition": "Good",
+              "price": 546707
+            },
+            {
+              "sqft": 1675,
+              "bedrooms": 2,
+              "bathrooms": 1.5,
+              "age_years": 45.0,
+              "garage_spaces": 0.0,
+              "neighborhood": "Rural",
+              "condition": "Poor",
+              "price": 255746
+            },
+            {
+              "sqft": 3607,
+              "bedrooms": 5,
+              "bathrooms": 2.5,
+              "age_years": 23.0,
+              "garage_spaces": 0.0,
+              "neighborhood": "Suburban",
+              "condition": "Excellent",
+              "price": 579080
+            },
+            {
+              "sqft": 3156,
+              "bedrooms": 4,
+              "bathrooms": 3.0,
+              "age_years": 22.0,
+              "garage_spaces": NaN,
+              "neighborhood": "Urban",
+              "condition": "Poor",
+              "price": 481062
+            },
+            {
+              "sqft": 2750,
+              "bedrooms": 5,
+              "bathrooms": 1.5,
+              "age_years": 50.0,
+              "garage_spaces": 2.0,
+              "neighborhood": "Suburban",
+              "condition": "Good",
+              "price": 449185
+            }
+          ],
+          "quality_flags": [],
+          "recommendations": [
+            "Impute missing numeric values (median recommended for skewed data).",
+            "Impute missing categorical values with mode or a dedicated 'Unknown' category.",
+            "One-hot encode `neighborhood` (3 categories).",
+            "One-hot encode `condition` (4 categories).",
+            "Scale numeric features with StandardScaler or MinMaxScaler before training."
+          ]
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 2,
+      "name": "detect_task",
+      "label": "Task detection",
+      "status": "done",
+      "data": {
+        "task": {
+          "target_col": "price",
+          "task_type": "regression",
+          "confidence": "high",
+          "reasoning": "Target column `price` matched from user description. Column name suggests a continuous numeric target \u2192 regression.",
+          "alternatives": [
+            "garage_spaces",
+            "age_years",
+            "bedrooms"
+          ],
+          "n_classes": null,
+          "target_dtype": "int64"
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 3,
+      "name": "preprocess",
+      "label": "Preprocessing",
+      "status": "done",
+      "data": {
+        "prep": {
+          "feature_names": [
+            "sqft",
+            "bedrooms",
+            "bathrooms",
+            "age_years",
+            "garage_spaces",
+            "neighborhood_Rural",
+            "neighborhood_Suburban",
+            "neighborhood_Urban",
+            "condition_Excellent",
+            "condition_Fair",
+            "condition_Good",
+            "condition_Poor"
+          ],
+          "task_type": "regression",
+          "dropped_cols": [],
+          "encoding_summary": {
+            "sqft": "median imputation + standard scaling",
+            "bedrooms": "median imputation + standard scaling",
+            "bathrooms": "median imputation + standard scaling",
+            "age_years": "median imputation + standard scaling",
+            "garage_spaces": "median imputation + standard scaling",
+            "neighborhood": "mode imputation + one-hot encoding",
+            "condition": "mode imputation + one-hot encoding"
+          },
+          "preprocessing_log": [
+            "Numeric columns (5): median imputation + standard scaling.",
+            "Categorical columns (2): mode imputation + one-hot encoding.",
+            "Train/test split: 480 train rows, 120 test rows (20% test).",
+            "Final feature matrix: 12 features."
+          ],
+          "num_cols": [
+            "sqft",
+            "bedrooms",
+            "bathrooms",
+            "age_years",
+            "garage_spaces"
+          ],
+          "cat_cols": [
+            "neighborhood",
+            "condition"
+          ],
+          "n_classes": null,
+          "log_transformed_cols": [],
+          "smote_applied": false,
+          "smote_log": "",
+          "train_size": 480,
+          "test_size": 120,
+          "final_feature_count": 12
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 4,
+      "name": "plan_training",
+      "label": "Training Plan",
+      "status": "done",
+      "data": {
+        "plan": {
+          "recommended_models": [
+            "Linear Regression",
+            "Random Forest",
+            "XGBoost",
+            "LightGBM"
+          ],
+          "skip_models": [],
+          "skip_reasons": {},
+          "adjusted_params": {
+            "Random Forest": {
+              "n_estimators": 100,
+              "max_depth": 5
+            },
+            "XGBoost": {
+              "n_estimators": 100,
+              "max_depth": 4,
+              "learning_rate": 0.1
+            },
+            "LightGBM": {
+              "n_estimators": 100,
+              "num_leaves": 31
+            }
+          },
+          "primary_metric": "r2",
+          "metric_reasoning": "Regression task \u2014 R\u00b2 measures explained variance.",
+          "n_trials": 20,
+          "timeout": 60,
+          "warnings": [
+            "Small dataset \u2014 using conservative parameters to reduce overfitting risk."
+          ],
+          "notes": [
+            "Small dataset (600 rows): Optuna budget set to 20 trials and 60s timeout to avoid overfitting."
+          ],
+          "plan_summary": "The dataset has 600 rows and 12 features after preprocessing. Task: regression Missing values were present in the raw data. Recommended models: Linear Regression, Random Forest, XGBoost, LightGBM. Primary evaluation metric: r2. Tuning budget: 20 trials, 60s.",
+          "dataset_profile": {
+            "n_rows": 600,
+            "n_features": 12,
+            "is_small": true,
+            "is_large": false,
+            "is_wide": false,
+            "is_binary": false,
+            "imbalance_ratio": 1.0,
+            "smote_applied": false
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 5,
+      "name": "train_models",
+      "label": "Model training",
+      "status": "done",
+      "data": {
+        "train": {
+          "best_name": "Linear Regression",
+          "best_metrics": {
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539,
+            "train_score": 0.9756910409906572,
+            "test_score": 0.9704270192549539,
+            "generalization_gap": 0.005264021735703284,
+            "overfit": false
+          },
+          "metric_name": "r2",
+          "task_type": "regression",
+          "comparison_df": [
+            {
+              "Model": "Linear Regression",
+              "Train Score": 0.9757,
+              "Test Score": 0.9704,
+              "Gap": 0.0053,
+              "CV Mean": 0.9741,
+              "CV Std": 0.0031,
+              "CV Train Mean": 0.9758,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.01
+            },
+            {
+              "Model": "Random Forest",
+              "Train Score": 0.9636,
+              "Test Score": 0.9075,
+              "Gap": 0.0561,
+              "CV Mean": 0.9326,
+              "CV Std": 0.004,
+              "CV Train Mean": 0.9671,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.09
+            },
+            {
+              "Model": "XGBoost",
+              "Train Score": 0.9922,
+              "Test Score": 0.9476,
+              "Gap": 0.0445,
+              "CV Mean": 0.9567,
+              "CV Std": 0.0034,
+              "CV Train Mean": 0.994,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.06
+            },
+            {
+              "Model": "LightGBM",
+              "Train Score": 0.986,
+              "Test Score": 0.9518,
+              "Gap": 0.0342,
+              "CV Mean": 0.9608,
+              "CV Std": 0.0038,
+              "CV Train Mean": 0.9851,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.03
+            }
+          ],
+          "feature_importances": {
+            "sqft": 0.4456435087879694,
+            "condition_Excellent": 0.09867448822812258,
+            "condition_Poor": 0.0986206784824437,
+            "neighborhood_Rural": 0.08315954104508148,
+            "neighborhood_Urban": 0.0716489877463011,
+            "bedrooms": 0.046274064304399475,
+            "garage_spaces": 0.04394295807733568,
+            "bathrooms": 0.037811195041493086,
+            "age_years": 0.027697291642748048,
+            "condition_Fair": 0.01753527154492642,
+            "condition_Good": 0.0174814617999633,
+            "neighborhood_Suburban": 0.01151055329921564
+          },
+          "training_log": [
+            "Training 4 models for regression task.",
+            "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
+            "  Training Linear Regression...",
+            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
+            "  Training Random Forest...",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.09s]",
+            "  Training XGBoost...",
+            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.06s]",
+            "  Training LightGBM...",
+            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
+            "\nBest model: Linear Regression (r2=0.9704)",
+            "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
+          ],
+          "overfitting_warnings": [],
+          "cv_summary": "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704",
+          "cv_folds_used": 5,
+          "results": [
+            {
+              "name": "Linear Regression",
+              "metrics": {
+                "rmse": 19244.30726602296,
+                "mae": 15054.427702432535,
+                "r2": 0.9704273023733059,
+                "train_time_s": 0.011,
+                "train_score": 0.9756910416636839,
+                "test_score": 0.9704273023733059,
+                "generalization_gap": 0.0052637392903780444,
+                "overfit": false
+              },
+              "cv_scores": [
+                0.9710294992504257,
+                0.9781035991057532,
+                0.9771028471539891,
+                0.9739904674462987,
+                0.9704762542683623
+              ],
+              "cv_mean": 0.9741405334449658,
+              "cv_std": 0.003085747474762751,
+              "cv_train_scores": [
+                0.9766145909757923,
+                0.9748610876644823,
+                0.9751200991005268,
+                0.9757688552112045,
+                0.9767345324333215
+              ],
+              "cv_train_mean": 0.9758198330770655,
+              "cv_overfit": false,
+              "train_score": 0.9756910416636839,
+              "generalization_gap": 0.0052637392903780444,
+              "overfit": false
+            },
+            {
+              "name": "Random Forest",
+              "metrics": {
+                "rmse": 34041.310371799285,
+                "mae": 27600.138340497615,
+                "r2": 0.9074665155441052,
+                "train_time_s": 0.089,
+                "train_score": 0.9635729463513367,
+                "test_score": 0.9074665155441052,
+                "generalization_gap": 0.056106430807231544,
+                "overfit": false
+              },
+              "cv_scores": [
+                0.9357359945589842,
+                0.9382614289622773,
+                0.9301892382602968,
+                0.9268878476820184,
+                0.9318488429287124
+              ],
+              "cv_mean": 0.9325846704784577,
+              "cv_std": 0.004022182442727374,
+              "cv_train_scores": [
+                0.967156970877803,
+                0.967581448731281,
+                0.9650487207467973,
+                0.9680221872002721,
+                0.9676417562858995
+              ],
+              "cv_train_mean": 0.9670902167684107,
+              "cv_overfit": false,
+              "train_score": 0.9635729463513367,
+              "generalization_gap": 0.056106430807231544,
+              "overfit": false
+            },
+            {
+              "name": "XGBoost",
+              "metrics": {
+                "rmse": 25605.403548893355,
+                "mae": 20573.833333333332,
+                "r2": 0.9476460290782922,
+                "train_time_s": 0.059,
+                "train_score": 0.9921668774926053,
+                "test_score": 0.9476460290782922,
+                "generalization_gap": 0.04452084841431314,
+                "overfit": false
+              },
+              "cv_scores": [
+                0.9564472610777743,
+                0.9624837677039059,
+                0.9578105825027486,
+                0.952828336453084,
+                0.9539833529591583
+              ],
+              "cv_mean": 0.9567106601393341,
+              "cv_std": 0.003379900024649941,
+              "cv_train_scores": [
+                0.9943620674093794,
+                0.9939179417068826,
+                0.9930728083566575,
+                0.9941910326518375,
+                0.9944765624332212
+              ],
+              "cv_train_mean": 0.9940040825115956,
+              "cv_overfit": false,
+              "train_score": 0.9921668774926053,
+              "generalization_gap": 0.04452084841431314,
+              "overfit": false
+            },
+            {
+              "name": "LightGBM",
+              "metrics": {
+                "rmse": 24557.54614248733,
+                "mae": 19483.402159085697,
+                "r2": 0.9518433447340738,
+                "train_time_s": 0.031,
+                "train_score": 0.9860135698556134,
+                "test_score": 0.9518433447340738,
+                "generalization_gap": 0.034170225121539555,
+                "overfit": false
+              },
+              "cv_scores": [
+                0.9645952804827025,
+                0.9598903361108475,
+                0.9637275951657004,
+                0.9540209656863238,
+                0.961609264856611
+              ],
+              "cv_mean": 0.960768688460437,
+              "cv_std": 0.003752539661600903,
+              "cv_train_scores": [
+                0.9852874580944649,
+                0.9846055359075653,
+                0.9847562253726434,
+                0.9855759230625724,
+                0.9853512046454515
+              ],
+              "cv_train_mean": 0.9851152694165396,
+              "cv_overfit": false,
+              "train_score": 0.9860135698556134,
+              "generalization_gap": 0.034170225121539555,
+              "overfit": false
+            }
+          ]
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 6,
+      "name": "tune_model",
+      "label": "Hyperparameter tuning",
+      "status": "done",
+      "data": {
+        "tune": {
+          "success": true,
+          "best_params": {
+            "alpha": 0.010128544009274777
+          },
+          "best_score": 0.9704270192549539,
+          "baseline_score": 0.9704273023733059,
+          "improvement": -2.8311835198469026e-07,
+          "n_trials_run": 20,
+          "tuning_time_s": 0.06037402153015137,
+          "generalization_gap": 0.005264021735703284,
+          "overfit": false,
+          "tuning_log": [
+            "Dataset has 480 training rows (<1000); using n_trials=20.",
+            "Optuna completed 20 trials in 0.1s.",
+            "Best test score: 0.9704 (baseline 0.9704, improvement -0.0000)."
+          ],
+          "test_metrics_full": {
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539
+          },
+          "train_metrics_full": {
+            "rmse": 19947.328180899563,
+            "mae": 16177.14425128797,
+            "r2": 0.9756910409906572
+          },
+          "model_name": "Linear Regression"
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 7,
+      "name": "evaluate_model",
+      "label": "Evaluation",
+      "status": "done",
+      "data": {
+        "eval": {
+          "metrics": {
+            "r2": 0.9704270192549539,
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "mape": 4.092251039954261
+          },
+          "plot_paths": {
+            "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
+            "residuals": "outputs/housing_residuals.png",
+            "feature_importance": "outputs/housing_feature_importance.png",
+            "shap_bar": "outputs/housing_shap_bar.png",
+            "shap_summary": "outputs/housing_shap_summary.png",
+            "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+            "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+            "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+            "shap_waterfall": "outputs/housing_shap_waterfall.png"
+          },
+          "eval_log": [
+            "Computed evaluation metrics.",
+            "Saved actual vs predicted \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_actual_vs_predicted.png",
+            "Saved residuals plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_residuals.png",
+            "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_feature_importance.png",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_bar.png (shap_bar)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_summary.png (shap_summary)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_sqft.png (shap_dependence_sqft)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_bedrooms.png (shap_dependence_bedrooms)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_condition_Excellent.png (shap_dependence_condition_Excellent)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_waterfall.png (shap_waterfall)"
+          ],
+          "task_type": "regression",
+          "has_shap": true,
+          "shap_explanation_text": "This prediction is mainly influenced by sqft, garage_spaces, and bedrooms."
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 8,
+      "name": "final",
+      "label": "Final recommendation",
+      "status": "done",
+      "data": {
+        "status": "complete",
+        "eda": {
+          "overview": {
+            "rows": 600,
+            "columns": 8,
+            "numeric_cols": 6,
+            "categorical_cols": 2,
+            "duplicate_rows": 0,
+            "memory_mb": 0.09008216857910156,
+            "column_names": [
+              "sqft",
+              "bedrooms",
+              "bathrooms",
+              "age_years",
+              "garage_spaces",
+              "neighborhood",
+              "condition",
+              "price"
+            ]
+          },
+          "columns": {
+            "sqft": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 564,
+              "mean": 2564.108333333333,
+              "std": 1070.1966710789827,
+              "min": 623.0,
+              "max": 4499.0,
+              "median": 2573.0,
+              "skewness": 0.03561779681436486
+            },
+            "bedrooms": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 5,
+              "mean": 3.0283333333333333,
+              "std": 1.412157050324145,
+              "min": 1.0,
+              "max": 5.0,
+              "median": 3.0,
+              "skewness": -0.025307566881084567
+            },
+            "bathrooms": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 6,
+              "mean": 2.1991666666666667,
+              "std": 0.8462325259853908,
+              "min": 1.0,
+              "max": 3.5,
+              "median": 2.0,
+              "skewness": 0.061742786244594346
+            },
+            "age_years": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 30,
+              "n_unique": 60,
+              "mean": 30.589473684210525,
+              "std": 17.10126650476417,
+              "min": 0.0,
+              "max": 59.0,
+              "median": 32.0,
+              "skewness": -0.1053416928261383
+            },
+            "garage_spaces": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 26,
+              "n_unique": 3,
+              "mean": 0.9529616724738676,
+              "std": 0.8076099281739645,
+              "min": 0.0,
+              "max": 2.0,
+              "median": 1.0,
+              "skewness": 0.0857734877615075
+            },
+            "neighborhood": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 3,
+              "top_value": "Urban",
+              "top_freq": 205,
+              "value_counts": {
+                "Urban": 205,
+                "Rural": 203,
+                "Suburban": 192
+              }
+            },
+            "condition": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 4,
+              "top_value": "Good",
+              "top_freq": 173,
+              "value_counts": {
+                "Good": 173,
+                "Excellent": 150,
+                "Fair": 150,
+                "Poor": 127
+              }
+            },
+            "price": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 600,
+              "mean": 408573.35833333334,
+              "std": 125132.5198891944,
+              "min": 95356.0,
+              "max": 687540.0,
+              "median": 407219.5,
+              "skewness": 0.03820771443496304
+            }
+          },
+          "missing": {
+            "total_missing": 56,
+            "columns_with_missing": 2,
+            "by_column": {
+              "age_years": {
+                "count": 30,
+                "pct": 5.0
+              },
+              "garage_spaces": {
+                "count": 26,
+                "pct": 4.33
+              }
+            }
+          },
+          "sample": [
+            {
+              "sqft": 3538,
+              "bedrooms": 1,
+              "bathrooms": 1.0,
+              "age_years": 17.0,
+              "garage_spaces": 2.0,
+              "neighborhood": "Urban",
+              "condition": "Good",
+              "price": 546707
+            },
+            {
+              "sqft": 1675,
+              "bedrooms": 2,
+              "bathrooms": 1.5,
+              "age_years": 45.0,
+              "garage_spaces": 0.0,
+              "neighborhood": "Rural",
+              "condition": "Poor",
+              "price": 255746
+            },
+            {
+              "sqft": 3607,
+              "bedrooms": 5,
+              "bathrooms": 2.5,
+              "age_years": 23.0,
+              "garage_spaces": 0.0,
+              "neighborhood": "Suburban",
+              "condition": "Excellent",
+              "price": 579080
+            },
+            {
+              "sqft": 3156,
+              "bedrooms": 4,
+              "bathrooms": 3.0,
+              "age_years": 22.0,
+              "garage_spaces": NaN,
+              "neighborhood": "Urban",
+              "condition": "Poor",
+              "price": 481062
+            },
+            {
+              "sqft": 2750,
+              "bedrooms": 5,
+              "bathrooms": 1.5,
+              "age_years": 50.0,
+              "garage_spaces": 2.0,
+              "neighborhood": "Suburban",
+              "condition": "Good",
+              "price": 449185
+            }
+          ],
+          "quality_flags": [],
+          "recommendations": [
+            "Impute missing numeric values (median recommended for skewed data).",
+            "Impute missing categorical values with mode or a dedicated 'Unknown' category.",
+            "One-hot encode `neighborhood` (3 categories).",
+            "One-hot encode `condition` (4 categories).",
+            "Scale numeric features with StandardScaler or MinMaxScaler before training."
+          ]
+        },
+        "task": {
+          "target_col": "price",
+          "task_type": "regression",
+          "confidence": "high",
+          "reasoning": "Target column `price` matched from user description. Column name suggests a continuous numeric target \u2192 regression.",
+          "alternatives": [
+            "garage_spaces",
+            "age_years",
+            "bedrooms"
+          ],
+          "n_classes": null,
+          "target_dtype": "int64"
+        },
+        "prep": {
+          "feature_names": [
+            "sqft",
+            "bedrooms",
+            "bathrooms",
+            "age_years",
+            "garage_spaces",
+            "neighborhood_Rural",
+            "neighborhood_Suburban",
+            "neighborhood_Urban",
+            "condition_Excellent",
+            "condition_Fair",
+            "condition_Good",
+            "condition_Poor"
+          ],
+          "task_type": "regression",
+          "dropped_cols": [],
+          "encoding_summary": {
+            "sqft": "median imputation + standard scaling",
+            "bedrooms": "median imputation + standard scaling",
+            "bathrooms": "median imputation + standard scaling",
+            "age_years": "median imputation + standard scaling",
+            "garage_spaces": "median imputation + standard scaling",
+            "neighborhood": "mode imputation + one-hot encoding",
+            "condition": "mode imputation + one-hot encoding"
+          },
+          "preprocessing_log": [
+            "Numeric columns (5): median imputation + standard scaling.",
+            "Categorical columns (2): mode imputation + one-hot encoding.",
+            "Train/test split: 480 train rows, 120 test rows (20% test).",
+            "Final feature matrix: 12 features."
+          ],
+          "num_cols": [
+            "sqft",
+            "bedrooms",
+            "bathrooms",
+            "age_years",
+            "garage_spaces"
+          ],
+          "cat_cols": [
+            "neighborhood",
+            "condition"
+          ],
+          "n_classes": null,
+          "log_transformed_cols": [],
+          "smote_applied": false,
+          "smote_log": ""
+        },
+        "train": {
+          "best_name": "Linear Regression",
+          "best_metrics": {
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539,
+            "train_score": 0.9756910409906572,
+            "test_score": 0.9704270192549539,
+            "generalization_gap": 0.005264021735703284,
+            "overfit": false
+          },
+          "metric_name": "r2",
+          "task_type": "regression",
+          "comparison_df": [
+            {
+              "Model": "Linear Regression",
+              "Train Score": 0.9757,
+              "Test Score": 0.9704,
+              "Gap": 0.0053,
+              "CV Mean": 0.9741,
+              "CV Std": 0.0031,
+              "CV Train Mean": 0.9758,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.01
+            },
+            {
+              "Model": "Random Forest",
+              "Train Score": 0.9636,
+              "Test Score": 0.9075,
+              "Gap": 0.0561,
+              "CV Mean": 0.9326,
+              "CV Std": 0.004,
+              "CV Train Mean": 0.9671,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.09
+            },
+            {
+              "Model": "XGBoost",
+              "Train Score": 0.9922,
+              "Test Score": 0.9476,
+              "Gap": 0.0445,
+              "CV Mean": 0.9567,
+              "CV Std": 0.0034,
+              "CV Train Mean": 0.994,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.06
+            },
+            {
+              "Model": "LightGBM",
+              "Train Score": 0.986,
+              "Test Score": 0.9518,
+              "Gap": 0.0342,
+              "CV Mean": 0.9608,
+              "CV Std": 0.0038,
+              "CV Train Mean": 0.9851,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.03
+            }
+          ],
+          "feature_importances": {
+            "sqft": 0.4456435087879694,
+            "condition_Excellent": 0.09867448822812258,
+            "condition_Poor": 0.0986206784824437,
+            "neighborhood_Rural": 0.08315954104508148,
+            "neighborhood_Urban": 0.0716489877463011,
+            "bedrooms": 0.046274064304399475,
+            "garage_spaces": 0.04394295807733568,
+            "bathrooms": 0.037811195041493086,
+            "age_years": 0.027697291642748048,
+            "condition_Fair": 0.01753527154492642,
+            "condition_Good": 0.0174814617999633,
+            "neighborhood_Suburban": 0.01151055329921564
+          },
+          "training_log": [
+            "Training 4 models for regression task.",
+            "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
+            "  Training Linear Regression...",
+            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
+            "  Training Random Forest...",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.09s]",
+            "  Training XGBoost...",
+            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.06s]",
+            "  Training LightGBM...",
+            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
+            "\nBest model: Linear Regression (r2=0.9704)",
+            "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
+          ],
+          "overfitting_warnings": [],
+          "cv_summary": "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704",
+          "cv_folds_used": 5,
+          "results": [
+            {
+              "name": "Linear Regression",
+              "metrics": {
+                "rmse": 19244.30726602296,
+                "mae": 15054.427702432535,
+                "r2": 0.9704273023733059,
+                "train_time_s": 0.011,
+                "train_score": 0.9756910416636839,
+                "test_score": 0.9704273023733059,
+                "generalization_gap": 0.0052637392903780444,
+                "overfit": false
+              },
+              "train_score": 0.9756910416636839,
+              "generalization_gap": 0.0052637392903780444,
+              "overfit": false,
+              "cv_scores": [
+                0.9710294992504257,
+                0.9781035991057532,
+                0.9771028471539891,
+                0.9739904674462987,
+                0.9704762542683623
+              ],
+              "cv_mean": 0.9741405334449658,
+              "cv_std": 0.003085747474762751,
+              "cv_train_scores": [
+                0.9766145909757923,
+                0.9748610876644823,
+                0.9751200991005268,
+                0.9757688552112045,
+                0.9767345324333215
+              ],
+              "cv_train_mean": 0.9758198330770655,
+              "cv_overfit": false
+            },
+            {
+              "name": "Random Forest",
+              "metrics": {
+                "rmse": 34041.310371799285,
+                "mae": 27600.138340497615,
+                "r2": 0.9074665155441052,
+                "train_time_s": 0.089,
+                "train_score": 0.9635729463513367,
+                "test_score": 0.9074665155441052,
+                "generalization_gap": 0.056106430807231544,
+                "overfit": false
+              },
+              "train_score": 0.9635729463513367,
+              "generalization_gap": 0.056106430807231544,
+              "overfit": false,
+              "cv_scores": [
+                0.9357359945589842,
+                0.9382614289622773,
+                0.9301892382602968,
+                0.9268878476820184,
+                0.9318488429287124
+              ],
+              "cv_mean": 0.9325846704784577,
+              "cv_std": 0.004022182442727374,
+              "cv_train_scores": [
+                0.967156970877803,
+                0.967581448731281,
+                0.9650487207467973,
+                0.9680221872002721,
+                0.9676417562858995
+              ],
+              "cv_train_mean": 0.9670902167684107,
+              "cv_overfit": false
+            },
+            {
+              "name": "XGBoost",
+              "metrics": {
+                "rmse": 25605.403548893355,
+                "mae": 20573.833333333332,
+                "r2": 0.9476460290782922,
+                "train_time_s": 0.059,
+                "train_score": 0.9921668774926053,
+                "test_score": 0.9476460290782922,
+                "generalization_gap": 0.04452084841431314,
+                "overfit": false
+              },
+              "train_score": 0.9921668774926053,
+              "generalization_gap": 0.04452084841431314,
+              "overfit": false,
+              "cv_scores": [
+                0.9564472610777743,
+                0.9624837677039059,
+                0.9578105825027486,
+                0.952828336453084,
+                0.9539833529591583
+              ],
+              "cv_mean": 0.9567106601393341,
+              "cv_std": 0.003379900024649941,
+              "cv_train_scores": [
+                0.9943620674093794,
+                0.9939179417068826,
+                0.9930728083566575,
+                0.9941910326518375,
+                0.9944765624332212
+              ],
+              "cv_train_mean": 0.9940040825115956,
+              "cv_overfit": false
+            },
+            {
+              "name": "LightGBM",
+              "metrics": {
+                "rmse": 24557.54614248733,
+                "mae": 19483.402159085697,
+                "r2": 0.9518433447340738,
+                "train_time_s": 0.031,
+                "train_score": 0.9860135698556134,
+                "test_score": 0.9518433447340738,
+                "generalization_gap": 0.034170225121539555,
+                "overfit": false
+              },
+              "train_score": 0.9860135698556134,
+              "generalization_gap": 0.034170225121539555,
+              "overfit": false,
+              "cv_scores": [
+                0.9645952804827025,
+                0.9598903361108475,
+                0.9637275951657004,
+                0.9540209656863238,
+                0.961609264856611
+              ],
+              "cv_mean": 0.960768688460437,
+              "cv_std": 0.003752539661600903,
+              "cv_train_scores": [
+                0.9852874580944649,
+                0.9846055359075653,
+                0.9847562253726434,
+                0.9855759230625724,
+                0.9853512046454515
+              ],
+              "cv_train_mean": 0.9851152694165396,
+              "cv_overfit": false
+            }
+          ]
+        },
+        "eval": {
+          "metrics": {
+            "r2": 0.9704270192549539,
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "mape": 4.092251039954261
+          },
+          "plot_paths": {
+            "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
+            "residuals": "outputs/housing_residuals.png",
+            "feature_importance": "outputs/housing_feature_importance.png",
+            "shap_bar": "outputs/housing_shap_bar.png",
+            "shap_summary": "outputs/housing_shap_summary.png",
+            "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+            "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+            "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+            "shap_waterfall": "outputs/housing_shap_waterfall.png"
+          },
+          "eval_log": [
+            "Computed evaluation metrics.",
+            "Saved actual vs predicted \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_actual_vs_predicted.png",
+            "Saved residuals plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_residuals.png",
+            "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_feature_importance.png",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_bar.png (shap_bar)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_summary.png (shap_summary)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_sqft.png (shap_dependence_sqft)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_bedrooms.png (shap_dependence_bedrooms)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_condition_Excellent.png (shap_dependence_condition_Excellent)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_waterfall.png (shap_waterfall)"
+          ],
+          "task_type": "regression",
+          "has_shap": true,
+          "shap_explanation_text": "This prediction is mainly influenced by sqft, garage_spaces, and bedrooms."
+        },
+        "target_col": "price",
+        "task_type": "regression",
+        "best_model_name": "Linear Regression",
+        "best_metrics": {
+          "rmse": 19244.3993848345,
+          "mae": 15054.32546750226,
+          "r2": 0.9704270192549539,
+          "train_score": 0.9756910409906572,
+          "test_score": 0.9704270192549539,
+          "generalization_gap": 0.005264021735703284,
+          "overfit": false
+        },
+        "comparison_df": [
+          {
+            "Model": "Linear Regression",
+            "Train Score": 0.9757,
+            "Test Score": 0.9704,
+            "Gap": 0.0053,
+            "CV Mean": 0.9741,
+            "CV Std": 0.0031,
+            "CV Train Mean": 0.9758,
+            "CV Overfit": "No",
+            "Overfit": "No",
+            "Train Time(s)": 0.01
+          },
+          {
+            "Model": "Random Forest",
+            "Train Score": 0.9636,
+            "Test Score": 0.9075,
+            "Gap": 0.0561,
+            "CV Mean": 0.9326,
+            "CV Std": 0.004,
+            "CV Train Mean": 0.9671,
+            "CV Overfit": "No",
+            "Overfit": "No",
+            "Train Time(s)": 0.09
+          },
+          {
+            "Model": "XGBoost",
+            "Train Score": 0.9922,
+            "Test Score": 0.9476,
+            "Gap": 0.0445,
+            "CV Mean": 0.9567,
+            "CV Std": 0.0034,
+            "CV Train Mean": 0.994,
+            "CV Overfit": "No",
+            "Overfit": "No",
+            "Train Time(s)": 0.06
+          },
+          {
+            "Model": "LightGBM",
+            "Train Score": 0.986,
+            "Test Score": 0.9518,
+            "Gap": 0.0342,
+            "CV Mean": 0.9608,
+            "CV Std": 0.0038,
+            "CV Train Mean": 0.9851,
+            "CV Overfit": "No",
+            "Overfit": "No",
+            "Train Time(s)": 0.03
+          }
+        ],
+        "feature_importances": {
+          "sqft": 0.4456435087879694,
+          "condition_Excellent": 0.09867448822812258,
+          "condition_Poor": 0.0986206784824437,
+          "neighborhood_Rural": 0.08315954104508148,
+          "neighborhood_Urban": 0.0716489877463011,
+          "bedrooms": 0.046274064304399475,
+          "garage_spaces": 0.04394295807733568,
+          "bathrooms": 0.037811195041493086,
+          "age_years": 0.027697291642748048,
+          "condition_Fair": 0.01753527154492642,
+          "condition_Good": 0.0174814617999633,
+          "neighborhood_Suburban": 0.01151055329921564
+        },
+        "plot_paths": {
+          "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
+          "residuals": "outputs/housing_residuals.png",
+          "feature_importance": "outputs/housing_feature_importance.png",
+          "shap_bar": "outputs/housing_shap_bar.png",
+          "shap_summary": "outputs/housing_shap_summary.png",
+          "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+          "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+          "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+          "shap_waterfall": "outputs/housing_shap_waterfall.png"
+        },
+        "metrics": {
+          "r2": 0.9704270192549539,
+          "rmse": 19244.3993848345,
+          "mae": 15054.32546750226,
+          "mape": 4.092251039954261
+        },
+        "tune": {
+          "success": true,
+          "best_params": {
+            "alpha": 0.010128544009274777
+          },
+          "best_score": 0.9704270192549539,
+          "baseline_score": 0.9704273023733059,
+          "improvement": -2.8311835198469026e-07,
+          "n_trials_run": 20,
+          "tuning_time_s": 0.06037402153015137,
+          "generalization_gap": 0.005264021735703284,
+          "overfit": false,
+          "tuning_log": [
+            "Dataset has 480 training rows (<1000); using n_trials=20.",
+            "Optuna completed 20 trials in 0.1s.",
+            "Best test score: 0.9704 (baseline 0.9704, improvement -0.0000)."
+          ],
+          "test_metrics_full": {
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539
+          },
+          "train_metrics_full": {
+            "rmse": 19947.328180899563,
+            "mae": 16177.14425128797,
+            "r2": 0.9756910409906572
+          }
+        },
+        "plan": {
+          "recommended_models": [
+            "Linear Regression",
+            "Random Forest",
+            "XGBoost",
+            "LightGBM"
+          ],
+          "skip_models": [],
+          "skip_reasons": {},
+          "adjusted_params": {
+            "Random Forest": {
+              "n_estimators": 100,
+              "max_depth": 5
+            },
+            "XGBoost": {
+              "n_estimators": 100,
+              "max_depth": 4,
+              "learning_rate": 0.1
+            },
+            "LightGBM": {
+              "n_estimators": 100,
+              "num_leaves": 31
+            }
+          },
+          "primary_metric": "r2",
+          "metric_reasoning": "Regression task \u2014 R\u00b2 measures explained variance.",
+          "n_trials": 20,
+          "timeout": 60,
+          "warnings": [
+            "Small dataset \u2014 using conservative parameters to reduce overfitting risk."
+          ],
+          "notes": [
+            "Small dataset (600 rows): Optuna budget set to 20 trials and 60s timeout to avoid overfitting."
+          ],
+          "plan_summary": "The dataset has 600 rows and 12 features after preprocessing. Task: regression Missing values were present in the raw data. Recommended models: Linear Regression, Random Forest, XGBoost, LightGBM. Primary evaluation metric: r2. Tuning budget: 20 trials, 60s.",
+          "dataset_profile": {
+            "n_rows": 600,
+            "n_features": 12,
+            "is_small": true,
+            "is_large": false,
+            "is_wide": false,
+            "is_binary": false,
+            "imbalance_ratio": 1.0,
+            "smote_applied": false
+          }
+        }
+      },
+      "error": null
+    }
+  ],
+  "log_lines": [
+    "<div class=\"log-line log-text\"><span class=\"log-ts\">00:00:00</span>Demo mode \u2014 pre-computed run (housing).</div>"
+  ]
+}

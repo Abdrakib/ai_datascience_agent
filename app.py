@@ -50,6 +50,7 @@ def _init_state() -> None:
         "saved_model_path": None,
         "inference_bundle": None,
         "inference_predictions": None,
+        "demo_dataset":     "healthcare",
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -59,12 +60,20 @@ def _init_state() -> None:
 APP_ROOT = Path(__file__).parent.resolve()
 
 
-def _demo_result_path() -> Path:
-    """Prefer demo_result.json next to app.py, then workspace parent."""
-    for p in (APP_ROOT / "demo_result.json", APP_ROOT.parent / "demo_result.json"):
-        if p.is_file():
-            return p
-    return APP_ROOT / "demo_result.json"
+def _load_demo_result() -> dict | None:
+    """Load pre-computed demo JSON for the selected sample dataset key."""
+    dataset = st.session_state.get("demo_dataset", "healthcare")
+    candidates = [
+        APP_ROOT / f"demo_result_{dataset}.json",
+        APP_ROOT.parent / f"demo_result_{dataset}.json",
+        APP_ROOT / "demo_result.json",
+        APP_ROOT.parent / "demo_result.json",
+    ]
+    for path in candidates:
+        if path.is_file():
+            with open(path, encoding="utf-8") as f:
+                return json.load(f)
+    return None
 
 
 def _hydrate_comparison_dfs(obj: Any) -> None:
@@ -97,14 +106,6 @@ def _resolve_plot_paths_relative(obj: Any, base: Path) -> None:
     elif isinstance(obj, list):
         for item in obj:
             _resolve_plot_paths_relative(item, base)
-
-
-def _load_demo_json() -> dict | None:
-    path = _demo_result_path()
-    if not path.is_file():
-        return None
-    with open(path, encoding="utf-8") as f:
-        return json.load(f)
 
 
 def _apply_demo_payload(data: dict) -> None:
@@ -141,17 +142,16 @@ def _apply_demo_payload(data: dict) -> None:
 
 def _on_demo_mode_change() -> None:
     if st.session_state.get("demo_mode_toggle"):
-        snap = _load_demo_json()
+        snap = _load_demo_result()
         if not snap:
-            st.session_state.demo_mode_toggle = False
-            st.session_state["_demo_snapshot_error"] = (
-                f"Could not load demo snapshot ({_demo_result_path().name} missing)."
-            )
+            st.session_state["_demo_data_missing"] = True
         else:
+            st.session_state["_demo_data_missing"] = False
             st.session_state.pop("_demo_snapshot_error", None)
             _apply_demo_payload(snap)
     else:
         st.session_state.pop("_demo_snapshot_error", None)
+        st.session_state.pop("_demo_data_missing", None)
         st.session_state.result = None
         st.session_state.log_lines = []
         st.session_state.pipeline_track = []
@@ -1932,10 +1932,6 @@ with st.sidebar:
         help="Browse a pre-computed example without an API key.",
         on_change=_on_demo_mode_change,
     )
-    _demo_err = st.session_state.get("_demo_snapshot_error")
-    if _demo_err:
-        st.error(_demo_err)
-
     if not st.session_state.get("demo_mode_toggle", False):
         st.markdown('<div class="section-head">API key</div>', unsafe_allow_html=True)
         _env_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
@@ -1963,7 +1959,10 @@ with st.sidebar:
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Titanic", use_container_width=True):
-            p = Path("datasets/titanic.csv")
+            st.session_state["demo_dataset"] = "titanic"
+            p = Path("datasets/titanic_demo_synth.csv")
+            if not p.exists():
+                p = Path("datasets/titanic.csv")
             if p.exists():
                 st.session_state.df = pd.read_csv(p)
                 st.session_state.filename = p.name
@@ -1972,9 +1971,17 @@ with st.sidebar:
                 st.session_state.step_cards = []
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
+                if st.session_state.get("demo_mode_toggle"):
+                    _ds = _load_demo_result()
+                    if _ds:
+                        st.session_state["_demo_data_missing"] = False
+                        _apply_demo_payload(_ds)
+                    else:
+                        st.session_state["_demo_data_missing"] = True
             else:
-                st.warning("datasets/titanic.csv not found.")
+                st.warning("datasets/titanic_demo_synth.csv or datasets/titanic.csv not found.")
         if st.button("Healthcare", use_container_width=True):
+            st.session_state["demo_dataset"] = "healthcare"
             p = Path("datasets/sample_healthcare_classification.csv")
             if p.exists():
                 st.session_state.df = pd.read_csv(p)
@@ -1984,11 +1991,21 @@ with st.sidebar:
                 st.session_state.step_cards = []
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
+                if st.session_state.get("demo_mode_toggle"):
+                    _ds = _load_demo_result()
+                    if _ds:
+                        st.session_state["_demo_data_missing"] = False
+                        _apply_demo_payload(_ds)
+                    else:
+                        st.session_state["_demo_data_missing"] = True
             else:
                 st.warning("Run generate_samples.py first.")
     with col2:
         if st.button("Diabetes", use_container_width=True):
-            p = Path("datasets/diabetes.csv")
+            st.session_state["demo_dataset"] = "diabetes"
+            p = Path("datasets/diabetes_sklearn_demo.csv")
+            if not p.exists():
+                p = Path("datasets/diabetes.csv")
             if p.exists():
                 st.session_state.df = pd.read_csv(p)
                 st.session_state.filename = p.name
@@ -1997,9 +2014,17 @@ with st.sidebar:
                 st.session_state.step_cards = []
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
+                if st.session_state.get("demo_mode_toggle"):
+                    _ds = _load_demo_result()
+                    if _ds:
+                        st.session_state["_demo_data_missing"] = False
+                        _apply_demo_payload(_ds)
+                    else:
+                        st.session_state["_demo_data_missing"] = True
             else:
-                st.warning("datasets/diabetes.csv not found.")
+                st.warning("datasets/diabetes_sklearn_demo.csv or datasets/diabetes.csv not found.")
         if st.button("Housing", use_container_width=True):
+            st.session_state["demo_dataset"] = "housing"
             p = Path("datasets/sample_housing_regression.csv")
             if p.exists():
                 st.session_state.df = pd.read_csv(p)
@@ -2009,6 +2034,13 @@ with st.sidebar:
                 st.session_state.step_cards = []
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
+                if st.session_state.get("demo_mode_toggle"):
+                    _ds = _load_demo_result()
+                    if _ds:
+                        st.session_state["_demo_data_missing"] = False
+                        _apply_demo_payload(_ds)
+                    else:
+                        st.session_state["_demo_data_missing"] = True
             else:
                 st.warning("Run generate_samples.py first.")
 
@@ -2035,19 +2067,29 @@ with st.sidebar:
 
 
 if st.session_state.get("demo_mode_toggle") and st.session_state.get("result") is None:
-    _snap = _load_demo_json()
+    _snap = _load_demo_result()
     if _snap:
+        st.session_state["_demo_data_missing"] = False
         _apply_demo_payload(_snap)
+    else:
+        st.session_state["_demo_data_missing"] = True
 
 
 tab_pipeline, tab_inference = st.tabs(["Pipeline", "Inference"])
 with tab_pipeline:
     _demo_on = st.session_state.get("demo_mode_toggle", False)
     if _demo_on:
+        _dname = st.session_state.get("demo_dataset", "healthcare")
+        _label = str(_dname).replace("_", " ").title()
         st.info(
-            "Demo Mode — showing a pre-computed example run. Toggle off to use your own API key "
-            "and run on your own data."
+            f"Demo Mode — showing pre-computed results for the {_label} dataset. "
+            "Toggle off to use your own API key."
         )
+        if st.session_state.get("_demo_data_missing"):
+            st.warning(
+                "Demo data not found. Run `python generate_all_demos.py` locally "
+                "and push the demo_result_*.json files to GitHub."
+            )
 
     goal_col, btn_col = st.columns([5, 1])
     with goal_col:
