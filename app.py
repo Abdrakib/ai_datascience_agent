@@ -1992,7 +1992,9 @@ with st.sidebar:
                 st.warning("datasets/titanic_demo_synth.csv or datasets/titanic.csv not found.")
         if st.button("Healthcare", use_container_width=True):
             st.session_state["demo_dataset"] = "healthcare"
-            p = Path("datasets/sample_healthcare_classification.csv")
+            p = Path("datasets/healthcare_demo_synth.csv")
+            if not p.exists():
+                p = Path("datasets/sample_healthcare_classification.csv")
             if p.exists():
                 st.session_state.df = pd.read_csv(p)
                 st.session_state.filename = p.name

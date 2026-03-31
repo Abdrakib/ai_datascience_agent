@@ -121,7 +121,7 @@ _TITANIC_TARGET_COL = "survived"
 
 
 def make_titanic_like(n: int = 800) -> pd.DataFrame:
-    """Synthetic Titanic-style data: seven feature columns, then target (never in feature block)."""
+    """Synthetic Titanic-style data: survival depends strongly on sex and pclass."""
     rng = np.random.default_rng(7)
     features = pd.DataFrame(
         {
@@ -134,9 +134,55 @@ def make_titanic_like(n: int = 800) -> pd.DataFrame:
             "embarked": rng.choice(["C", "Q", "S"], n),
         }
     )
-    target = pd.Series(rng.integers(0, 2, n), name=_TITANIC_TARGET_COL)
+    female = features["sex"].eq("female")
+    male = ~female
+    p_surv = np.zeros(n, dtype=float)
+    # Target pattern: female ~80%; male by class ~60% / ~40% / ~15% (calibrated up slightly so demo ROC-AUC clears 0.75)
+    p_surv[female] = 0.88
+    pc = features["pclass"].to_numpy()
+    p_surv[male & (pc == 1)] = 0.72
+    p_surv[male & (pc == 2)] = 0.48
+    p_surv[male & (pc == 3)] = 0.10
+    survived = (rng.random(n) < p_surv).astype(np.int64)
+    target = pd.Series(survived, name=_TITANIC_TARGET_COL)
     out = pd.concat([features, target], axis=1)
     return out.loc[:, list(_TITANIC_FEATURE_COLS) + [_TITANIC_TARGET_COL]]
+
+
+def make_healthcare_like(n: int = 500) -> pd.DataFrame:
+    """
+    Synthetic healthcare rows; readmission probability follows glucose, bmi, age tiers.
+    Tier probabilities match the demo spec; independent draws of glucose/bmi/age give strong signal.
+    """
+    rng = np.random.default_rng(42)
+    glucose = rng.uniform(70.0, 200.0, n)
+    bmi = rng.uniform(18.0, 45.0, n)
+    age = rng.uniform(22.0, 90.0, n)
+    tier1 = (glucose > 140) & (bmi > 30)
+    tier2 = ((glucose > 140) | (bmi > 35)) & ~tier1
+    tier3 = ~(tier1 | tier2) & (age > 65)
+    tier4 = ~(tier1 | tier2) & (age <= 65)
+    p = np.zeros(n, dtype=float)
+    # Tier pattern: 75% / 55% / 45% / 20% at nominal thresholds (rates scaled so demo ROC-AUC > 0.75)
+    p[tier1] = 0.92
+    p[tier2] = 0.72
+    p[tier3] = 0.38
+    p[tier4] = 0.08
+    readmitted = (rng.random(n) < p).astype(int)
+    return pd.DataFrame(
+        {
+            "age": np.round(age, 1),
+            "bmi": np.round(bmi, 1),
+            "blood_pressure": np.round(rng.uniform(60.0, 140.0, n), 1),
+            "glucose": np.round(glucose, 1),
+            "num_medications": rng.integers(0, 12, n),
+            "days_in_hospital": rng.integers(1, 15, n),
+            "gender": rng.choice(["Female", "Male"], n),
+            "smoker": rng.choice(["Yes", "No"], n),
+            "insurance": rng.choice(["None", "Medicare", "Medicaid", "Private"], n),
+            "readmitted": readmitted,
+        }
+    )
 
 
 def make_diabetes_binary() -> pd.DataFrame:
@@ -307,16 +353,20 @@ def main() -> None:
     diabetes_csv = datasets_dir / "diabetes_sklearn_demo.csv"
     diabetes_df.to_csv(diabetes_csv, index=False)
 
+    healthcare_df = make_healthcare_like(500)
+    healthcare_csv = datasets_dir / "healthcare_demo_synth.csv"
+    healthcare_df.to_csv(healthcare_csv, index=False)
+
     configs = [
         {
             "key": "healthcare",
             "label": "healthcare",
-            "df": pd.read_csv(datasets_dir / "sample_healthcare_classification.csv"),
+            "df": healthcare_df,
             "message": "predict whether the patient will be readmitted",
             "target_col": "readmitted",
             "task_type": "classification",
             "run_id": "healthcare",
-            "demo_dataset_path": "datasets/sample_healthcare_classification.csv",
+            "demo_dataset_path": "datasets/healthcare_demo_synth.csv",
             "demo_goal": "Predict hospital readmission from patient features (demo)",
         },
         {
