@@ -216,7 +216,7 @@
         "accuracy": 0.45,
         "f1": 0.4489157983666573,
         "roc_auc": 0.4511784511784511,
-        "train_time_s": 0.006,
+        "train_time_s": 0.009,
         "train_score": 0.5815384615384616,
         "test_score": 0.4511784511784511,
         "generalization_gap": 0.13036001036001044,
@@ -247,7 +247,31 @@
           "CV Train Mean": 0.9664,
           "CV Overfit": "Yes",
           "Overfit": "Yes",
-          "Train Time(s)": 0.13
+          "Train Time(s)": 0.15
+        },
+        {
+          "Model": "XGBoost",
+          "Train Score": 0.9898,
+          "Test Score": 0.6274,
+          "Gap": 0.3624,
+          "CV Mean": 0.4944,
+          "CV Std": 0.0483,
+          "CV Train Mean": 0.9957,
+          "CV Overfit": "Yes",
+          "Overfit": "Yes",
+          "Train Time(s)": 0.11
+        },
+        {
+          "Model": "LightGBM",
+          "Train Score": 0.914,
+          "Test Score": 0.5623,
+          "Gap": 0.3517,
+          "CV Mean": 0.4804,
+          "CV Std": 0.0754,
+          "CV Train Mean": 0.9036,
+          "CV Overfit": "Yes",
+          "Overfit": "Yes",
+          "Train Time(s)": 3.39
         }
       ],
       "feature_importances": {
@@ -260,19 +284,27 @@
         "glucose": 0.024976833444477486
       },
       "training_log": [
-        "Training 2 models for classification task.",
+        "Training 4 models for classification task.",
         "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
         "  Training Logistic Regression...",
         "    Logistic Regression: acc=0.450, f1=0.449, auc=0.451  [0.01s]",
         "  Training Random Forest...",
-        "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.13s]",
+        "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.15s]",
+        "  Training XGBoost...",
+        "    XGBoost: acc=0.633, f1=0.616, auc=0.627  [0.11s]",
+        "  Training LightGBM...",
+        "    LightGBM: acc=0.567, f1=0.552, auc=0.562  [3.39s]",
         "\nBest model: Logistic Regression (roc_auc=0.4512)",
-        "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+        "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290; XGBoost is overfitting \u2014 train ROC-AUC 0.9898 vs test ROC-AUC 0.6274, gap 0.3624; XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9957 vs CV test mean 0.4944; LightGBM is overfitting \u2014 train ROC-AUC 0.9140 vs test ROC-AUC 0.5623, gap 0.3517; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9036 vs CV test mean 0.4804",
         "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512"
       ],
       "overfitting_warnings": [
         "Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156",
-        "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290"
+        "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+        "XGBoost is overfitting \u2014 train ROC-AUC 0.9898 vs test ROC-AUC 0.6274, gap 0.3624",
+        "XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9957 vs CV test mean 0.4944",
+        "LightGBM is overfitting \u2014 train ROC-AUC 0.9140 vs test ROC-AUC 0.5623, gap 0.3517",
+        "LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9036 vs CV test mean 0.4804"
       ],
       "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512",
       "cv_folds_used": 5,
@@ -283,7 +315,7 @@
             "accuracy": 0.45,
             "f1": 0.4489157983666573,
             "roc_auc": 0.4511784511784511,
-            "train_time_s": 0.006,
+            "train_time_s": 0.009,
             "train_score": 0.5815384615384616,
             "test_score": 0.4511784511784511,
             "generalization_gap": 0.13036001036001044,
@@ -317,7 +349,7 @@
             "accuracy": 0.55,
             "f1": 0.532,
             "roc_auc": 0.5432098765432098,
-            "train_time_s": 0.13,
+            "train_time_s": 0.151,
             "train_score": 0.9588111888111888,
             "test_score": 0.5432098765432098,
             "generalization_gap": 0.4156013122679789,
@@ -344,6 +376,74 @@
           ],
           "cv_train_mean": 0.9664335664335665,
           "cv_overfit": true
+        },
+        {
+          "name": "XGBoost",
+          "metrics": {
+            "accuracy": 0.6333333333333333,
+            "f1": 0.6157894736842106,
+            "roc_auc": 0.6273849607182941,
+            "train_time_s": 0.107,
+            "train_score": 0.989825174825175,
+            "test_score": 0.6273849607182941,
+            "generalization_gap": 0.3624402141068809,
+            "overfit": true
+          },
+          "train_score": 0.989825174825175,
+          "generalization_gap": 0.3624402141068809,
+          "overfit": true,
+          "cv_scores": [
+            0.5034965034965035,
+            0.4615384615384615,
+            0.5402097902097902,
+            0.5472027972027972,
+            0.4195804195804196
+          ],
+          "cv_mean": 0.4944055944055944,
+          "cv_std": 0.048264415080058694,
+          "cv_train_scores": [
+            0.9943181818181819,
+            0.9967220279720279,
+            0.9944274475524475,
+            0.9992351398601399,
+            0.9936625874125873
+          ],
+          "cv_train_mean": 0.995673076923077,
+          "cv_overfit": true
+        },
+        {
+          "name": "LightGBM",
+          "metrics": {
+            "accuracy": 0.5666666666666667,
+            "f1": 0.5524089306698002,
+            "roc_auc": 0.5622895622895623,
+            "train_time_s": 3.392,
+            "train_score": 0.913951048951049,
+            "test_score": 0.5622895622895623,
+            "generalization_gap": 0.35166148666148667,
+            "overfit": true
+          },
+          "train_score": 0.913951048951049,
+          "generalization_gap": 0.35166148666148667,
+          "overfit": true,
+          "cv_scores": [
+            0.46153846153846156,
+            0.4178321678321678,
+            0.4772727272727273,
+            0.6241258741258742,
+            0.42132867132867136
+          ],
+          "cv_mean": 0.48041958041958044,
+          "cv_std": 0.07540135003739318,
+          "cv_train_scores": [
+            0.9170673076923077,
+            0.911986451048951,
+            0.9075065559440559,
+            0.8940668706293706,
+            0.887347027972028
+          ],
+          "cv_train_mean": 0.9035948426573427,
+          "cv_overfit": true
         }
       ]
     },
@@ -358,18 +458,29 @@
       "plot_paths": {
         "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
         "roc_curve": "outputs/demo_showcase_roc_curve.png",
-        "feature_importance": "outputs/demo_showcase_feature_importance.png"
+        "feature_importance": "outputs/demo_showcase_feature_importance.png",
+        "shap_bar": "outputs/demo_showcase_shap_bar.png",
+        "shap_summary": "outputs/demo_showcase_shap_summary.png",
+        "shap_dependence_age": "outputs/demo_showcase_shap_dependence_age.png",
+        "shap_dependence_smoker_Yes": "outputs/demo_showcase_shap_dependence_smoker_Yes.png",
+        "shap_dependence_smoker_No": "outputs/demo_showcase_shap_dependence_smoker_No.png",
+        "shap_waterfall": "outputs/demo_showcase_shap_waterfall.png"
       },
       "eval_log": [
         "Computed evaluation metrics.",
         "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_confusion_matrix.png",
         "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_roc_curve.png",
         "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_feature_importance.png",
-        "SHAP not installed \u2014 skipping (pip install shap)."
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_bar.png (shap_bar)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_summary.png (shap_summary)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_age.png (shap_dependence_age)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_smoker_Yes.png (shap_dependence_smoker_Yes)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_smoker_No.png (shap_dependence_smoker_No)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_waterfall.png (shap_waterfall)"
       ],
       "task_type": "classification",
-      "has_shap": false,
-      "shap_explanation_text": ""
+      "has_shap": true,
+      "shap_explanation_text": "This prediction is mainly influenced by age, bmi, and gender_Female."
     },
     "target_col": "survived",
     "task_type": "classification",
@@ -378,7 +489,7 @@
       "accuracy": 0.45,
       "f1": 0.4489157983666573,
       "roc_auc": 0.4511784511784511,
-      "train_time_s": 0.006,
+      "train_time_s": 0.009,
       "train_score": 0.5815384615384616,
       "test_score": 0.4511784511784511,
       "generalization_gap": 0.13036001036001044,
@@ -407,7 +518,31 @@
         "CV Train Mean": 0.9664,
         "CV Overfit": "Yes",
         "Overfit": "Yes",
-        "Train Time(s)": 0.13
+        "Train Time(s)": 0.15
+      },
+      {
+        "Model": "XGBoost",
+        "Train Score": 0.9898,
+        "Test Score": 0.6274,
+        "Gap": 0.3624,
+        "CV Mean": 0.4944,
+        "CV Std": 0.0483,
+        "CV Train Mean": 0.9957,
+        "CV Overfit": "Yes",
+        "Overfit": "Yes",
+        "Train Time(s)": 0.11
+      },
+      {
+        "Model": "LightGBM",
+        "Train Score": 0.914,
+        "Test Score": 0.5623,
+        "Gap": 0.3517,
+        "CV Mean": 0.4804,
+        "CV Std": 0.0754,
+        "CV Train Mean": 0.9036,
+        "CV Overfit": "Yes",
+        "Overfit": "Yes",
+        "Train Time(s)": 3.39
       }
     ],
     "feature_importances": {
@@ -422,7 +557,13 @@
     "plot_paths": {
       "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
       "roc_curve": "outputs/demo_showcase_roc_curve.png",
-      "feature_importance": "outputs/demo_showcase_feature_importance.png"
+      "feature_importance": "outputs/demo_showcase_feature_importance.png",
+      "shap_bar": "outputs/demo_showcase_shap_bar.png",
+      "shap_summary": "outputs/demo_showcase_shap_summary.png",
+      "shap_dependence_age": "outputs/demo_showcase_shap_dependence_age.png",
+      "shap_dependence_smoker_Yes": "outputs/demo_showcase_shap_dependence_smoker_Yes.png",
+      "shap_dependence_smoker_No": "outputs/demo_showcase_shap_dependence_smoker_No.png",
+      "shap_waterfall": "outputs/demo_showcase_shap_waterfall.png"
     },
     "metrics": {
       "accuracy": 0.45,
@@ -433,7 +574,7 @@
     },
     "tune": {
       "success": false,
-      "error": "optuna not installed \u2014 run: pip install optuna"
+      "error": "All Optuna trials failed during training or scoring."
     },
     "plan": {
       "recommended_models": [
@@ -786,7 +927,7 @@
             "accuracy": 0.45,
             "f1": 0.4489157983666573,
             "roc_auc": 0.4511784511784511,
-            "train_time_s": 0.006,
+            "train_time_s": 0.009,
             "train_score": 0.5815384615384616,
             "test_score": 0.4511784511784511,
             "generalization_gap": 0.13036001036001044,
@@ -817,7 +958,31 @@
               "CV Train Mean": 0.9664,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 0.13
+              "Train Time(s)": 0.15
+            },
+            {
+              "Model": "XGBoost",
+              "Train Score": 0.9898,
+              "Test Score": 0.6274,
+              "Gap": 0.3624,
+              "CV Mean": 0.4944,
+              "CV Std": 0.0483,
+              "CV Train Mean": 0.9957,
+              "CV Overfit": "Yes",
+              "Overfit": "Yes",
+              "Train Time(s)": 0.11
+            },
+            {
+              "Model": "LightGBM",
+              "Train Score": 0.914,
+              "Test Score": 0.5623,
+              "Gap": 0.3517,
+              "CV Mean": 0.4804,
+              "CV Std": 0.0754,
+              "CV Train Mean": 0.9036,
+              "CV Overfit": "Yes",
+              "Overfit": "Yes",
+              "Train Time(s)": 3.39
             }
           ],
           "feature_importances": {
@@ -830,19 +995,27 @@
             "glucose": 0.024976833444477486
           },
           "training_log": [
-            "Training 2 models for classification task.",
+            "Training 4 models for classification task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.450, f1=0.449, auc=0.451  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.13s]",
+            "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.15s]",
+            "  Training XGBoost...",
+            "    XGBoost: acc=0.633, f1=0.616, auc=0.627  [0.11s]",
+            "  Training LightGBM...",
+            "    LightGBM: acc=0.567, f1=0.552, auc=0.562  [3.39s]",
             "\nBest model: Logistic Regression (roc_auc=0.4512)",
-            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290; XGBoost is overfitting \u2014 train ROC-AUC 0.9898 vs test ROC-AUC 0.6274, gap 0.3624; XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9957 vs CV test mean 0.4944; LightGBM is overfitting \u2014 train ROC-AUC 0.9140 vs test ROC-AUC 0.5623, gap 0.3517; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9036 vs CV test mean 0.4804",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512"
           ],
           "overfitting_warnings": [
             "Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156",
-            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290"
+            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+            "XGBoost is overfitting \u2014 train ROC-AUC 0.9898 vs test ROC-AUC 0.6274, gap 0.3624",
+            "XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9957 vs CV test mean 0.4944",
+            "LightGBM is overfitting \u2014 train ROC-AUC 0.9140 vs test ROC-AUC 0.5623, gap 0.3517",
+            "LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9036 vs CV test mean 0.4804"
           ],
           "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512",
           "cv_folds_used": 5,
@@ -853,7 +1026,7 @@
                 "accuracy": 0.45,
                 "f1": 0.4489157983666573,
                 "roc_auc": 0.4511784511784511,
-                "train_time_s": 0.006,
+                "train_time_s": 0.009,
                 "train_score": 0.5815384615384616,
                 "test_score": 0.4511784511784511,
                 "generalization_gap": 0.13036001036001044,
@@ -887,7 +1060,7 @@
                 "accuracy": 0.55,
                 "f1": 0.532,
                 "roc_auc": 0.5432098765432098,
-                "train_time_s": 0.13,
+                "train_time_s": 0.151,
                 "train_score": 0.9588111888111888,
                 "test_score": 0.5432098765432098,
                 "generalization_gap": 0.4156013122679789,
@@ -914,6 +1087,74 @@
               "train_score": 0.9588111888111888,
               "generalization_gap": 0.4156013122679789,
               "overfit": true
+            },
+            {
+              "name": "XGBoost",
+              "metrics": {
+                "accuracy": 0.6333333333333333,
+                "f1": 0.6157894736842106,
+                "roc_auc": 0.6273849607182941,
+                "train_time_s": 0.107,
+                "train_score": 0.989825174825175,
+                "test_score": 0.6273849607182941,
+                "generalization_gap": 0.3624402141068809,
+                "overfit": true
+              },
+              "cv_scores": [
+                0.5034965034965035,
+                0.4615384615384615,
+                0.5402097902097902,
+                0.5472027972027972,
+                0.4195804195804196
+              ],
+              "cv_mean": 0.4944055944055944,
+              "cv_std": 0.048264415080058694,
+              "cv_train_scores": [
+                0.9943181818181819,
+                0.9967220279720279,
+                0.9944274475524475,
+                0.9992351398601399,
+                0.9936625874125873
+              ],
+              "cv_train_mean": 0.995673076923077,
+              "cv_overfit": true,
+              "train_score": 0.989825174825175,
+              "generalization_gap": 0.3624402141068809,
+              "overfit": true
+            },
+            {
+              "name": "LightGBM",
+              "metrics": {
+                "accuracy": 0.5666666666666667,
+                "f1": 0.5524089306698002,
+                "roc_auc": 0.5622895622895623,
+                "train_time_s": 3.392,
+                "train_score": 0.913951048951049,
+                "test_score": 0.5622895622895623,
+                "generalization_gap": 0.35166148666148667,
+                "overfit": true
+              },
+              "cv_scores": [
+                0.46153846153846156,
+                0.4178321678321678,
+                0.4772727272727273,
+                0.6241258741258742,
+                0.42132867132867136
+              ],
+              "cv_mean": 0.48041958041958044,
+              "cv_std": 0.07540135003739318,
+              "cv_train_scores": [
+                0.9170673076923077,
+                0.911986451048951,
+                0.9075065559440559,
+                0.8940668706293706,
+                0.887347027972028
+              ],
+              "cv_train_mean": 0.9035948426573427,
+              "cv_overfit": true,
+              "train_score": 0.913951048951049,
+              "generalization_gap": 0.35166148666148667,
+              "overfit": true
             }
           ]
         }
@@ -928,7 +1169,7 @@
       "data": {
         "tune": {
           "success": false,
-          "error": "optuna not installed \u2014 run: pip install optuna",
+          "error": "All Optuna trials failed during training or scoring.",
           "model_name": "Logistic Regression"
         }
       },
@@ -951,18 +1192,29 @@
           "plot_paths": {
             "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
             "roc_curve": "outputs/demo_showcase_roc_curve.png",
-            "feature_importance": "outputs/demo_showcase_feature_importance.png"
+            "feature_importance": "outputs/demo_showcase_feature_importance.png",
+            "shap_bar": "outputs/demo_showcase_shap_bar.png",
+            "shap_summary": "outputs/demo_showcase_shap_summary.png",
+            "shap_dependence_age": "outputs/demo_showcase_shap_dependence_age.png",
+            "shap_dependence_smoker_Yes": "outputs/demo_showcase_shap_dependence_smoker_Yes.png",
+            "shap_dependence_smoker_No": "outputs/demo_showcase_shap_dependence_smoker_No.png",
+            "shap_waterfall": "outputs/demo_showcase_shap_waterfall.png"
           },
           "eval_log": [
             "Computed evaluation metrics.",
             "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_confusion_matrix.png",
             "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_roc_curve.png",
             "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_feature_importance.png",
-            "SHAP not installed \u2014 skipping (pip install shap)."
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_bar.png (shap_bar)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_summary.png (shap_summary)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_age.png (shap_dependence_age)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_smoker_Yes.png (shap_dependence_smoker_Yes)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_smoker_No.png (shap_dependence_smoker_No)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_waterfall.png (shap_waterfall)"
           ],
           "task_type": "classification",
-          "has_shap": false,
-          "shap_explanation_text": ""
+          "has_shap": true,
+          "shap_explanation_text": "This prediction is mainly influenced by age, bmi, and gender_Female."
         }
       },
       "error": null
@@ -1186,7 +1438,7 @@
             "accuracy": 0.45,
             "f1": 0.4489157983666573,
             "roc_auc": 0.4511784511784511,
-            "train_time_s": 0.006,
+            "train_time_s": 0.009,
             "train_score": 0.5815384615384616,
             "test_score": 0.4511784511784511,
             "generalization_gap": 0.13036001036001044,
@@ -1217,7 +1469,31 @@
               "CV Train Mean": 0.9664,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 0.13
+              "Train Time(s)": 0.15
+            },
+            {
+              "Model": "XGBoost",
+              "Train Score": 0.9898,
+              "Test Score": 0.6274,
+              "Gap": 0.3624,
+              "CV Mean": 0.4944,
+              "CV Std": 0.0483,
+              "CV Train Mean": 0.9957,
+              "CV Overfit": "Yes",
+              "Overfit": "Yes",
+              "Train Time(s)": 0.11
+            },
+            {
+              "Model": "LightGBM",
+              "Train Score": 0.914,
+              "Test Score": 0.5623,
+              "Gap": 0.3517,
+              "CV Mean": 0.4804,
+              "CV Std": 0.0754,
+              "CV Train Mean": 0.9036,
+              "CV Overfit": "Yes",
+              "Overfit": "Yes",
+              "Train Time(s)": 3.39
             }
           ],
           "feature_importances": {
@@ -1230,19 +1506,27 @@
             "glucose": 0.024976833444477486
           },
           "training_log": [
-            "Training 2 models for classification task.",
+            "Training 4 models for classification task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.450, f1=0.449, auc=0.451  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.13s]",
+            "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.15s]",
+            "  Training XGBoost...",
+            "    XGBoost: acc=0.633, f1=0.616, auc=0.627  [0.11s]",
+            "  Training LightGBM...",
+            "    LightGBM: acc=0.567, f1=0.552, auc=0.562  [3.39s]",
             "\nBest model: Logistic Regression (roc_auc=0.4512)",
-            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290; XGBoost is overfitting \u2014 train ROC-AUC 0.9898 vs test ROC-AUC 0.6274, gap 0.3624; XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9957 vs CV test mean 0.4944; LightGBM is overfitting \u2014 train ROC-AUC 0.9140 vs test ROC-AUC 0.5623, gap 0.3517; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9036 vs CV test mean 0.4804",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512"
           ],
           "overfitting_warnings": [
             "Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156",
-            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290"
+            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+            "XGBoost is overfitting \u2014 train ROC-AUC 0.9898 vs test ROC-AUC 0.6274, gap 0.3624",
+            "XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9957 vs CV test mean 0.4944",
+            "LightGBM is overfitting \u2014 train ROC-AUC 0.9140 vs test ROC-AUC 0.5623, gap 0.3517",
+            "LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9036 vs CV test mean 0.4804"
           ],
           "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512",
           "cv_folds_used": 5,
@@ -1253,7 +1537,7 @@
                 "accuracy": 0.45,
                 "f1": 0.4489157983666573,
                 "roc_auc": 0.4511784511784511,
-                "train_time_s": 0.006,
+                "train_time_s": 0.009,
                 "train_score": 0.5815384615384616,
                 "test_score": 0.4511784511784511,
                 "generalization_gap": 0.13036001036001044,
@@ -1287,7 +1571,7 @@
                 "accuracy": 0.55,
                 "f1": 0.532,
                 "roc_auc": 0.5432098765432098,
-                "train_time_s": 0.13,
+                "train_time_s": 0.151,
                 "train_score": 0.9588111888111888,
                 "test_score": 0.5432098765432098,
                 "generalization_gap": 0.4156013122679789,
@@ -1314,6 +1598,74 @@
               ],
               "cv_train_mean": 0.9664335664335665,
               "cv_overfit": true
+            },
+            {
+              "name": "XGBoost",
+              "metrics": {
+                "accuracy": 0.6333333333333333,
+                "f1": 0.6157894736842106,
+                "roc_auc": 0.6273849607182941,
+                "train_time_s": 0.107,
+                "train_score": 0.989825174825175,
+                "test_score": 0.6273849607182941,
+                "generalization_gap": 0.3624402141068809,
+                "overfit": true
+              },
+              "train_score": 0.989825174825175,
+              "generalization_gap": 0.3624402141068809,
+              "overfit": true,
+              "cv_scores": [
+                0.5034965034965035,
+                0.4615384615384615,
+                0.5402097902097902,
+                0.5472027972027972,
+                0.4195804195804196
+              ],
+              "cv_mean": 0.4944055944055944,
+              "cv_std": 0.048264415080058694,
+              "cv_train_scores": [
+                0.9943181818181819,
+                0.9967220279720279,
+                0.9944274475524475,
+                0.9992351398601399,
+                0.9936625874125873
+              ],
+              "cv_train_mean": 0.995673076923077,
+              "cv_overfit": true
+            },
+            {
+              "name": "LightGBM",
+              "metrics": {
+                "accuracy": 0.5666666666666667,
+                "f1": 0.5524089306698002,
+                "roc_auc": 0.5622895622895623,
+                "train_time_s": 3.392,
+                "train_score": 0.913951048951049,
+                "test_score": 0.5622895622895623,
+                "generalization_gap": 0.35166148666148667,
+                "overfit": true
+              },
+              "train_score": 0.913951048951049,
+              "generalization_gap": 0.35166148666148667,
+              "overfit": true,
+              "cv_scores": [
+                0.46153846153846156,
+                0.4178321678321678,
+                0.4772727272727273,
+                0.6241258741258742,
+                0.42132867132867136
+              ],
+              "cv_mean": 0.48041958041958044,
+              "cv_std": 0.07540135003739318,
+              "cv_train_scores": [
+                0.9170673076923077,
+                0.911986451048951,
+                0.9075065559440559,
+                0.8940668706293706,
+                0.887347027972028
+              ],
+              "cv_train_mean": 0.9035948426573427,
+              "cv_overfit": true
             }
           ]
         },
@@ -1328,18 +1680,29 @@
           "plot_paths": {
             "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
             "roc_curve": "outputs/demo_showcase_roc_curve.png",
-            "feature_importance": "outputs/demo_showcase_feature_importance.png"
+            "feature_importance": "outputs/demo_showcase_feature_importance.png",
+            "shap_bar": "outputs/demo_showcase_shap_bar.png",
+            "shap_summary": "outputs/demo_showcase_shap_summary.png",
+            "shap_dependence_age": "outputs/demo_showcase_shap_dependence_age.png",
+            "shap_dependence_smoker_Yes": "outputs/demo_showcase_shap_dependence_smoker_Yes.png",
+            "shap_dependence_smoker_No": "outputs/demo_showcase_shap_dependence_smoker_No.png",
+            "shap_waterfall": "outputs/demo_showcase_shap_waterfall.png"
           },
           "eval_log": [
             "Computed evaluation metrics.",
             "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_confusion_matrix.png",
             "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_roc_curve.png",
             "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_feature_importance.png",
-            "SHAP not installed \u2014 skipping (pip install shap)."
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_bar.png (shap_bar)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_summary.png (shap_summary)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_age.png (shap_dependence_age)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_smoker_Yes.png (shap_dependence_smoker_Yes)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_dependence_smoker_No.png (shap_dependence_smoker_No)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_shap_waterfall.png (shap_waterfall)"
           ],
           "task_type": "classification",
-          "has_shap": false,
-          "shap_explanation_text": ""
+          "has_shap": true,
+          "shap_explanation_text": "This prediction is mainly influenced by age, bmi, and gender_Female."
         },
         "target_col": "survived",
         "task_type": "classification",
@@ -1348,7 +1711,7 @@
           "accuracy": 0.45,
           "f1": 0.4489157983666573,
           "roc_auc": 0.4511784511784511,
-          "train_time_s": 0.006,
+          "train_time_s": 0.009,
           "train_score": 0.5815384615384616,
           "test_score": 0.4511784511784511,
           "generalization_gap": 0.13036001036001044,
@@ -1377,7 +1740,31 @@
             "CV Train Mean": 0.9664,
             "CV Overfit": "Yes",
             "Overfit": "Yes",
-            "Train Time(s)": 0.13
+            "Train Time(s)": 0.15
+          },
+          {
+            "Model": "XGBoost",
+            "Train Score": 0.9898,
+            "Test Score": 0.6274,
+            "Gap": 0.3624,
+            "CV Mean": 0.4944,
+            "CV Std": 0.0483,
+            "CV Train Mean": 0.9957,
+            "CV Overfit": "Yes",
+            "Overfit": "Yes",
+            "Train Time(s)": 0.11
+          },
+          {
+            "Model": "LightGBM",
+            "Train Score": 0.914,
+            "Test Score": 0.5623,
+            "Gap": 0.3517,
+            "CV Mean": 0.4804,
+            "CV Std": 0.0754,
+            "CV Train Mean": 0.9036,
+            "CV Overfit": "Yes",
+            "Overfit": "Yes",
+            "Train Time(s)": 3.39
           }
         ],
         "feature_importances": {
@@ -1392,7 +1779,13 @@
         "plot_paths": {
           "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
           "roc_curve": "outputs/demo_showcase_roc_curve.png",
-          "feature_importance": "outputs/demo_showcase_feature_importance.png"
+          "feature_importance": "outputs/demo_showcase_feature_importance.png",
+          "shap_bar": "outputs/demo_showcase_shap_bar.png",
+          "shap_summary": "outputs/demo_showcase_shap_summary.png",
+          "shap_dependence_age": "outputs/demo_showcase_shap_dependence_age.png",
+          "shap_dependence_smoker_Yes": "outputs/demo_showcase_shap_dependence_smoker_Yes.png",
+          "shap_dependence_smoker_No": "outputs/demo_showcase_shap_dependence_smoker_No.png",
+          "shap_waterfall": "outputs/demo_showcase_shap_waterfall.png"
         },
         "metrics": {
           "accuracy": 0.45,
@@ -1403,7 +1796,7 @@
         },
         "tune": {
           "success": false,
-          "error": "optuna not installed \u2014 run: pip install optuna"
+          "error": "All Optuna trials failed during training or scoring."
         },
         "plan": {
           "recommended_models": [
