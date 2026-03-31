@@ -318,7 +318,7 @@
         "accuracy": 0.59,
         "f1": 0.5865062656641604,
         "roc_auc": 0.6229707792207793,
-        "train_time_s": 0.007,
+        "train_time_s": 0.016,
         "train_score": 0.7091282207190088,
         "test_score": 0.6229707792207793,
         "generalization_gap": 0.08615744149822957,
@@ -337,7 +337,7 @@
           "CV Train Mean": 0.7151,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.01
+          "Train Time(s)": 0.02
         },
         {
           "Model": "Random Forest",
@@ -350,30 +350,6 @@
           "CV Overfit": "Yes",
           "Overfit": "Yes",
           "Train Time(s)": 0.18
-        },
-        {
-          "Model": "XGBoost",
-          "Train Score": 0.9935,
-          "Test Score": 0.6534,
-          "Gap": 0.3401,
-          "CV Mean": 0.6209,
-          "CV Std": 0.0522,
-          "CV Train Mean": 0.9986,
-          "CV Overfit": "Yes",
-          "Overfit": "Yes",
-          "Train Time(s)": 0.09
-        },
-        {
-          "Model": "LightGBM",
-          "Train Score": 0.9903,
-          "Test Score": 0.6603,
-          "Gap": 0.33,
-          "CV Mean": 0.6232,
-          "CV Std": 0.0575,
-          "CV Train Mean": 0.9886,
-          "CV Overfit": "Yes",
-          "Overfit": "Yes",
-          "Train Time(s)": 2.04
         }
       ],
       "feature_importances": {
@@ -392,27 +368,19 @@
         "insurance_Medicaid": 0.013232160772548313
       },
       "training_log": [
-        "Training 4 models for classification task.",
+        "Training 2 models for classification task.",
         "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
         "  Training Logistic Regression...",
-        "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.01s]",
+        "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.02s]",
         "  Training Random Forest...",
         "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.18s]",
-        "  Training XGBoost...",
-        "    XGBoost: acc=0.610, f1=0.611, auc=0.653  [0.09s]",
-        "  Training LightGBM...",
-        "    LightGBM: acc=0.670, f1=0.671, auc=0.660  [2.04s]",
         "\nBest model: Logistic Regression (roc_auc=0.6230)",
-        "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214; XGBoost is overfitting \u2014 train ROC-AUC 0.9935 vs test ROC-AUC 0.6534, gap 0.3401; XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9986 vs CV test mean 0.6209; LightGBM is overfitting \u2014 train ROC-AUC 0.9903 vs test ROC-AUC 0.6603, gap 0.3300; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9886 vs CV test mean 0.6232",
+        "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
         "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230"
       ],
       "overfitting_warnings": [
         "Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899",
-        "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
-        "XGBoost is overfitting \u2014 train ROC-AUC 0.9935 vs test ROC-AUC 0.6534, gap 0.3401",
-        "XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9986 vs CV test mean 0.6209",
-        "LightGBM is overfitting \u2014 train ROC-AUC 0.9903 vs test ROC-AUC 0.6603, gap 0.3300",
-        "LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9886 vs CV test mean 0.6232"
+        "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214"
       ],
       "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230",
       "cv_folds_used": 5,
@@ -423,7 +391,7 @@
             "accuracy": 0.59,
             "f1": 0.5865062656641604,
             "roc_auc": 0.6229707792207793,
-            "train_time_s": 0.007,
+            "train_time_s": 0.016,
             "train_score": 0.7091282207190088,
             "test_score": 0.6229707792207793,
             "generalization_gap": 0.08615744149822957,
@@ -457,7 +425,7 @@
             "accuracy": 0.59,
             "f1": 0.5904565239396701,
             "roc_auc": 0.6501623376623377,
-            "train_time_s": 0.183,
+            "train_time_s": 0.179,
             "train_score": 0.9400572572268248,
             "test_score": 0.6501623376623377,
             "generalization_gap": 0.2898949195644871,
@@ -483,74 +451,6 @@
             0.9648559768612068
           ],
           "cv_train_mean": 0.9591784170172838,
-          "cv_overfit": true
-        },
-        {
-          "name": "XGBoost",
-          "metrics": {
-            "accuracy": 0.61,
-            "f1": 0.6110615989515072,
-            "roc_auc": 0.6534090909090909,
-            "train_time_s": 0.093,
-            "train_score": 0.9934635555217755,
-            "test_score": 0.6534090909090909,
-            "generalization_gap": 0.3400544646126845,
-            "overfit": true
-          },
-          "train_score": 0.9934635555217755,
-          "generalization_gap": 0.3400544646126845,
-          "overfit": true,
-          "cv_scores": [
-            0.6946031746031746,
-            0.5479365079365079,
-            0.634920634920635,
-            0.5776515151515151,
-            0.6496212121212122
-          ],
-          "cv_mean": 0.6209466089466089,
-          "cv_std": 0.052245068532244844,
-          "cv_train_scores": [
-            0.9971910112359551,
-            0.9996834942237697,
-            0.9982196550087039,
-            0.9996830302309917,
-            0.9980189389436983
-          ],
-          "cv_train_mean": 0.9985592259286238,
-          "cv_overfit": true
-        },
-        {
-          "name": "LightGBM",
-          "metrics": {
-            "accuracy": 0.67,
-            "f1": 0.6708982760358907,
-            "roc_auc": 0.6603084415584416,
-            "train_time_s": 2.043,
-            "train_score": 0.9903473436193662,
-            "test_score": 0.6603084415584416,
-            "generalization_gap": 0.33003890206092457,
-            "overfit": true
-          },
-          "train_score": 0.9903473436193662,
-          "generalization_gap": 0.33003890206092457,
-          "overfit": true,
-          "cv_scores": [
-            0.6577777777777778,
-            0.5479365079365078,
-            0.6679365079365079,
-            0.5593434343434344,
-            0.6830808080808082
-          ],
-          "cv_mean": 0.6232150072150071,
-          "cv_std": 0.057489028733791143,
-          "cv_train_scores": [
-            0.9875375850609274,
-            0.9894761829403387,
-            0.9858363665136889,
-            0.9913625737945243,
-            0.9887871944213321
-          ],
-          "cv_train_mean": 0.9885999805461623,
           "cv_overfit": true
         }
       ]
@@ -667,29 +567,18 @@
       "plot_paths": {
         "confusion_matrix": "outputs/healthcare_confusion_matrix.png",
         "roc_curve": "outputs/healthcare_roc_curve.png",
-        "feature_importance": "outputs/healthcare_feature_importance.png",
-        "shap_bar": "outputs/healthcare_shap_bar.png",
-        "shap_summary": "outputs/healthcare_shap_summary.png",
-        "shap_dependence_age": "outputs/healthcare_shap_dependence_age.png",
-        "shap_dependence_days_in_hospital": "outputs/healthcare_shap_dependence_days_in_hospital.png",
-        "shap_dependence_num_medications": "outputs/healthcare_shap_dependence_num_medications.png",
-        "shap_waterfall": "outputs/healthcare_shap_waterfall.png"
+        "feature_importance": "outputs/healthcare_feature_importance.png"
       },
       "eval_log": [
         "Computed evaluation metrics.",
         "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_confusion_matrix.png",
         "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_roc_curve.png",
         "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_feature_importance.png",
-        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_bar.png (shap_bar)",
-        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_summary.png (shap_summary)",
-        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_age.png (shap_dependence_age)",
-        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_days_in_hospital.png (shap_dependence_days_in_hospital)",
-        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_num_medications.png (shap_dependence_num_medications)",
-        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_waterfall.png (shap_waterfall)"
+        "SHAP not installed \u2014 skipping (pip install shap)."
       ],
       "task_type": "classification",
-      "has_shap": true,
-      "shap_explanation_text": "This prediction is mainly influenced by age, num_medications, and days_in_hospital."
+      "has_shap": false,
+      "shap_explanation_text": ""
     },
     "target_col": "readmitted",
     "task_type": "classification",
@@ -698,7 +587,7 @@
       "accuracy": 0.59,
       "f1": 0.5865062656641604,
       "roc_auc": 0.6229707792207793,
-      "train_time_s": 0.007,
+      "train_time_s": 0.016,
       "train_score": 0.7091282207190088,
       "test_score": 0.6229707792207793,
       "generalization_gap": 0.08615744149822957,
@@ -715,7 +604,7 @@
         "CV Train Mean": 0.7151,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.01
+        "Train Time(s)": 0.02
       },
       {
         "Model": "Random Forest",
@@ -728,30 +617,6 @@
         "CV Overfit": "Yes",
         "Overfit": "Yes",
         "Train Time(s)": 0.18
-      },
-      {
-        "Model": "XGBoost",
-        "Train Score": 0.9935,
-        "Test Score": 0.6534,
-        "Gap": 0.3401,
-        "CV Mean": 0.6209,
-        "CV Std": 0.0522,
-        "CV Train Mean": 0.9986,
-        "CV Overfit": "Yes",
-        "Overfit": "Yes",
-        "Train Time(s)": 0.09
-      },
-      {
-        "Model": "LightGBM",
-        "Train Score": 0.9903,
-        "Test Score": 0.6603,
-        "Gap": 0.33,
-        "CV Mean": 0.6232,
-        "CV Std": 0.0575,
-        "CV Train Mean": 0.9886,
-        "CV Overfit": "Yes",
-        "Overfit": "Yes",
-        "Train Time(s)": 2.04
       }
     ],
     "feature_importances": {
@@ -772,13 +637,7 @@
     "plot_paths": {
       "confusion_matrix": "outputs/healthcare_confusion_matrix.png",
       "roc_curve": "outputs/healthcare_roc_curve.png",
-      "feature_importance": "outputs/healthcare_feature_importance.png",
-      "shap_bar": "outputs/healthcare_shap_bar.png",
-      "shap_summary": "outputs/healthcare_shap_summary.png",
-      "shap_dependence_age": "outputs/healthcare_shap_dependence_age.png",
-      "shap_dependence_days_in_hospital": "outputs/healthcare_shap_dependence_days_in_hospital.png",
-      "shap_dependence_num_medications": "outputs/healthcare_shap_dependence_num_medications.png",
-      "shap_waterfall": "outputs/healthcare_shap_waterfall.png"
+      "feature_importance": "outputs/healthcare_feature_importance.png"
     },
     "metrics": {
       "accuracy": 0.59,
@@ -890,7 +749,7 @@
     },
     "tune": {
       "success": false,
-      "error": "All Optuna trials failed during training or scoring."
+      "error": "optuna not installed \u2014 run: pip install optuna"
     },
     "plan": {
       "recommended_models": [
@@ -1345,7 +1204,7 @@
             "accuracy": 0.59,
             "f1": 0.5865062656641604,
             "roc_auc": 0.6229707792207793,
-            "train_time_s": 0.007,
+            "train_time_s": 0.016,
             "train_score": 0.7091282207190088,
             "test_score": 0.6229707792207793,
             "generalization_gap": 0.08615744149822957,
@@ -1364,7 +1223,7 @@
               "CV Train Mean": 0.7151,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.01
+              "Train Time(s)": 0.02
             },
             {
               "Model": "Random Forest",
@@ -1377,30 +1236,6 @@
               "CV Overfit": "Yes",
               "Overfit": "Yes",
               "Train Time(s)": 0.18
-            },
-            {
-              "Model": "XGBoost",
-              "Train Score": 0.9935,
-              "Test Score": 0.6534,
-              "Gap": 0.3401,
-              "CV Mean": 0.6209,
-              "CV Std": 0.0522,
-              "CV Train Mean": 0.9986,
-              "CV Overfit": "Yes",
-              "Overfit": "Yes",
-              "Train Time(s)": 0.09
-            },
-            {
-              "Model": "LightGBM",
-              "Train Score": 0.9903,
-              "Test Score": 0.6603,
-              "Gap": 0.33,
-              "CV Mean": 0.6232,
-              "CV Std": 0.0575,
-              "CV Train Mean": 0.9886,
-              "CV Overfit": "Yes",
-              "Overfit": "Yes",
-              "Train Time(s)": 2.04
             }
           ],
           "feature_importances": {
@@ -1419,27 +1254,19 @@
             "insurance_Medicaid": 0.013232160772548313
           },
           "training_log": [
-            "Training 4 models for classification task.",
+            "Training 2 models for classification task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Logistic Regression...",
-            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.01s]",
+            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.02s]",
             "  Training Random Forest...",
             "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.18s]",
-            "  Training XGBoost...",
-            "    XGBoost: acc=0.610, f1=0.611, auc=0.653  [0.09s]",
-            "  Training LightGBM...",
-            "    LightGBM: acc=0.670, f1=0.671, auc=0.660  [2.04s]",
             "\nBest model: Logistic Regression (roc_auc=0.6230)",
-            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214; XGBoost is overfitting \u2014 train ROC-AUC 0.9935 vs test ROC-AUC 0.6534, gap 0.3401; XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9986 vs CV test mean 0.6209; LightGBM is overfitting \u2014 train ROC-AUC 0.9903 vs test ROC-AUC 0.6603, gap 0.3300; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9886 vs CV test mean 0.6232",
+            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230"
           ],
           "overfitting_warnings": [
             "Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899",
-            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
-            "XGBoost is overfitting \u2014 train ROC-AUC 0.9935 vs test ROC-AUC 0.6534, gap 0.3401",
-            "XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9986 vs CV test mean 0.6209",
-            "LightGBM is overfitting \u2014 train ROC-AUC 0.9903 vs test ROC-AUC 0.6603, gap 0.3300",
-            "LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9886 vs CV test mean 0.6232"
+            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214"
           ],
           "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230",
           "cv_folds_used": 5,
@@ -1450,7 +1277,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5865062656641604,
                 "roc_auc": 0.6229707792207793,
-                "train_time_s": 0.007,
+                "train_time_s": 0.016,
                 "train_score": 0.7091282207190088,
                 "test_score": 0.6229707792207793,
                 "generalization_gap": 0.08615744149822957,
@@ -1484,7 +1311,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5904565239396701,
                 "roc_auc": 0.6501623376623377,
-                "train_time_s": 0.183,
+                "train_time_s": 0.179,
                 "train_score": 0.9400572572268248,
                 "test_score": 0.6501623376623377,
                 "generalization_gap": 0.2898949195644871,
@@ -1511,74 +1338,6 @@
               "train_score": 0.9400572572268248,
               "generalization_gap": 0.2898949195644871,
               "overfit": true
-            },
-            {
-              "name": "XGBoost",
-              "metrics": {
-                "accuracy": 0.61,
-                "f1": 0.6110615989515072,
-                "roc_auc": 0.6534090909090909,
-                "train_time_s": 0.093,
-                "train_score": 0.9934635555217755,
-                "test_score": 0.6534090909090909,
-                "generalization_gap": 0.3400544646126845,
-                "overfit": true
-              },
-              "cv_scores": [
-                0.6946031746031746,
-                0.5479365079365079,
-                0.634920634920635,
-                0.5776515151515151,
-                0.6496212121212122
-              ],
-              "cv_mean": 0.6209466089466089,
-              "cv_std": 0.052245068532244844,
-              "cv_train_scores": [
-                0.9971910112359551,
-                0.9996834942237697,
-                0.9982196550087039,
-                0.9996830302309917,
-                0.9980189389436983
-              ],
-              "cv_train_mean": 0.9985592259286238,
-              "cv_overfit": true,
-              "train_score": 0.9934635555217755,
-              "generalization_gap": 0.3400544646126845,
-              "overfit": true
-            },
-            {
-              "name": "LightGBM",
-              "metrics": {
-                "accuracy": 0.67,
-                "f1": 0.6708982760358907,
-                "roc_auc": 0.6603084415584416,
-                "train_time_s": 2.043,
-                "train_score": 0.9903473436193662,
-                "test_score": 0.6603084415584416,
-                "generalization_gap": 0.33003890206092457,
-                "overfit": true
-              },
-              "cv_scores": [
-                0.6577777777777778,
-                0.5479365079365078,
-                0.6679365079365079,
-                0.5593434343434344,
-                0.6830808080808082
-              ],
-              "cv_mean": 0.6232150072150071,
-              "cv_std": 0.057489028733791143,
-              "cv_train_scores": [
-                0.9875375850609274,
-                0.9894761829403387,
-                0.9858363665136889,
-                0.9913625737945243,
-                0.9887871944213321
-              ],
-              "cv_train_mean": 0.9885999805461623,
-              "cv_overfit": true,
-              "train_score": 0.9903473436193662,
-              "generalization_gap": 0.33003890206092457,
-              "overfit": true
             }
           ]
         }
@@ -1593,7 +1352,7 @@
       "data": {
         "tune": {
           "success": false,
-          "error": "All Optuna trials failed during training or scoring.",
+          "error": "optuna not installed \u2014 run: pip install optuna",
           "model_name": "Logistic Regression"
         }
       },
@@ -1717,29 +1476,18 @@
           "plot_paths": {
             "confusion_matrix": "outputs/healthcare_confusion_matrix.png",
             "roc_curve": "outputs/healthcare_roc_curve.png",
-            "feature_importance": "outputs/healthcare_feature_importance.png",
-            "shap_bar": "outputs/healthcare_shap_bar.png",
-            "shap_summary": "outputs/healthcare_shap_summary.png",
-            "shap_dependence_age": "outputs/healthcare_shap_dependence_age.png",
-            "shap_dependence_days_in_hospital": "outputs/healthcare_shap_dependence_days_in_hospital.png",
-            "shap_dependence_num_medications": "outputs/healthcare_shap_dependence_num_medications.png",
-            "shap_waterfall": "outputs/healthcare_shap_waterfall.png"
+            "feature_importance": "outputs/healthcare_feature_importance.png"
           },
           "eval_log": [
             "Computed evaluation metrics.",
             "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_confusion_matrix.png",
             "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_roc_curve.png",
             "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_feature_importance.png",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_bar.png (shap_bar)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_summary.png (shap_summary)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_age.png (shap_dependence_age)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_days_in_hospital.png (shap_dependence_days_in_hospital)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_num_medications.png (shap_dependence_num_medications)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_waterfall.png (shap_waterfall)"
+            "SHAP not installed \u2014 skipping (pip install shap)."
           ],
           "task_type": "classification",
-          "has_shap": true,
-          "shap_explanation_text": "This prediction is mainly influenced by age, num_medications, and days_in_hospital."
+          "has_shap": false,
+          "shap_explanation_text": ""
         }
       },
       "error": null
@@ -2065,7 +1813,7 @@
             "accuracy": 0.59,
             "f1": 0.5865062656641604,
             "roc_auc": 0.6229707792207793,
-            "train_time_s": 0.007,
+            "train_time_s": 0.016,
             "train_score": 0.7091282207190088,
             "test_score": 0.6229707792207793,
             "generalization_gap": 0.08615744149822957,
@@ -2084,7 +1832,7 @@
               "CV Train Mean": 0.7151,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.01
+              "Train Time(s)": 0.02
             },
             {
               "Model": "Random Forest",
@@ -2097,30 +1845,6 @@
               "CV Overfit": "Yes",
               "Overfit": "Yes",
               "Train Time(s)": 0.18
-            },
-            {
-              "Model": "XGBoost",
-              "Train Score": 0.9935,
-              "Test Score": 0.6534,
-              "Gap": 0.3401,
-              "CV Mean": 0.6209,
-              "CV Std": 0.0522,
-              "CV Train Mean": 0.9986,
-              "CV Overfit": "Yes",
-              "Overfit": "Yes",
-              "Train Time(s)": 0.09
-            },
-            {
-              "Model": "LightGBM",
-              "Train Score": 0.9903,
-              "Test Score": 0.6603,
-              "Gap": 0.33,
-              "CV Mean": 0.6232,
-              "CV Std": 0.0575,
-              "CV Train Mean": 0.9886,
-              "CV Overfit": "Yes",
-              "Overfit": "Yes",
-              "Train Time(s)": 2.04
             }
           ],
           "feature_importances": {
@@ -2139,27 +1863,19 @@
             "insurance_Medicaid": 0.013232160772548313
           },
           "training_log": [
-            "Training 4 models for classification task.",
+            "Training 2 models for classification task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Logistic Regression...",
-            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.01s]",
+            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.02s]",
             "  Training Random Forest...",
             "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.18s]",
-            "  Training XGBoost...",
-            "    XGBoost: acc=0.610, f1=0.611, auc=0.653  [0.09s]",
-            "  Training LightGBM...",
-            "    LightGBM: acc=0.670, f1=0.671, auc=0.660  [2.04s]",
             "\nBest model: Logistic Regression (roc_auc=0.6230)",
-            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214; XGBoost is overfitting \u2014 train ROC-AUC 0.9935 vs test ROC-AUC 0.6534, gap 0.3401; XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9986 vs CV test mean 0.6209; LightGBM is overfitting \u2014 train ROC-AUC 0.9903 vs test ROC-AUC 0.6603, gap 0.3300; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9886 vs CV test mean 0.6232",
+            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230"
           ],
           "overfitting_warnings": [
             "Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899",
-            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
-            "XGBoost is overfitting \u2014 train ROC-AUC 0.9935 vs test ROC-AUC 0.6534, gap 0.3401",
-            "XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 0.9986 vs CV test mean 0.6209",
-            "LightGBM is overfitting \u2014 train ROC-AUC 0.9903 vs test ROC-AUC 0.6603, gap 0.3300",
-            "LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9886 vs CV test mean 0.6232"
+            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214"
           ],
           "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230",
           "cv_folds_used": 5,
@@ -2170,7 +1886,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5865062656641604,
                 "roc_auc": 0.6229707792207793,
-                "train_time_s": 0.007,
+                "train_time_s": 0.016,
                 "train_score": 0.7091282207190088,
                 "test_score": 0.6229707792207793,
                 "generalization_gap": 0.08615744149822957,
@@ -2204,7 +1920,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5904565239396701,
                 "roc_auc": 0.6501623376623377,
-                "train_time_s": 0.183,
+                "train_time_s": 0.179,
                 "train_score": 0.9400572572268248,
                 "test_score": 0.6501623376623377,
                 "generalization_gap": 0.2898949195644871,
@@ -2230,74 +1946,6 @@
                 0.9648559768612068
               ],
               "cv_train_mean": 0.9591784170172838,
-              "cv_overfit": true
-            },
-            {
-              "name": "XGBoost",
-              "metrics": {
-                "accuracy": 0.61,
-                "f1": 0.6110615989515072,
-                "roc_auc": 0.6534090909090909,
-                "train_time_s": 0.093,
-                "train_score": 0.9934635555217755,
-                "test_score": 0.6534090909090909,
-                "generalization_gap": 0.3400544646126845,
-                "overfit": true
-              },
-              "train_score": 0.9934635555217755,
-              "generalization_gap": 0.3400544646126845,
-              "overfit": true,
-              "cv_scores": [
-                0.6946031746031746,
-                0.5479365079365079,
-                0.634920634920635,
-                0.5776515151515151,
-                0.6496212121212122
-              ],
-              "cv_mean": 0.6209466089466089,
-              "cv_std": 0.052245068532244844,
-              "cv_train_scores": [
-                0.9971910112359551,
-                0.9996834942237697,
-                0.9982196550087039,
-                0.9996830302309917,
-                0.9980189389436983
-              ],
-              "cv_train_mean": 0.9985592259286238,
-              "cv_overfit": true
-            },
-            {
-              "name": "LightGBM",
-              "metrics": {
-                "accuracy": 0.67,
-                "f1": 0.6708982760358907,
-                "roc_auc": 0.6603084415584416,
-                "train_time_s": 2.043,
-                "train_score": 0.9903473436193662,
-                "test_score": 0.6603084415584416,
-                "generalization_gap": 0.33003890206092457,
-                "overfit": true
-              },
-              "train_score": 0.9903473436193662,
-              "generalization_gap": 0.33003890206092457,
-              "overfit": true,
-              "cv_scores": [
-                0.6577777777777778,
-                0.5479365079365078,
-                0.6679365079365079,
-                0.5593434343434344,
-                0.6830808080808082
-              ],
-              "cv_mean": 0.6232150072150071,
-              "cv_std": 0.057489028733791143,
-              "cv_train_scores": [
-                0.9875375850609274,
-                0.9894761829403387,
-                0.9858363665136889,
-                0.9913625737945243,
-                0.9887871944213321
-              ],
-              "cv_train_mean": 0.9885999805461623,
               "cv_overfit": true
             }
           ]
@@ -2414,29 +2062,18 @@
           "plot_paths": {
             "confusion_matrix": "outputs/healthcare_confusion_matrix.png",
             "roc_curve": "outputs/healthcare_roc_curve.png",
-            "feature_importance": "outputs/healthcare_feature_importance.png",
-            "shap_bar": "outputs/healthcare_shap_bar.png",
-            "shap_summary": "outputs/healthcare_shap_summary.png",
-            "shap_dependence_age": "outputs/healthcare_shap_dependence_age.png",
-            "shap_dependence_days_in_hospital": "outputs/healthcare_shap_dependence_days_in_hospital.png",
-            "shap_dependence_num_medications": "outputs/healthcare_shap_dependence_num_medications.png",
-            "shap_waterfall": "outputs/healthcare_shap_waterfall.png"
+            "feature_importance": "outputs/healthcare_feature_importance.png"
           },
           "eval_log": [
             "Computed evaluation metrics.",
             "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_confusion_matrix.png",
             "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_roc_curve.png",
             "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_feature_importance.png",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_bar.png (shap_bar)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_summary.png (shap_summary)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_age.png (shap_dependence_age)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_days_in_hospital.png (shap_dependence_days_in_hospital)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_dependence_num_medications.png (shap_dependence_num_medications)",
-            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\healthcare_shap_waterfall.png (shap_waterfall)"
+            "SHAP not installed \u2014 skipping (pip install shap)."
           ],
           "task_type": "classification",
-          "has_shap": true,
-          "shap_explanation_text": "This prediction is mainly influenced by age, num_medications, and days_in_hospital."
+          "has_shap": false,
+          "shap_explanation_text": ""
         },
         "target_col": "readmitted",
         "task_type": "classification",
@@ -2445,7 +2082,7 @@
           "accuracy": 0.59,
           "f1": 0.5865062656641604,
           "roc_auc": 0.6229707792207793,
-          "train_time_s": 0.007,
+          "train_time_s": 0.016,
           "train_score": 0.7091282207190088,
           "test_score": 0.6229707792207793,
           "generalization_gap": 0.08615744149822957,
@@ -2462,7 +2099,7 @@
             "CV Train Mean": 0.7151,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.01
+            "Train Time(s)": 0.02
           },
           {
             "Model": "Random Forest",
@@ -2475,30 +2112,6 @@
             "CV Overfit": "Yes",
             "Overfit": "Yes",
             "Train Time(s)": 0.18
-          },
-          {
-            "Model": "XGBoost",
-            "Train Score": 0.9935,
-            "Test Score": 0.6534,
-            "Gap": 0.3401,
-            "CV Mean": 0.6209,
-            "CV Std": 0.0522,
-            "CV Train Mean": 0.9986,
-            "CV Overfit": "Yes",
-            "Overfit": "Yes",
-            "Train Time(s)": 0.09
-          },
-          {
-            "Model": "LightGBM",
-            "Train Score": 0.9903,
-            "Test Score": 0.6603,
-            "Gap": 0.33,
-            "CV Mean": 0.6232,
-            "CV Std": 0.0575,
-            "CV Train Mean": 0.9886,
-            "CV Overfit": "Yes",
-            "Overfit": "Yes",
-            "Train Time(s)": 2.04
           }
         ],
         "feature_importances": {
@@ -2519,13 +2132,7 @@
         "plot_paths": {
           "confusion_matrix": "outputs/healthcare_confusion_matrix.png",
           "roc_curve": "outputs/healthcare_roc_curve.png",
-          "feature_importance": "outputs/healthcare_feature_importance.png",
-          "shap_bar": "outputs/healthcare_shap_bar.png",
-          "shap_summary": "outputs/healthcare_shap_summary.png",
-          "shap_dependence_age": "outputs/healthcare_shap_dependence_age.png",
-          "shap_dependence_days_in_hospital": "outputs/healthcare_shap_dependence_days_in_hospital.png",
-          "shap_dependence_num_medications": "outputs/healthcare_shap_dependence_num_medications.png",
-          "shap_waterfall": "outputs/healthcare_shap_waterfall.png"
+          "feature_importance": "outputs/healthcare_feature_importance.png"
         },
         "metrics": {
           "accuracy": 0.59,
@@ -2637,7 +2244,7 @@
         },
         "tune": {
           "success": false,
-          "error": "All Optuna trials failed during training or scoring."
+          "error": "optuna not installed \u2014 run: pip install optuna"
         },
         "plan": {
           "recommended_models": [

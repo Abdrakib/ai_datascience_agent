@@ -116,18 +116,26 @@ class DemoMockAgent:
         yield {"type": "done", "result": inner.result}
 
 
+_TITANIC_FEATURE_COLS = ("pclass", "sex", "age", "sibsp", "parch", "fare", "embarked")
+_TITANIC_TARGET_COL = "survived"
+
+
 def make_titanic_like(n: int = 800) -> pd.DataFrame:
+    """Synthetic Titanic-style data: seven features only; survived is target only."""
     rng = np.random.default_rng(7)
-    return pd.DataFrame({
-        "pclass": rng.choice([1, 2, 3], n),
-        "sex": rng.choice(["male", "female"], n),
-        "age": rng.uniform(0.5, 80.0, n).round(1),
-        "sibsp": rng.integers(0, 9, n),
-        "parch": rng.integers(0, 7, n),
-        "fare": rng.uniform(0, 500, n).round(2),
-        "embarked": rng.choice(["C", "Q", "S"], n),
-        "survived": rng.integers(0, 2, n),
-    })
+    df = pd.DataFrame(
+        {
+            "pclass": rng.choice([1, 2, 3], n),
+            "sex": rng.choice(["male", "female"], n),
+            "age": rng.uniform(0.5, 80.0, n).round(1),
+            "sibsp": rng.integers(0, 9, n),
+            "parch": rng.integers(0, 7, n),
+            "fare": rng.uniform(0, 500, n).round(2),
+            "embarked": rng.choice(["C", "Q", "S"], n),
+        }
+    )
+    df[_TITANIC_TARGET_COL] = rng.integers(0, 2, n)
+    return df.loc[:, list(_TITANIC_FEATURE_COLS) + [_TITANIC_TARGET_COL]]
 
 
 def make_diabetes_binary() -> pd.DataFrame:
