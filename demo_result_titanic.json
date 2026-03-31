@@ -7,8 +7,8 @@
     "eda": {
       "overview": {
         "rows": 800,
-        "columns": 8,
-        "numeric_cols": 6,
+        "columns": 7,
+        "numeric_cols": 5,
         "categorical_cols": 2,
         "duplicate_rows": 0,
         "memory_mb": 0.11606407165527344,
@@ -19,8 +19,7 @@
           "sibsp",
           "parch",
           "fare",
-          "embarked",
-          "survived"
+          "embarked"
         ]
       },
       "columns": {
@@ -108,18 +107,6 @@
             "C": 275,
             "Q": 250
           }
-        },
-        "survived": {
-          "dtype": "int64",
-          "dtype_group": "numeric",
-          "missing": 0,
-          "n_unique": 2,
-          "mean": 0.49875,
-          "std": 0.500311229794338,
-          "min": 0.0,
-          "max": 1.0,
-          "median": 0.0,
-          "skewness": 0.005009413171058638
         }
       },
       "missing": {
@@ -135,8 +122,7 @@
           "sibsp": 6,
           "parch": 3,
           "fare": 76.65,
-          "embarked": "S",
-          "survived": 1
+          "embarked": "S"
         },
         {
           "pclass": 2,
@@ -145,8 +131,7 @@
           "sibsp": 6,
           "parch": 1,
           "fare": 118.52,
-          "embarked": "S",
-          "survived": 0
+          "embarked": "S"
         },
         {
           "pclass": 3,
@@ -155,8 +140,7 @@
           "sibsp": 5,
           "parch": 6,
           "fare": 298.06,
-          "embarked": "C",
-          "survived": 0
+          "embarked": "C"
         },
         {
           "pclass": 3,
@@ -165,8 +149,7 @@
           "sibsp": 4,
           "parch": 3,
           "fare": 468.31,
-          "embarked": "Q",
-          "survived": 0
+          "embarked": "Q"
         },
         {
           "pclass": 2,
@@ -175,10 +158,23 @@
           "sibsp": 7,
           "parch": 2,
           "fare": 235.89,
-          "embarked": "C",
-          "survived": 0
+          "embarked": "C"
         }
       ],
+      "target_info": {
+        "column": "survived",
+        "inferred_task": "classification",
+        "classes": [
+          1,
+          0
+        ],
+        "n_classes": 2,
+        "class_distribution": {
+          "0": 401,
+          "1": 399
+        },
+        "imbalance_ratio": 1.01
+      },
       "quality_flags": [],
       "recommendations": [
         "Binary-encode `sex` (Label Encoding is sufficient).",
@@ -253,7 +249,7 @@
         "accuracy": 0.50625,
         "f1": 0.5060763549685436,
         "roc_auc": 0.51390625,
-        "train_time_s": 0.004,
+        "train_time_s": 0.003,
         "train_score": 0.5505620172071993,
         "test_score": 0.51390625,
         "generalization_gap": 0.03665576720719932,
@@ -284,7 +280,7 @@
           "CV Train Mean": 0.9169,
           "CV Overfit": "Yes",
           "Overfit": "Yes",
-          "Train Time(s)": 0.2
+          "Train Time(s)": 0.13
         }
       ],
       "feature_importances": {
@@ -305,7 +301,7 @@
         "  Training Logistic Regression...",
         "    Logistic Regression: acc=0.506, f1=0.506, auc=0.514  [0.00s]",
         "  Training Random Forest...",
-        "    Random Forest: acc=0.531, f1=0.531, auc=0.513  [0.20s]",
+        "    Random Forest: acc=0.531, f1=0.531, auc=0.513  [0.13s]",
         "\nBest model: Logistic Regression (roc_auc=0.5139)",
         "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.8889 vs test ROC-AUC 0.5131, gap 0.3758; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9169 vs CV test mean 0.4587",
         "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.5025 \u00b1 0.0343 vs single test score 0.5139"
@@ -323,7 +319,7 @@
             "accuracy": 0.50625,
             "f1": 0.5060763549685436,
             "roc_auc": 0.51390625,
-            "train_time_s": 0.004,
+            "train_time_s": 0.003,
             "train_score": 0.5505620172071993,
             "test_score": 0.51390625,
             "generalization_gap": 0.03665576720719932,
@@ -357,7 +353,7 @@
             "accuracy": 0.53125,
             "f1": 0.5312316887378413,
             "roc_auc": 0.513125,
-            "train_time_s": 0.203,
+            "train_time_s": 0.133,
             "train_score": 0.8889442279709763,
             "test_score": 0.513125,
             "generalization_gap": 0.3758192279709762,
@@ -579,7 +575,7 @@
       "accuracy": 0.50625,
       "f1": 0.5060763549685436,
       "roc_auc": 0.51390625,
-      "train_time_s": 0.004,
+      "train_time_s": 0.003,
       "train_score": 0.5505620172071993,
       "test_score": 0.51390625,
       "generalization_gap": 0.03665576720719932,
@@ -608,7 +604,7 @@
         "CV Train Mean": 0.9169,
         "CV Overfit": "Yes",
         "Overfit": "Yes",
-        "Train Time(s)": 0.2
+        "Train Time(s)": 0.13
       }
     ],
     "feature_importances": {
@@ -857,8 +853,8 @@
         "eda": {
           "overview": {
             "rows": 800,
-            "columns": 8,
-            "numeric_cols": 6,
+            "columns": 7,
+            "numeric_cols": 5,
             "categorical_cols": 2,
             "duplicate_rows": 0,
             "memory_mb": 0.11606407165527344,
@@ -869,8 +865,7 @@
               "sibsp",
               "parch",
               "fare",
-              "embarked",
-              "survived"
+              "embarked"
             ]
           },
           "columns": {
@@ -958,18 +953,6 @@
                 "C": 275,
                 "Q": 250
               }
-            },
-            "survived": {
-              "dtype": "int64",
-              "dtype_group": "numeric",
-              "missing": 0,
-              "n_unique": 2,
-              "mean": 0.49875,
-              "std": 0.500311229794338,
-              "min": 0.0,
-              "max": 1.0,
-              "median": 0.0,
-              "skewness": 0.005009413171058638
             }
           },
           "missing": {
@@ -985,8 +968,7 @@
               "sibsp": 6,
               "parch": 3,
               "fare": 76.65,
-              "embarked": "S",
-              "survived": 1
+              "embarked": "S"
             },
             {
               "pclass": 2,
@@ -995,8 +977,7 @@
               "sibsp": 6,
               "parch": 1,
               "fare": 118.52,
-              "embarked": "S",
-              "survived": 0
+              "embarked": "S"
             },
             {
               "pclass": 3,
@@ -1005,8 +986,7 @@
               "sibsp": 5,
               "parch": 6,
               "fare": 298.06,
-              "embarked": "C",
-              "survived": 0
+              "embarked": "C"
             },
             {
               "pclass": 3,
@@ -1015,8 +995,7 @@
               "sibsp": 4,
               "parch": 3,
               "fare": 468.31,
-              "embarked": "Q",
-              "survived": 0
+              "embarked": "Q"
             },
             {
               "pclass": 2,
@@ -1025,10 +1004,23 @@
               "sibsp": 7,
               "parch": 2,
               "fare": 235.89,
-              "embarked": "C",
-              "survived": 0
+              "embarked": "C"
             }
           ],
+          "target_info": {
+            "column": "survived",
+            "inferred_task": "classification",
+            "classes": [
+              1,
+              0
+            ],
+            "n_classes": 2,
+            "class_distribution": {
+              "0": 401,
+              "1": 399
+            },
+            "imbalance_ratio": 1.01
+          },
           "quality_flags": [],
           "recommendations": [
             "Binary-encode `sex` (Label Encoding is sufficient).",
@@ -1188,7 +1180,7 @@
             "accuracy": 0.50625,
             "f1": 0.5060763549685436,
             "roc_auc": 0.51390625,
-            "train_time_s": 0.004,
+            "train_time_s": 0.003,
             "train_score": 0.5505620172071993,
             "test_score": 0.51390625,
             "generalization_gap": 0.03665576720719932,
@@ -1219,7 +1211,7 @@
               "CV Train Mean": 0.9169,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 0.2
+              "Train Time(s)": 0.13
             }
           ],
           "feature_importances": {
@@ -1240,7 +1232,7 @@
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.506, f1=0.506, auc=0.514  [0.00s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.531, f1=0.531, auc=0.513  [0.20s]",
+            "    Random Forest: acc=0.531, f1=0.531, auc=0.513  [0.13s]",
             "\nBest model: Logistic Regression (roc_auc=0.5139)",
             "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.8889 vs test ROC-AUC 0.5131, gap 0.3758; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9169 vs CV test mean 0.4587",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.5025 \u00b1 0.0343 vs single test score 0.5139"
@@ -1258,7 +1250,7 @@
                 "accuracy": 0.50625,
                 "f1": 0.5060763549685436,
                 "roc_auc": 0.51390625,
-                "train_time_s": 0.004,
+                "train_time_s": 0.003,
                 "train_score": 0.5505620172071993,
                 "test_score": 0.51390625,
                 "generalization_gap": 0.03665576720719932,
@@ -1292,7 +1284,7 @@
                 "accuracy": 0.53125,
                 "f1": 0.5312316887378413,
                 "roc_auc": 0.513125,
-                "train_time_s": 0.203,
+                "train_time_s": 0.133,
                 "train_score": 0.8889442279709763,
                 "test_score": 0.513125,
                 "generalization_gap": 0.3758192279709762,
@@ -1543,8 +1535,8 @@
         "eda": {
           "overview": {
             "rows": 800,
-            "columns": 8,
-            "numeric_cols": 6,
+            "columns": 7,
+            "numeric_cols": 5,
             "categorical_cols": 2,
             "duplicate_rows": 0,
             "memory_mb": 0.11606407165527344,
@@ -1555,8 +1547,7 @@
               "sibsp",
               "parch",
               "fare",
-              "embarked",
-              "survived"
+              "embarked"
             ]
           },
           "columns": {
@@ -1644,18 +1635,6 @@
                 "C": 275,
                 "Q": 250
               }
-            },
-            "survived": {
-              "dtype": "int64",
-              "dtype_group": "numeric",
-              "missing": 0,
-              "n_unique": 2,
-              "mean": 0.49875,
-              "std": 0.500311229794338,
-              "min": 0.0,
-              "max": 1.0,
-              "median": 0.0,
-              "skewness": 0.005009413171058638
             }
           },
           "missing": {
@@ -1671,8 +1650,7 @@
               "sibsp": 6,
               "parch": 3,
               "fare": 76.65,
-              "embarked": "S",
-              "survived": 1
+              "embarked": "S"
             },
             {
               "pclass": 2,
@@ -1681,8 +1659,7 @@
               "sibsp": 6,
               "parch": 1,
               "fare": 118.52,
-              "embarked": "S",
-              "survived": 0
+              "embarked": "S"
             },
             {
               "pclass": 3,
@@ -1691,8 +1668,7 @@
               "sibsp": 5,
               "parch": 6,
               "fare": 298.06,
-              "embarked": "C",
-              "survived": 0
+              "embarked": "C"
             },
             {
               "pclass": 3,
@@ -1701,8 +1677,7 @@
               "sibsp": 4,
               "parch": 3,
               "fare": 468.31,
-              "embarked": "Q",
-              "survived": 0
+              "embarked": "Q"
             },
             {
               "pclass": 2,
@@ -1711,10 +1686,23 @@
               "sibsp": 7,
               "parch": 2,
               "fare": 235.89,
-              "embarked": "C",
-              "survived": 0
+              "embarked": "C"
             }
           ],
+          "target_info": {
+            "column": "survived",
+            "inferred_task": "classification",
+            "classes": [
+              1,
+              0
+            ],
+            "n_classes": 2,
+            "class_distribution": {
+              "0": 401,
+              "1": 399
+            },
+            "imbalance_ratio": 1.01
+          },
           "quality_flags": [],
           "recommendations": [
             "Binary-encode `sex` (Label Encoding is sufficient).",
@@ -1789,7 +1777,7 @@
             "accuracy": 0.50625,
             "f1": 0.5060763549685436,
             "roc_auc": 0.51390625,
-            "train_time_s": 0.004,
+            "train_time_s": 0.003,
             "train_score": 0.5505620172071993,
             "test_score": 0.51390625,
             "generalization_gap": 0.03665576720719932,
@@ -1820,7 +1808,7 @@
               "CV Train Mean": 0.9169,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 0.2
+              "Train Time(s)": 0.13
             }
           ],
           "feature_importances": {
@@ -1841,7 +1829,7 @@
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.506, f1=0.506, auc=0.514  [0.00s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.531, f1=0.531, auc=0.513  [0.20s]",
+            "    Random Forest: acc=0.531, f1=0.531, auc=0.513  [0.13s]",
             "\nBest model: Logistic Regression (roc_auc=0.5139)",
             "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.8889 vs test ROC-AUC 0.5131, gap 0.3758; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9169 vs CV test mean 0.4587",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.5025 \u00b1 0.0343 vs single test score 0.5139"
@@ -1859,7 +1847,7 @@
                 "accuracy": 0.50625,
                 "f1": 0.5060763549685436,
                 "roc_auc": 0.51390625,
-                "train_time_s": 0.004,
+                "train_time_s": 0.003,
                 "train_score": 0.5505620172071993,
                 "test_score": 0.51390625,
                 "generalization_gap": 0.03665576720719932,
@@ -1893,7 +1881,7 @@
                 "accuracy": 0.53125,
                 "f1": 0.5312316887378413,
                 "roc_auc": 0.513125,
-                "train_time_s": 0.203,
+                "train_time_s": 0.133,
                 "train_score": 0.8889442279709763,
                 "test_score": 0.513125,
                 "generalization_gap": 0.3758192279709762,
@@ -2115,7 +2103,7 @@
           "accuracy": 0.50625,
           "f1": 0.5060763549685436,
           "roc_auc": 0.51390625,
-          "train_time_s": 0.004,
+          "train_time_s": 0.003,
           "train_score": 0.5505620172071993,
           "test_score": 0.51390625,
           "generalization_gap": 0.03665576720719932,
@@ -2144,7 +2132,7 @@
             "CV Train Mean": 0.9169,
             "CV Overfit": "Yes",
             "Overfit": "Yes",
-            "Train Time(s)": 0.2
+            "Train Time(s)": 0.13
           }
         ],
         "feature_importances": {

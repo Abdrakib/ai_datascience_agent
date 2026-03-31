@@ -190,6 +190,16 @@
           "price": 449185
         }
       ],
+      "target_info": {
+        "column": "price",
+        "inferred_task": "regression",
+        "mean": 408573.35833333334,
+        "std": 125132.5198891944,
+        "min": 95356.0,
+        "max": 687540.0,
+        "median": 407219.5,
+        "skewness": 0.03820771443496304
+      },
       "quality_flags": [],
       "recommendations": [
         "Impute missing numeric values (median recommended for skewed data).",
@@ -266,7 +276,7 @@
         "rmse": 19244.30726602296,
         "mae": 15054.427702432535,
         "r2": 0.9704273023733059,
-        "train_time_s": 0.008,
+        "train_time_s": 0.001,
         "train_score": 0.9756910416636839,
         "test_score": 0.9704273023733059,
         "generalization_gap": 0.0052637392903780444,
@@ -285,7 +295,7 @@
           "CV Train Mean": 0.9758,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.01
+          "Train Time(s)": 0.0
         },
         {
           "Model": "Random Forest",
@@ -297,7 +307,7 @@
           "CV Train Mean": 0.9671,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.17
+          "Train Time(s)": 0.1
         }
       ],
       "feature_importances": {
@@ -318,9 +328,9 @@
         "Training 2 models for regression task.",
         "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
         "  Training Linear Regression...",
-        "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
+        "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.00s]",
         "  Training Random Forest...",
-        "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.18s]",
+        "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.10s]",
         "\nBest model: Linear Regression (r2=0.9704)",
         "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
       ],
@@ -334,7 +344,7 @@
             "rmse": 19244.30726602296,
             "mae": 15054.427702432535,
             "r2": 0.9704273023733059,
-            "train_time_s": 0.008,
+            "train_time_s": 0.001,
             "train_score": 0.9756910416636839,
             "test_score": 0.9704273023733059,
             "generalization_gap": 0.0052637392903780444,
@@ -366,9 +376,9 @@
           "name": "Random Forest",
           "metrics": {
             "rmse": 34041.31037179931,
-            "mae": 27600.138340497626,
+            "mae": 27600.13834049763,
             "r2": 0.9074665155441051,
-            "train_time_s": 0.175,
+            "train_time_s": 0.099,
             "train_score": 0.9635729463513367,
             "test_score": 0.9074665155441051,
             "generalization_gap": 0.056106430807231655,
@@ -378,14 +388,14 @@
           "generalization_gap": 0.056106430807231655,
           "overfit": false,
           "cv_scores": [
-            0.9357359945589843,
+            0.9357359945589842,
             0.9382614289622774,
-            0.9301892382602968,
+            0.9301892382602969,
             0.9268878476820184,
-            0.9318488429287124
+            0.9318488429287123
           ],
           "cv_mean": 0.9325846704784577,
-          "cv_std": 0.0040221824427274224,
+          "cv_std": 0.004022182442727396,
           "cv_train_scores": [
             0.967156970877803,
             0.967581448731281,
@@ -428,7 +438,7 @@
       "rmse": 19244.30726602296,
       "mae": 15054.427702432535,
       "r2": 0.9704273023733059,
-      "train_time_s": 0.008,
+      "train_time_s": 0.001,
       "train_score": 0.9756910416636839,
       "test_score": 0.9704273023733059,
       "generalization_gap": 0.0052637392903780444,
@@ -445,7 +455,7 @@
         "CV Train Mean": 0.9758,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.01
+        "Train Time(s)": 0.0
       },
       {
         "Model": "Random Forest",
@@ -457,7 +467,7 @@
         "CV Train Mean": 0.9671,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.17
+        "Train Time(s)": 0.1
       }
     ],
     "feature_importances": {
@@ -729,6 +739,16 @@
               "price": 449185
             }
           ],
+          "target_info": {
+            "column": "price",
+            "inferred_task": "regression",
+            "mean": 408573.35833333334,
+            "std": 125132.5198891944,
+            "min": 95356.0,
+            "max": 687540.0,
+            "median": 407219.5,
+            "skewness": 0.03820771443496304
+          },
           "quality_flags": [],
           "recommendations": [
             "Impute missing numeric values (median recommended for skewed data).",
@@ -890,7 +910,7 @@
             "rmse": 19244.30726602296,
             "mae": 15054.427702432535,
             "r2": 0.9704273023733059,
-            "train_time_s": 0.008,
+            "train_time_s": 0.001,
             "train_score": 0.9756910416636839,
             "test_score": 0.9704273023733059,
             "generalization_gap": 0.0052637392903780444,
@@ -909,7 +929,7 @@
               "CV Train Mean": 0.9758,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.01
+              "Train Time(s)": 0.0
             },
             {
               "Model": "Random Forest",
@@ -921,7 +941,7 @@
               "CV Train Mean": 0.9671,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.17
+              "Train Time(s)": 0.1
             }
           ],
           "feature_importances": {
@@ -942,9 +962,9 @@
             "Training 2 models for regression task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Linear Regression...",
-            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
+            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.00s]",
             "  Training Random Forest...",
-            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.18s]",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.10s]",
             "\nBest model: Linear Regression (r2=0.9704)",
             "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
           ],
@@ -958,7 +978,7 @@
                 "rmse": 19244.30726602296,
                 "mae": 15054.427702432535,
                 "r2": 0.9704273023733059,
-                "train_time_s": 0.008,
+                "train_time_s": 0.001,
                 "train_score": 0.9756910416636839,
                 "test_score": 0.9704273023733059,
                 "generalization_gap": 0.0052637392903780444,
@@ -990,23 +1010,23 @@
               "name": "Random Forest",
               "metrics": {
                 "rmse": 34041.31037179931,
-                "mae": 27600.138340497626,
+                "mae": 27600.13834049763,
                 "r2": 0.9074665155441051,
-                "train_time_s": 0.175,
+                "train_time_s": 0.099,
                 "train_score": 0.9635729463513367,
                 "test_score": 0.9074665155441051,
                 "generalization_gap": 0.056106430807231655,
                 "overfit": false
               },
               "cv_scores": [
-                0.9357359945589843,
+                0.9357359945589842,
                 0.9382614289622774,
-                0.9301892382602968,
+                0.9301892382602969,
                 0.9268878476820184,
-                0.9318488429287124
+                0.9318488429287123
               ],
               "cv_mean": 0.9325846704784577,
-              "cv_std": 0.0040221824427274224,
+              "cv_std": 0.004022182442727396,
               "cv_train_scores": [
                 0.967156970877803,
                 0.967581448731281,
@@ -1264,6 +1284,16 @@
               "price": 449185
             }
           ],
+          "target_info": {
+            "column": "price",
+            "inferred_task": "regression",
+            "mean": 408573.35833333334,
+            "std": 125132.5198891944,
+            "min": 95356.0,
+            "max": 687540.0,
+            "median": 407219.5,
+            "skewness": 0.03820771443496304
+          },
           "quality_flags": [],
           "recommendations": [
             "Impute missing numeric values (median recommended for skewed data).",
@@ -1340,7 +1370,7 @@
             "rmse": 19244.30726602296,
             "mae": 15054.427702432535,
             "r2": 0.9704273023733059,
-            "train_time_s": 0.008,
+            "train_time_s": 0.001,
             "train_score": 0.9756910416636839,
             "test_score": 0.9704273023733059,
             "generalization_gap": 0.0052637392903780444,
@@ -1359,7 +1389,7 @@
               "CV Train Mean": 0.9758,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.01
+              "Train Time(s)": 0.0
             },
             {
               "Model": "Random Forest",
@@ -1371,7 +1401,7 @@
               "CV Train Mean": 0.9671,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.17
+              "Train Time(s)": 0.1
             }
           ],
           "feature_importances": {
@@ -1392,9 +1422,9 @@
             "Training 2 models for regression task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Linear Regression...",
-            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
+            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.00s]",
             "  Training Random Forest...",
-            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.18s]",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.10s]",
             "\nBest model: Linear Regression (r2=0.9704)",
             "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
           ],
@@ -1408,7 +1438,7 @@
                 "rmse": 19244.30726602296,
                 "mae": 15054.427702432535,
                 "r2": 0.9704273023733059,
-                "train_time_s": 0.008,
+                "train_time_s": 0.001,
                 "train_score": 0.9756910416636839,
                 "test_score": 0.9704273023733059,
                 "generalization_gap": 0.0052637392903780444,
@@ -1440,9 +1470,9 @@
               "name": "Random Forest",
               "metrics": {
                 "rmse": 34041.31037179931,
-                "mae": 27600.138340497626,
+                "mae": 27600.13834049763,
                 "r2": 0.9074665155441051,
-                "train_time_s": 0.175,
+                "train_time_s": 0.099,
                 "train_score": 0.9635729463513367,
                 "test_score": 0.9074665155441051,
                 "generalization_gap": 0.056106430807231655,
@@ -1452,14 +1482,14 @@
               "generalization_gap": 0.056106430807231655,
               "overfit": false,
               "cv_scores": [
-                0.9357359945589843,
+                0.9357359945589842,
                 0.9382614289622774,
-                0.9301892382602968,
+                0.9301892382602969,
                 0.9268878476820184,
-                0.9318488429287124
+                0.9318488429287123
               ],
               "cv_mean": 0.9325846704784577,
-              "cv_std": 0.0040221824427274224,
+              "cv_std": 0.004022182442727396,
               "cv_train_scores": [
                 0.967156970877803,
                 0.967581448731281,
@@ -1502,7 +1532,7 @@
           "rmse": 19244.30726602296,
           "mae": 15054.427702432535,
           "r2": 0.9704273023733059,
-          "train_time_s": 0.008,
+          "train_time_s": 0.001,
           "train_score": 0.9756910416636839,
           "test_score": 0.9704273023733059,
           "generalization_gap": 0.0052637392903780444,
@@ -1519,7 +1549,7 @@
             "CV Train Mean": 0.9758,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.01
+            "Train Time(s)": 0.0
           },
           {
             "Model": "Random Forest",
@@ -1531,7 +1561,7 @@
             "CV Train Mean": 0.9671,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.17
+            "Train Time(s)": 0.1
           }
         ],
         "feature_importances": {

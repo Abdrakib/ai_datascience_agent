@@ -100,7 +100,7 @@ class DemoMockAgent:
     def run(self):
         inner = self._inner
         steps = [
-            ("run_eda", {}),
+            ("run_eda", {"target_col": self._target}),
             ("detect_task", {"user_hint": inner.user_message}),
             ("preprocess", {"target_col": self._target, "task_type": self._task, "scaler_type": "standard"}),
             ("plan_training", {}),
@@ -121,9 +121,9 @@ _TITANIC_TARGET_COL = "survived"
 
 
 def make_titanic_like(n: int = 800) -> pd.DataFrame:
-    """Synthetic Titanic-style data: seven features only; survived is target only."""
+    """Synthetic Titanic-style data: seven feature columns, then target (never in feature block)."""
     rng = np.random.default_rng(7)
-    df = pd.DataFrame(
+    features = pd.DataFrame(
         {
             "pclass": rng.choice([1, 2, 3], n),
             "sex": rng.choice(["male", "female"], n),
@@ -134,8 +134,9 @@ def make_titanic_like(n: int = 800) -> pd.DataFrame:
             "embarked": rng.choice(["C", "Q", "S"], n),
         }
     )
-    df[_TITANIC_TARGET_COL] = rng.integers(0, 2, n)
-    return df.loc[:, list(_TITANIC_FEATURE_COLS) + [_TITANIC_TARGET_COL]]
+    target = pd.Series(rng.integers(0, 2, n), name=_TITANIC_TARGET_COL)
+    out = pd.concat([features, target], axis=1)
+    return out.loc[:, list(_TITANIC_FEATURE_COLS) + [_TITANIC_TARGET_COL]]
 
 
 def make_diabetes_binary() -> pd.DataFrame:
@@ -188,6 +189,41 @@ def _json_safe(obj: Any) -> Any:
         return None
 
 
+def _remove_target_from_eda_feature_profiles(result: dict, target_col: str) -> None:
+    """
+    EDA profiles every column in df; for Titanic demo JSON, list only true feature columns.
+    Target remains in the DataFrame for training but must not appear as a feature column in EDA.
+    Mutates result['eda'] in place (same object as agent._eda_report).
+    """
+    eda = result.get("eda")
+    if not isinstance(eda, dict):
+        return
+    col_profiles = eda.get("columns")
+    if isinstance(col_profiles, dict) and target_col in col_profiles:
+        del col_profiles[target_col]
+    ov = eda.get("overview")
+    if isinstance(ov, dict):
+        cn = ov.get("column_names")
+        if isinstance(cn, list):
+            ov["column_names"] = [c for c in cn if c != target_col]
+        ov["columns"] = len(ov["column_names"])
+        num = cat = 0
+        for c in ov["column_names"]:
+            prof = col_profiles.get(c, {}) if isinstance(col_profiles, dict) else {}
+            dg = prof.get("dtype_group")
+            if dg == "numeric":
+                num += 1
+            elif dg == "categorical":
+                cat += 1
+        ov["numeric_cols"] = num
+        ov["categorical_cols"] = cat
+    samp = eda.get("sample")
+    if isinstance(samp, list):
+        for row in samp:
+            if isinstance(row, dict) and target_col in row:
+                del row[target_col]
+
+
 def _plot_paths_to_repo_relative(obj: Any, root: Path) -> None:
     root = root.resolve()
     if isinstance(obj, dict):
@@ -222,6 +258,9 @@ def build_demo_payload(
     events = list(agent.run())
     result = next(e["result"] for e in events if e["type"] == "done")
     inner = agent._inner
+
+    if label == "titanic":
+        _remove_target_from_eda_feature_profiles(result, target_col)
 
     track = _new_pipeline_track()
     tool_names = [

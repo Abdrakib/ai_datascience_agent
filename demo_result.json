@@ -232,6 +232,20 @@
           "readmitted": 0
         }
       ],
+      "target_info": {
+        "column": "readmitted",
+        "inferred_task": "classification",
+        "classes": [
+          1,
+          0
+        ],
+        "n_classes": 2,
+        "class_distribution": {
+          "0": 279,
+          "1": 221
+        },
+        "imbalance_ratio": 1.26
+      },
       "quality_flags": [
         "MODERATE MISSING: `insurance` has 25% missing values."
       ],
@@ -318,7 +332,7 @@
         "accuracy": 0.59,
         "f1": 0.5865062656641604,
         "roc_auc": 0.6229707792207793,
-        "train_time_s": 0.016,
+        "train_time_s": 0.003,
         "train_score": 0.7091282207190088,
         "test_score": 0.6229707792207793,
         "generalization_gap": 0.08615744149822957,
@@ -337,7 +351,7 @@
           "CV Train Mean": 0.7151,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.02
+          "Train Time(s)": 0.0
         },
         {
           "Model": "Random Forest",
@@ -349,7 +363,7 @@
           "CV Train Mean": 0.9592,
           "CV Overfit": "Yes",
           "Overfit": "Yes",
-          "Train Time(s)": 0.18
+          "Train Time(s)": 0.14
         }
       ],
       "feature_importances": {
@@ -371,9 +385,9 @@
         "Training 2 models for classification task.",
         "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
         "  Training Logistic Regression...",
-        "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.02s]",
+        "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.00s]",
         "  Training Random Forest...",
-        "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.18s]",
+        "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.14s]",
         "\nBest model: Logistic Regression (roc_auc=0.6230)",
         "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
         "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230"
@@ -391,7 +405,7 @@
             "accuracy": 0.59,
             "f1": 0.5865062656641604,
             "roc_auc": 0.6229707792207793,
-            "train_time_s": 0.016,
+            "train_time_s": 0.003,
             "train_score": 0.7091282207190088,
             "test_score": 0.6229707792207793,
             "generalization_gap": 0.08615744149822957,
@@ -425,7 +439,7 @@
             "accuracy": 0.59,
             "f1": 0.5904565239396701,
             "roc_auc": 0.6501623376623377,
-            "train_time_s": 0.179,
+            "train_time_s": 0.141,
             "train_score": 0.9400572572268248,
             "test_score": 0.6501623376623377,
             "generalization_gap": 0.2898949195644871,
@@ -587,7 +601,7 @@
       "accuracy": 0.59,
       "f1": 0.5865062656641604,
       "roc_auc": 0.6229707792207793,
-      "train_time_s": 0.016,
+      "train_time_s": 0.003,
       "train_score": 0.7091282207190088,
       "test_score": 0.6229707792207793,
       "generalization_gap": 0.08615744149822957,
@@ -604,7 +618,7 @@
         "CV Train Mean": 0.7151,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.02
+        "Train Time(s)": 0.0
       },
       {
         "Model": "Random Forest",
@@ -616,7 +630,7 @@
         "CV Train Mean": 0.9592,
         "CV Overfit": "Yes",
         "Overfit": "Yes",
-        "Train Time(s)": 0.18
+        "Train Time(s)": 0.14
       }
     ],
     "feature_importances": {
@@ -1033,6 +1047,20 @@
               "readmitted": 0
             }
           ],
+          "target_info": {
+            "column": "readmitted",
+            "inferred_task": "classification",
+            "classes": [
+              1,
+              0
+            ],
+            "n_classes": 2,
+            "class_distribution": {
+              "0": 279,
+              "1": 221
+            },
+            "imbalance_ratio": 1.26
+          },
           "quality_flags": [
             "MODERATE MISSING: `insurance` has 25% missing values."
           ],
@@ -1204,7 +1232,7 @@
             "accuracy": 0.59,
             "f1": 0.5865062656641604,
             "roc_auc": 0.6229707792207793,
-            "train_time_s": 0.016,
+            "train_time_s": 0.003,
             "train_score": 0.7091282207190088,
             "test_score": 0.6229707792207793,
             "generalization_gap": 0.08615744149822957,
@@ -1223,7 +1251,7 @@
               "CV Train Mean": 0.7151,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.02
+              "Train Time(s)": 0.0
             },
             {
               "Model": "Random Forest",
@@ -1235,7 +1263,7 @@
               "CV Train Mean": 0.9592,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 0.18
+              "Train Time(s)": 0.14
             }
           ],
           "feature_importances": {
@@ -1257,9 +1285,9 @@
             "Training 2 models for classification task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Logistic Regression...",
-            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.02s]",
+            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.00s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.18s]",
+            "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.14s]",
             "\nBest model: Logistic Regression (roc_auc=0.6230)",
             "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230"
@@ -1277,7 +1305,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5865062656641604,
                 "roc_auc": 0.6229707792207793,
-                "train_time_s": 0.016,
+                "train_time_s": 0.003,
                 "train_score": 0.7091282207190088,
                 "test_score": 0.6229707792207793,
                 "generalization_gap": 0.08615744149822957,
@@ -1311,7 +1339,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5904565239396701,
                 "roc_auc": 0.6501623376623377,
-                "train_time_s": 0.179,
+                "train_time_s": 0.141,
                 "train_score": 0.9400572572268248,
                 "test_score": 0.6501623376623377,
                 "generalization_gap": 0.2898949195644871,
@@ -1727,6 +1755,20 @@
               "readmitted": 0
             }
           ],
+          "target_info": {
+            "column": "readmitted",
+            "inferred_task": "classification",
+            "classes": [
+              1,
+              0
+            ],
+            "n_classes": 2,
+            "class_distribution": {
+              "0": 279,
+              "1": 221
+            },
+            "imbalance_ratio": 1.26
+          },
           "quality_flags": [
             "MODERATE MISSING: `insurance` has 25% missing values."
           ],
@@ -1813,7 +1855,7 @@
             "accuracy": 0.59,
             "f1": 0.5865062656641604,
             "roc_auc": 0.6229707792207793,
-            "train_time_s": 0.016,
+            "train_time_s": 0.003,
             "train_score": 0.7091282207190088,
             "test_score": 0.6229707792207793,
             "generalization_gap": 0.08615744149822957,
@@ -1832,7 +1874,7 @@
               "CV Train Mean": 0.7151,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.02
+              "Train Time(s)": 0.0
             },
             {
               "Model": "Random Forest",
@@ -1844,7 +1886,7 @@
               "CV Train Mean": 0.9592,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 0.18
+              "Train Time(s)": 0.14
             }
           ],
           "feature_importances": {
@@ -1866,9 +1908,9 @@
             "Training 2 models for classification task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Logistic Regression...",
-            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.02s]",
+            "    Logistic Regression: acc=0.590, f1=0.587, auc=0.623  [0.00s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.18s]",
+            "    Random Forest: acc=0.590, f1=0.590, auc=0.650  [0.14s]",
             "\nBest model: Logistic Regression (roc_auc=0.6230)",
             "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9401 vs test ROC-AUC 0.6502, gap 0.2899; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9592 vs CV test mean 0.6214",
             "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.6612 \u00b1 0.0203 vs single test score 0.6230"
@@ -1886,7 +1928,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5865062656641604,
                 "roc_auc": 0.6229707792207793,
-                "train_time_s": 0.016,
+                "train_time_s": 0.003,
                 "train_score": 0.7091282207190088,
                 "test_score": 0.6229707792207793,
                 "generalization_gap": 0.08615744149822957,
@@ -1920,7 +1962,7 @@
                 "accuracy": 0.59,
                 "f1": 0.5904565239396701,
                 "roc_auc": 0.6501623376623377,
-                "train_time_s": 0.179,
+                "train_time_s": 0.141,
                 "train_score": 0.9400572572268248,
                 "test_score": 0.6501623376623377,
                 "generalization_gap": 0.2898949195644871,
@@ -2082,7 +2124,7 @@
           "accuracy": 0.59,
           "f1": 0.5865062656641604,
           "roc_auc": 0.6229707792207793,
-          "train_time_s": 0.016,
+          "train_time_s": 0.003,
           "train_score": 0.7091282207190088,
           "test_score": 0.6229707792207793,
           "generalization_gap": 0.08615744149822957,
@@ -2099,7 +2141,7 @@
             "CV Train Mean": 0.7151,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.02
+            "Train Time(s)": 0.0
           },
           {
             "Model": "Random Forest",
@@ -2111,7 +2153,7 @@
             "CV Train Mean": 0.9592,
             "CV Overfit": "Yes",
             "Overfit": "Yes",
-            "Train Time(s)": 0.18
+            "Train Time(s)": 0.14
           }
         ],
         "feature_importances": {
