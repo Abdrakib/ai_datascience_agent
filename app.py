@@ -60,8 +60,8 @@ def _init_state() -> None:
 APP_ROOT = Path(__file__).parent.resolve()
 
 
-def _load_demo_result() -> dict | None:
-    """Load pre-computed demo JSON for the selected sample dataset key."""
+def _load_demo_json_file() -> dict | None:
+    """Load the full demo snapshot JSON (version, demo_dataset_path, result, pipeline_track, log_lines)."""
     dataset = st.session_state.get("demo_dataset", "healthcare")
     candidates = [
         APP_ROOT / f"demo_result_{dataset}.json",
@@ -74,6 +74,16 @@ def _load_demo_result() -> dict | None:
             with open(path, encoding="utf-8") as f:
                 return json.load(f)
     return None
+
+
+def _load_demo_result() -> dict | None:
+    """Return the nested pipeline ``result`` dict from the demo JSON file."""
+    raw = _load_demo_json_file()
+    if raw is None:
+        return None
+    if isinstance(raw, dict) and "result" in raw:
+        return raw["result"]
+    return raw
 
 
 def _hydrate_comparison_dfs(obj: Any) -> None:
@@ -142,7 +152,7 @@ def _apply_demo_payload(data: dict) -> None:
 
 def _on_demo_mode_change() -> None:
     if st.session_state.get("demo_mode_toggle"):
-        snap = _load_demo_result()
+        snap = _load_demo_json_file()
         if not snap:
             st.session_state["_demo_data_missing"] = True
         else:
@@ -1972,7 +1982,7 @@ with st.sidebar:
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
                 if st.session_state.get("demo_mode_toggle"):
-                    _ds = _load_demo_result()
+                    _ds = _load_demo_json_file()
                     if _ds:
                         st.session_state["_demo_data_missing"] = False
                         _apply_demo_payload(_ds)
@@ -1992,7 +2002,7 @@ with st.sidebar:
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
                 if st.session_state.get("demo_mode_toggle"):
-                    _ds = _load_demo_result()
+                    _ds = _load_demo_json_file()
                     if _ds:
                         st.session_state["_demo_data_missing"] = False
                         _apply_demo_payload(_ds)
@@ -2015,7 +2025,7 @@ with st.sidebar:
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
                 if st.session_state.get("demo_mode_toggle"):
-                    _ds = _load_demo_result()
+                    _ds = _load_demo_json_file()
                     if _ds:
                         st.session_state["_demo_data_missing"] = False
                         _apply_demo_payload(_ds)
@@ -2035,7 +2045,7 @@ with st.sidebar:
                 st.session_state.pipeline_track = []
                 st.session_state.error = None
                 if st.session_state.get("demo_mode_toggle"):
-                    _ds = _load_demo_result()
+                    _ds = _load_demo_json_file()
                     if _ds:
                         st.session_state["_demo_data_missing"] = False
                         _apply_demo_payload(_ds)
@@ -2067,7 +2077,7 @@ with st.sidebar:
 
 
 if st.session_state.get("demo_mode_toggle") and st.session_state.get("result") is None:
-    _snap = _load_demo_result()
+    _snap = _load_demo_json_file()
     if _snap:
         st.session_state["_demo_data_missing"] = False
         _apply_demo_payload(_snap)
