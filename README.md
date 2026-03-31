@@ -1,14 +1,15 @@
 ---
-title: Streamlit Template Space
+title: Ai Data Science Agent
 emoji: 🚀
 colorFrom: red
 colorTo: red
 sdk: docker
 app_port: 8501
 tags:
-  - streamlit
+- streamlit
 pinned: false
-short_description: Streamlit template space
+short_description: Claude-powered AutoML agent — drop in any CSV, get EDA, mode
+license: mit
 ---
 
 # Welcome to Streamlit!
