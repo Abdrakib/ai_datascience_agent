@@ -11,14 +11,10 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / ".env")
 
 # ── Anthropic ────────────────────────────────────────────────────────────────
-ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "").strip()
 ANTHROPIC_MODEL: str = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-20250514")
 
-if not ANTHROPIC_API_KEY:
-    raise EnvironmentError(
-        "ANTHROPIC_API_KEY is not set.\n"
-        "Copy .env.example to .env and add your key."
-    )
+# Key may be empty at import so the Streamlit app can load; set .env, sidebar, or Demo mode.
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 ROOT_DIR = Path(__file__).parent

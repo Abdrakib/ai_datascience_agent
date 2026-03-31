@@ -6,8 +6,11 @@ Run: streamlit run app.py
 
 from __future__ import annotations
 
+import copy
 import html
 import io
+import json
+import os
 import re
 import sys
 import tempfile
@@ -51,6 +54,110 @@ def _init_state() -> None:
     for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
+
+
+APP_ROOT = Path(__file__).parent.resolve()
+
+
+def _demo_result_path() -> Path:
+    """Prefer demo_result.json next to app.py, then workspace parent."""
+    for p in (APP_ROOT / "demo_result.json", APP_ROOT.parent / "demo_result.json"):
+        if p.is_file():
+            return p
+    return APP_ROOT / "demo_result.json"
+
+
+def _hydrate_comparison_dfs(obj: Any) -> None:
+    """Turn JSON list-of-rows into DataFrames wherever comparison_df appears."""
+    if isinstance(obj, dict):
+        for k, v in list(obj.items()):
+            if k == "comparison_df" and isinstance(v, list):
+                obj[k] = pd.DataFrame(v)
+            else:
+                _hydrate_comparison_dfs(v)
+    elif isinstance(obj, list):
+        for item in obj:
+            _hydrate_comparison_dfs(item)
+
+
+def _resolve_plot_paths_relative(obj: Any, base: Path) -> None:
+    """Resolve relative plot_paths entries against base (APP_ROOT)."""
+    if isinstance(obj, dict):
+        pp = obj.get("plot_paths")
+        if isinstance(pp, dict):
+            for pk, pv in list(pp.items()):
+                if isinstance(pv, str) and pv.strip():
+                    pth = Path(pv)
+                    if not pth.is_absolute():
+                        cand = (base / pv).resolve()
+                        if cand.is_file():
+                            pp[pk] = str(cand)
+        for v in obj.values():
+            _resolve_plot_paths_relative(v, base)
+    elif isinstance(obj, list):
+        for item in obj:
+            _resolve_plot_paths_relative(item, base)
+
+
+def _load_demo_json() -> dict | None:
+    path = _demo_result_path()
+    if not path.is_file():
+        return None
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _apply_demo_payload(data: dict) -> None:
+    raw_res = copy.deepcopy(data["result"])
+    _hydrate_comparison_dfs(raw_res)
+    _resolve_plot_paths_relative(raw_res, APP_ROOT)
+    st.session_state.result = raw_res
+
+    track = copy.deepcopy(data.get("pipeline_track", []))
+    for s in track:
+        d = s.get("data")
+        if isinstance(d, dict):
+            _hydrate_comparison_dfs(d)
+            _resolve_plot_paths_relative(d, APP_ROOT)
+    st.session_state.pipeline_track = track
+
+    st.session_state.log_lines = list(data.get("log_lines", []))
+    st.session_state.step_cards = []
+    st.session_state.error = None
+    st.session_state.report_export = None
+    st.session_state["agent"] = None
+    st.session_state.running = False
+
+    dp = data.get("demo_dataset_path")
+    if dp:
+        p = APP_ROOT / dp
+        if p.is_file():
+            st.session_state.df = pd.read_csv(p)
+            st.session_state.filename = p.name
+    goal = data.get("demo_goal", "")
+    if goal:
+        st.session_state["user_goal_input"] = goal
+
+
+def _on_demo_mode_change() -> None:
+    if st.session_state.get("demo_mode_toggle"):
+        snap = _load_demo_json()
+        if not snap:
+            st.session_state.demo_mode_toggle = False
+            st.session_state["_demo_snapshot_error"] = (
+                f"Could not load demo snapshot ({_demo_result_path().name} missing)."
+            )
+        else:
+            st.session_state.pop("_demo_snapshot_error", None)
+            _apply_demo_payload(snap)
+    else:
+        st.session_state.pop("_demo_snapshot_error", None)
+        st.session_state.result = None
+        st.session_state.log_lines = []
+        st.session_state.pipeline_track = []
+        st.session_state.error = None
+        st.session_state.report_export = None
+        st.session_state["agent"] = None
 
 
 def _pal() -> dict[str, str]:
@@ -1818,6 +1925,31 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
+    st.markdown('<div class="section-head">Demo</div>', unsafe_allow_html=True)
+    st.toggle(
+        "Demo Mode",
+        key="demo_mode_toggle",
+        help="Browse a pre-computed example without an API key.",
+        on_change=_on_demo_mode_change,
+    )
+    _demo_err = st.session_state.get("_demo_snapshot_error")
+    if _demo_err:
+        st.error(_demo_err)
+
+    if not st.session_state.get("demo_mode_toggle", False):
+        st.markdown('<div class="section-head">API key</div>', unsafe_allow_html=True)
+        _env_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
+        if _env_key:
+            st.caption("Using ANTHROPIC_API_KEY from environment (.env).")
+        else:
+            st.text_input(
+                "ANTHROPIC_API_KEY",
+                type="password",
+                key="anthropic_api_key_input",
+                placeholder="sk-ant-...",
+            )
+            st.caption("Your key is never stored or logged.")
+
     st.markdown('<div class="section-head">Dataset</div>', unsafe_allow_html=True)
     uploaded = st.file_uploader(
         "Upload CSV", type=["csv"],
@@ -1894,16 +2026,6 @@ with st.sidebar:
         st.dataframe(df.head(6), use_container_width=True, height=180)
 
     st.markdown('<div class="section-head">Settings</div>', unsafe_allow_html=True)
-    demo_mode = st.checkbox(
-        "Demo mode (no API)",
-        value=False,
-        help="Run pipeline without Claude API. Uses auto-detected target. Good for testing when API credits are low.",
-    )
-    scaler = st.selectbox(
-        "Scaler", ["standard", "minmax", "none"],
-        label_visibility="visible",
-    )
-
     _icon = "☀️" if st.session_state.get("theme", "dark") == "light" else "🌙"
     st.toggle(
         _icon,
@@ -1912,8 +2034,21 @@ with st.sidebar:
     )
 
 
+if st.session_state.get("demo_mode_toggle") and st.session_state.get("result") is None:
+    _snap = _load_demo_json()
+    if _snap:
+        _apply_demo_payload(_snap)
+
+
 tab_pipeline, tab_inference = st.tabs(["Pipeline", "Inference"])
 with tab_pipeline:
+    _demo_on = st.session_state.get("demo_mode_toggle", False)
+    if _demo_on:
+        st.info(
+            "Demo Mode — showing a pre-computed example run. Toggle off to use your own API key "
+            "and run on your own data."
+        )
+
     goal_col, btn_col = st.columns([5, 1])
     with goal_col:
         user_goal = st.text_input(
@@ -1928,8 +2063,10 @@ with tab_pipeline:
             type="primary",
             use_container_width=True,
             key="run_button",
-            disabled=st.session_state.running,
+            disabled=st.session_state.running or _demo_on,
         )
+        if _demo_on:
+            st.caption("Add your ANTHROPIC_API_KEY to run on your own data")
 
     # ── Main-area dataset upload (sidebar stays available via top-left «) ────────
     if st.session_state.df is None:
@@ -1954,113 +2091,86 @@ with tab_pipeline:
         elif not user_goal.strip():
             st.error("Describe your goal so the agent knows what to predict.")
         else:
-            st.session_state.running   = True
-            st.session_state.result    = None
-            st.session_state.log_lines = []
-            st.session_state.step_cards = []
-            st.session_state.pipeline_track = _new_pipeline_track()
-            st.session_state.error     = None
-            st.session_state.report_export = None
-    
-            df = st.session_state.df.copy()
-            log_placeholder = st.empty()
-            status_placeholder = st.empty()
-            step_cards_placeholder = st.empty()
-            agent_holder: dict = {"agent": None}
+            _env_k = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
+            _paste_k = (st.session_state.get("anthropic_api_key_input") or "").strip()
+            _effective_key = _env_k or _paste_k
+            if not _effective_key:
+                st.error("Add ANTHROPIC_API_KEY to your .env file or paste it in the sidebar.")
+            else:
+                os.environ["ANTHROPIC_API_KEY"] = _effective_key
+                st.session_state.running   = True
+                st.session_state.result    = None
+                st.session_state.log_lines = []
+                st.session_state.step_cards = []
+                st.session_state.pipeline_track = _new_pipeline_track()
+                st.session_state.error     = None
+                st.session_state.report_export = None
 
-            def run_agent_events():
-                if demo_mode:
+                df = st.session_state.df.copy()
+                log_placeholder = st.empty()
+                status_placeholder = st.empty()
+                step_cards_placeholder = st.empty()
+                agent_holder: dict = {"agent": None}
+
+                def run_agent_events():
                     from agent.core import AutoMLAgent
-                    from agent.tools.task_detector import detect_task
-                    task_res = detect_task(df, user_goal)
-                    target_col = task_res["target_col"]
-                    task_type = task_res["task_type"]
-                    inner = AutoMLAgent.__new__(AutoMLAgent)
-                    inner.df, inner.user_message = df, user_goal
-                    inner._eda_report = inner._task_result = inner._prep_result = None
-                    inner._plan_result = None
-                    inner._train_result = inner._eval_result = inner._tune_result = None
-                    inner.result = {}
-                    steps = [
-                        ("run_eda", {}),
-                        ("detect_task", {"user_hint": user_goal}),
-                        ("preprocess", {"target_col": target_col, "task_type": task_type, "scaler_type": scaler}),
-                        ("plan_training", {}),
-                        ("train_models", {}),
-                        ("tune_model", {}),
-                        ("evaluate_model", {"run_id": "app_run"}),
-                    ]
-                    for name, inputs in steps:
-                        evt_run = {"type": "tool", "name": name, "status": "running"}
-                        if name == "tune_model" and inner._train_result:
-                            evt_run["tune_model_name"] = inner._train_result.get(
-                                "best_name", "best model"
-                            )
-                        yield evt_run
-                        output = inner._dispatch(name, inputs)
-                        step_data = inner._get_step_data(name)
-                        yield {"type": "tool", "name": name, "status": "done", "output": output, "step_data": step_data}
-                    inner.result = inner._build_result()
-                    agent_holder["agent"] = inner
-                    yield {"type": "done", "result": inner.result}
-                else:
-                    from agent.core import AutoMLAgent
+
                     agent = AutoMLAgent(df, user_goal)
                     agent_holder["agent"] = agent
                     yield from agent.run()
 
-            try:
-                status_placeholder.info("▶ Pipeline running… (this may take a minute)")
-                pipeline_failed = False
-                for event in run_agent_events():
-                    etype = event["type"]
-                    if etype == "text":
-                        _log_text(event["content"])
-                    elif etype == "tool":
-                        name = event["name"]
-                        status = event["status"]
-                        _log_tool(name, status, event.get("output", ""))
-                        if status == "running":
-                            _pipeline_track_update_running(
-                                name, event.get("tune_model_name"),
-                            )
-                        elif status == "done":
-                            _pipeline_track_update_done(name, event.get("step_data"))
-                    elif etype == "error":
-                        _log_error(event["content"])
-                        st.session_state.error = event["content"]
-                        _pipeline_track_fail_running(event["content"])
-                        pipeline_failed = True
-                    elif etype == "done":
-                        st.session_state.result = event["result"]
-                        _log_text("Pipeline complete.")
-                        _pipeline_track_finalize(event["result"])
-    
-                    log_html = "".join(st.session_state.log_lines)
-                    log_placeholder.markdown(
-                        f'<div class="log-container">{log_html}</div>',
-                        unsafe_allow_html=True,
-                    )
-                    with step_cards_placeholder.container():
-                        for s in st.session_state.pipeline_track:
-                            _render_pipeline_step(s)
-    
-                    if pipeline_failed:
-                        break
+                try:
+                    status_placeholder.info("▶ Pipeline running… (this may take a minute)")
+                    pipeline_failed = False
+                    for event in run_agent_events():
+                        etype = event["type"]
+                        if etype == "text":
+                            _log_text(event["content"])
+                        elif etype == "tool":
+                            name = event["name"]
+                            status = event["status"]
+                            _log_tool(name, status, event.get("output", ""))
+                            if status == "running":
+                                _pipeline_track_update_running(
+                                    name, event.get("tune_model_name"),
+                                )
+                            elif status == "done":
+                                _pipeline_track_update_done(name, event.get("step_data"))
+                        elif etype == "error":
+                            _log_error(event["content"])
+                            st.session_state.error = event["content"]
+                            _pipeline_track_fail_running(event["content"])
+                            pipeline_failed = True
+                        elif etype == "done":
+                            st.session_state.result = event["result"]
+                            _log_text("Pipeline complete.")
+                            _pipeline_track_finalize(event["result"])
 
-                if not pipeline_failed:
-                    st.session_state["agent"] = agent_holder.get("agent")
+                        log_html = "".join(st.session_state.log_lines)
+                        log_placeholder.markdown(
+                            f'<div class="log-container">{log_html}</div>',
+                            unsafe_allow_html=True,
+                        )
+                        with step_cards_placeholder.container():
+                            for s in st.session_state.pipeline_track:
+                                _render_pipeline_step(s)
 
-                status_placeholder.empty()
-            except Exception as e:
-                err_msg = str(e)
-                st.session_state.error = err_msg
-                _log_error(err_msg)
-                status_placeholder.error(f"Pipeline failed: {err_msg}")
-                st.error(f"Pipeline failed: {err_msg}")
-    
-            st.session_state.running = False
-            st.rerun()
+                        if pipeline_failed:
+                            break
+
+                    if not pipeline_failed:
+                        st.session_state["agent"] = agent_holder.get("agent")
+
+                    status_placeholder.empty()
+                except Exception as e:
+                    err_msg = str(e)
+                    st.session_state.error = err_msg
+                    _log_error(err_msg)
+                    status_placeholder.error(f"Pipeline failed: {err_msg}")
+                    st.error(f"Pipeline failed: {err_msg}")
+
+                st.session_state.running = False
+                st.rerun()
     
     
     # ── Pipeline steps (persistent after run) ────────────────────────────────────

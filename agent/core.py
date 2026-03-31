@@ -23,6 +23,8 @@ import anthropic
 import numpy as np
 import pandas as pd
 
+import os
+
 from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL, CV_FOLDS, MAX_AGENT_ITERATIONS, MAX_TOKENS
 from agent.tools.eda import run_eda, eda_to_markdown
 from agent.tools.task_detector import detect_task, task_detection_to_markdown
@@ -236,7 +238,8 @@ class AutoMLAgent:
     def __init__(self, df: pd.DataFrame, user_message: str):
         self.df = df
         self.user_message = user_message
-        self.client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        _key = (os.getenv("ANTHROPIC_API_KEY", "") or "").strip() or ANTHROPIC_API_KEY
+        self.client = anthropic.Anthropic(api_key=_key) if _key else None
 
         # Shared state populated by tool calls
         self._eda_report: dict | None = None
@@ -260,6 +263,16 @@ class AutoMLAgent:
           {"type": "error",   "content": str}
           {"type": "done",    "result": dict}           — final structured result
         """
+        if self.client is None:
+            yield {
+                "type": "error",
+                "content": (
+                    "ANTHROPIC_API_KEY is not set. Add it to your .env file or paste it in the "
+                    "Streamlit sidebar, then run again."
+                ),
+            }
+            return
+
         messages = [
             {
                 "role": "user",

@@ -1,0 +1,1462 @@
+{
+  "version": 1,
+  "demo_dataset_path": "datasets/titanic.csv",
+  "demo_goal": "Predict whether a patient survived (demo)",
+  "result": {
+    "status": "complete",
+    "eda": {
+      "overview": {
+        "rows": 300,
+        "columns": 6,
+        "numeric_cols": 4,
+        "categorical_cols": 2,
+        "duplicate_rows": 0,
+        "memory_mb": 0.039470672607421875,
+        "column_names": [
+          "age",
+          "bmi",
+          "glucose",
+          "smoker",
+          "gender",
+          "survived"
+        ]
+      },
+      "columns": {
+        "age": {
+          "dtype": "float64",
+          "dtype_group": "numeric",
+          "missing": 0,
+          "n_unique": 59,
+          "mean": 49.446666666666665,
+          "std": 16.354777632041777,
+          "min": 20.0,
+          "max": 79.0,
+          "median": 49.0,
+          "skewness": -0.0386360710697924
+        },
+        "bmi": {
+          "dtype": "float64",
+          "dtype_group": "numeric",
+          "missing": 15,
+          "n_unique": 144,
+          "mean": 26.975438596491227,
+          "std": 5.0432174750468315,
+          "min": 14.2,
+          "max": 41.5,
+          "median": 27.0,
+          "skewness": 0.036890158685425216
+        },
+        "glucose": {
+          "dtype": "float64",
+          "dtype_group": "numeric",
+          "missing": 0,
+          "n_unique": 254,
+          "mean": 98.09833333333333,
+          "std": 25.808506878803865,
+          "min": 25.9,
+          "max": 164.9,
+          "median": 98.25,
+          "skewness": -0.041962228874551685
+        },
+        "smoker": {
+          "dtype": "object",
+          "dtype_group": "categorical",
+          "missing": 0,
+          "n_unique": 2,
+          "top_value": "No",
+          "top_freq": 150,
+          "value_counts": {
+            "No": 150,
+            "Yes": 150
+          }
+        },
+        "gender": {
+          "dtype": "object",
+          "dtype_group": "categorical",
+          "missing": 0,
+          "n_unique": 2,
+          "top_value": "Female",
+          "top_freq": 153,
+          "value_counts": {
+            "Female": 153,
+            "Male": 147
+          }
+        },
+        "survived": {
+          "dtype": "int64",
+          "dtype_group": "numeric",
+          "missing": 0,
+          "n_unique": 2,
+          "mean": 0.45666666666666667,
+          "std": 0.4989509619494919,
+          "min": 0.0,
+          "max": 1.0,
+          "median": 0.0,
+          "skewness": 0.1748635212702186
+        }
+      },
+      "missing": {
+        "total_missing": 15,
+        "columns_with_missing": 1,
+        "by_column": {
+          "bmi": {
+            "count": 15,
+            "pct": 5.0
+          }
+        }
+      },
+      "sample": [
+        {
+          "age": 25.0,
+          "bmi": 32.3,
+          "glucose": 127.9,
+          "smoker": "No",
+          "gender": "Male",
+          "survived": 0
+        },
+        {
+          "age": 66.0,
+          "bmi": 27.8,
+          "glucose": 109.6,
+          "smoker": "No",
+          "gender": "Female",
+          "survived": 1
+        },
+        {
+          "age": 59.0,
+          "bmi": 26.2,
+          "glucose": 96.7,
+          "smoker": "No",
+          "gender": "Female",
+          "survived": 1
+        },
+        {
+          "age": 46.0,
+          "bmi": 21.8,
+          "glucose": 108.7,
+          "smoker": "No",
+          "gender": "Female",
+          "survived": 0
+        },
+        {
+          "age": 45.0,
+          "bmi": 18.6,
+          "glucose": 148.8,
+          "smoker": "Yes",
+          "gender": "Female",
+          "survived": 1
+        }
+      ],
+      "quality_flags": [],
+      "recommendations": [
+        "Impute missing numeric values (median recommended for skewed data).",
+        "Impute missing categorical values with mode or a dedicated 'Unknown' category.",
+        "Binary-encode `smoker` (Label Encoding is sufficient).",
+        "Binary-encode `gender` (Label Encoding is sufficient).",
+        "Scale numeric features with StandardScaler or MinMaxScaler before training."
+      ]
+    },
+    "task": {
+      "target_col": "survived",
+      "task_type": "classification",
+      "confidence": "high",
+      "reasoning": "Target column `survived` matched from user description. User description suggests classification ('predict whether').",
+      "alternatives": [
+        "age",
+        "smoker",
+        "gender"
+      ],
+      "n_classes": 2,
+      "target_dtype": "int64"
+    },
+    "prep": {
+      "feature_names": [
+        "age",
+        "bmi",
+        "glucose",
+        "smoker_No",
+        "smoker_Yes",
+        "gender_Female",
+        "gender_Male"
+      ],
+      "task_type": "classification",
+      "dropped_cols": [],
+      "encoding_summary": {
+        "age": "median imputation + standard scaling",
+        "bmi": "median imputation + standard scaling",
+        "glucose": "median imputation + standard scaling",
+        "smoker": "mode imputation + one-hot encoding",
+        "gender": "mode imputation + one-hot encoding"
+      },
+      "preprocessing_log": [
+        "Numeric columns (3): median imputation + standard scaling.",
+        "Categorical columns (2): mode imputation + one-hot encoding.",
+        "Target encoded with LabelEncoder. Classes: ['0', '1']",
+        "Train/test split: 240 train rows, 60 test rows (20% test).",
+        "Class imbalance ratio (majority/minority): 1.18.",
+        "Final feature matrix: 7 features."
+      ],
+      "num_cols": [
+        "age",
+        "bmi",
+        "glucose"
+      ],
+      "cat_cols": [
+        "smoker",
+        "gender"
+      ],
+      "n_classes": 2,
+      "log_transformed_cols": [],
+      "smote_applied": false,
+      "smote_log": ""
+    },
+    "train": {
+      "best_name": "Logistic Regression",
+      "best_metrics": {
+        "accuracy": 0.45,
+        "f1": 0.4489157983666573,
+        "roc_auc": 0.4511784511784511,
+        "train_time_s": 0.006,
+        "train_score": 0.5815384615384616,
+        "test_score": 0.4511784511784511,
+        "generalization_gap": 0.13036001036001044,
+        "overfit": false
+      },
+      "metric_name": "roc_auc",
+      "task_type": "classification",
+      "comparison_df": [
+        {
+          "Model": "Logistic Regression",
+          "Train Score": 0.5815,
+          "Test Score": 0.4512,
+          "Gap": 0.1304,
+          "CV Mean": 0.4976,
+          "CV Std": 0.0892,
+          "CV Train Mean": 0.5893,
+          "CV Overfit": "No",
+          "Overfit": "No",
+          "Train Time(s)": 0.01
+        },
+        {
+          "Model": "Random Forest",
+          "Train Score": 0.9588,
+          "Test Score": 0.5432,
+          "Gap": 0.4156,
+          "CV Mean": 0.529,
+          "CV Std": 0.0591,
+          "CV Train Mean": 0.9664,
+          "CV Overfit": "Yes",
+          "Overfit": "Yes",
+          "Train Time(s)": 0.13
+        }
+      ],
+      "feature_importances": {
+        "smoker_Yes": 0.19699141983724053,
+        "smoker_No": 0.1939423075252067,
+        "gender_Female": 0.16565234608133855,
+        "age": 0.16404897591729706,
+        "gender_Male": 0.1626032337693049,
+        "bmi": 0.0917848834251347,
+        "glucose": 0.024976833444477486
+      },
+      "training_log": [
+        "Training 2 models for classification task.",
+        "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
+        "  Training Logistic Regression...",
+        "    Logistic Regression: acc=0.450, f1=0.449, auc=0.451  [0.01s]",
+        "  Training Random Forest...",
+        "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.13s]",
+        "\nBest model: Logistic Regression (roc_auc=0.4512)",
+        "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+        "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512"
+      ],
+      "overfitting_warnings": [
+        "Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156",
+        "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290"
+      ],
+      "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512",
+      "cv_folds_used": 5,
+      "results": [
+        {
+          "name": "Logistic Regression",
+          "metrics": {
+            "accuracy": 0.45,
+            "f1": 0.4489157983666573,
+            "roc_auc": 0.4511784511784511,
+            "train_time_s": 0.006,
+            "train_score": 0.5815384615384616,
+            "test_score": 0.4511784511784511,
+            "generalization_gap": 0.13036001036001044,
+            "overfit": false
+          },
+          "train_score": 0.5815384615384616,
+          "generalization_gap": 0.13036001036001044,
+          "overfit": false,
+          "cv_scores": [
+            0.4632867132867133,
+            0.4073426573426573,
+            0.6048951048951049,
+            0.6031468531468531,
+            0.40909090909090917
+          ],
+          "cv_mean": 0.4975524475524475,
+          "cv_std": 0.08923005677423444,
+          "cv_train_scores": [
+            0.6059877622377623,
+            0.6217220279720279,
+            0.5741914335664335,
+            0.5557255244755246,
+            0.5890515734265735
+          ],
+          "cv_train_mean": 0.5893356643356643,
+          "cv_overfit": false
+        },
+        {
+          "name": "Random Forest",
+          "metrics": {
+            "accuracy": 0.55,
+            "f1": 0.532,
+            "roc_auc": 0.5432098765432098,
+            "train_time_s": 0.13,
+            "train_score": 0.9588111888111888,
+            "test_score": 0.5432098765432098,
+            "generalization_gap": 0.4156013122679789,
+            "overfit": true
+          },
+          "train_score": 0.9588111888111888,
+          "generalization_gap": 0.4156013122679789,
+          "overfit": true,
+          "cv_scores": [
+            0.513986013986014,
+            0.5017482517482517,
+            0.6206293706293706,
+            0.5629370629370629,
+            0.4458041958041957
+          ],
+          "cv_mean": 0.529020979020979,
+          "cv_std": 0.05905469159469648,
+          "cv_train_scores": [
+            0.9593531468531469,
+            0.9593531468531469,
+            0.9844842657342657,
+            0.9609921328671329,
+            0.9679851398601398
+          ],
+          "cv_train_mean": 0.9664335664335665,
+          "cv_overfit": true
+        }
+      ]
+    },
+    "eval": {
+      "metrics": {
+        "accuracy": 0.45,
+        "f1": 0.4489157983666573,
+        "classification_report": "              precision    recall  f1-score   support\n\n           0       0.50      0.52      0.51        33\n           1       0.38      0.37      0.38        27\n\n    accuracy                           0.45        60\n   macro avg       0.44      0.44      0.44        60\nweighted avg       0.45      0.45      0.45        60\n",
+        "roc_auc": 0.4511784511784511,
+        "y_prob": "[0.57014611 0.53596553 0.4241862  0.36509514 0.48147007 0.3187959\n 0.4747174  0.57359152 0.5056487  0.5028259  0.64256345 0.66002936\n 0.63778489 0.33171773 0.51338013 0.44263411 0.40235316 0.43268133\n 0.48608274 0.50569409 0.59623373 0.40039336 0.33733264 0.41309245\n 0.5975354  0.53161    0.53129141 0.3610581  0.57085109 0.49017402\n 0.50337386 0.5221093  0.42158069 0.37601336 0.46604688 0.62920635\n 0.38227093 0.40702436 0.54269723 0.35922024 0.49264623 0.41928929\n 0.47206829 0.62459893 0.56867975 0.4912891  0.62618004 0.44662953\n 0.49452991 0.48079494 0.34942465 0.46325945 0.48244211 0.51415148\n 0.4885389  0.46029596 0.53704264 0.54362534 0.58717205 0.47581249]"
+      },
+      "plot_paths": {
+        "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
+        "roc_curve": "outputs/demo_showcase_roc_curve.png",
+        "feature_importance": "outputs/demo_showcase_feature_importance.png"
+      },
+      "eval_log": [
+        "Computed evaluation metrics.",
+        "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_confusion_matrix.png",
+        "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_roc_curve.png",
+        "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_feature_importance.png",
+        "SHAP not installed \u2014 skipping (pip install shap)."
+      ],
+      "task_type": "classification",
+      "has_shap": false,
+      "shap_explanation_text": ""
+    },
+    "target_col": "survived",
+    "task_type": "classification",
+    "best_model_name": "Logistic Regression",
+    "best_metrics": {
+      "accuracy": 0.45,
+      "f1": 0.4489157983666573,
+      "roc_auc": 0.4511784511784511,
+      "train_time_s": 0.006,
+      "train_score": 0.5815384615384616,
+      "test_score": 0.4511784511784511,
+      "generalization_gap": 0.13036001036001044,
+      "overfit": false
+    },
+    "comparison_df": [
+      {
+        "Model": "Logistic Regression",
+        "Train Score": 0.5815,
+        "Test Score": 0.4512,
+        "Gap": 0.1304,
+        "CV Mean": 0.4976,
+        "CV Std": 0.0892,
+        "CV Train Mean": 0.5893,
+        "CV Overfit": "No",
+        "Overfit": "No",
+        "Train Time(s)": 0.01
+      },
+      {
+        "Model": "Random Forest",
+        "Train Score": 0.9588,
+        "Test Score": 0.5432,
+        "Gap": 0.4156,
+        "CV Mean": 0.529,
+        "CV Std": 0.0591,
+        "CV Train Mean": 0.9664,
+        "CV Overfit": "Yes",
+        "Overfit": "Yes",
+        "Train Time(s)": 0.13
+      }
+    ],
+    "feature_importances": {
+      "smoker_Yes": 0.19699141983724053,
+      "smoker_No": 0.1939423075252067,
+      "gender_Female": 0.16565234608133855,
+      "age": 0.16404897591729706,
+      "gender_Male": 0.1626032337693049,
+      "bmi": 0.0917848834251347,
+      "glucose": 0.024976833444477486
+    },
+    "plot_paths": {
+      "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
+      "roc_curve": "outputs/demo_showcase_roc_curve.png",
+      "feature_importance": "outputs/demo_showcase_feature_importance.png"
+    },
+    "metrics": {
+      "accuracy": 0.45,
+      "f1": 0.4489157983666573,
+      "classification_report": "              precision    recall  f1-score   support\n\n           0       0.50      0.52      0.51        33\n           1       0.38      0.37      0.38        27\n\n    accuracy                           0.45        60\n   macro avg       0.44      0.44      0.44        60\nweighted avg       0.45      0.45      0.45        60\n",
+      "roc_auc": 0.4511784511784511,
+      "y_prob": "[0.57014611 0.53596553 0.4241862  0.36509514 0.48147007 0.3187959\n 0.4747174  0.57359152 0.5056487  0.5028259  0.64256345 0.66002936\n 0.63778489 0.33171773 0.51338013 0.44263411 0.40235316 0.43268133\n 0.48608274 0.50569409 0.59623373 0.40039336 0.33733264 0.41309245\n 0.5975354  0.53161    0.53129141 0.3610581  0.57085109 0.49017402\n 0.50337386 0.5221093  0.42158069 0.37601336 0.46604688 0.62920635\n 0.38227093 0.40702436 0.54269723 0.35922024 0.49264623 0.41928929\n 0.47206829 0.62459893 0.56867975 0.4912891  0.62618004 0.44662953\n 0.49452991 0.48079494 0.34942465 0.46325945 0.48244211 0.51415148\n 0.4885389  0.46029596 0.53704264 0.54362534 0.58717205 0.47581249]"
+    },
+    "tune": {
+      "success": false,
+      "error": "optuna not installed \u2014 run: pip install optuna"
+    },
+    "plan": {
+      "recommended_models": [
+        "Logistic Regression",
+        "Random Forest",
+        "XGBoost",
+        "LightGBM"
+      ],
+      "skip_models": [],
+      "skip_reasons": {},
+      "adjusted_params": {
+        "Random Forest": {
+          "n_estimators": 100,
+          "max_depth": 5
+        },
+        "XGBoost": {
+          "n_estimators": 100,
+          "max_depth": 4,
+          "learning_rate": 0.1
+        },
+        "LightGBM": {
+          "n_estimators": 100,
+          "num_leaves": 31
+        }
+      },
+      "primary_metric": "roc_auc",
+      "metric_reasoning": "Binary classification \u2014 ROC-AUC summarizes ranking quality across thresholds.",
+      "n_trials": 20,
+      "timeout": 60,
+      "warnings": [
+        "Small dataset \u2014 using conservative parameters to reduce overfitting risk."
+      ],
+      "notes": [
+        "Small dataset (300 rows): Optuna budget set to 20 trials and 60s timeout to avoid overfitting."
+      ],
+      "plan_summary": "The dataset has 300 rows and 7 features after preprocessing. Task: classification with 2 classes. Missing values were present in the raw data. Recommended models: Logistic Regression, Random Forest, XGBoost, LightGBM. Primary evaluation metric: roc_auc. Tuning budget: 20 trials, 60s.",
+      "dataset_profile": {
+        "n_rows": 300,
+        "n_features": 7,
+        "is_small": true,
+        "is_large": false,
+        "is_wide": false,
+        "is_binary": true,
+        "imbalance_ratio": 1.1818181818181819,
+        "smote_applied": false
+      }
+    }
+  },
+  "pipeline_track": [
+    {
+      "step": 1,
+      "name": "run_eda",
+      "label": "EDA",
+      "status": "done",
+      "data": {
+        "eda": {
+          "overview": {
+            "rows": 300,
+            "columns": 6,
+            "numeric_cols": 4,
+            "categorical_cols": 2,
+            "duplicate_rows": 0,
+            "memory_mb": 0.039470672607421875,
+            "column_names": [
+              "age",
+              "bmi",
+              "glucose",
+              "smoker",
+              "gender",
+              "survived"
+            ]
+          },
+          "columns": {
+            "age": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 59,
+              "mean": 49.446666666666665,
+              "std": 16.354777632041777,
+              "min": 20.0,
+              "max": 79.0,
+              "median": 49.0,
+              "skewness": -0.0386360710697924
+            },
+            "bmi": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 15,
+              "n_unique": 144,
+              "mean": 26.975438596491227,
+              "std": 5.0432174750468315,
+              "min": 14.2,
+              "max": 41.5,
+              "median": 27.0,
+              "skewness": 0.036890158685425216
+            },
+            "glucose": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 254,
+              "mean": 98.09833333333333,
+              "std": 25.808506878803865,
+              "min": 25.9,
+              "max": 164.9,
+              "median": 98.25,
+              "skewness": -0.041962228874551685
+            },
+            "smoker": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 2,
+              "top_value": "No",
+              "top_freq": 150,
+              "value_counts": {
+                "No": 150,
+                "Yes": 150
+              }
+            },
+            "gender": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 2,
+              "top_value": "Female",
+              "top_freq": 153,
+              "value_counts": {
+                "Female": 153,
+                "Male": 147
+              }
+            },
+            "survived": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 2,
+              "mean": 0.45666666666666667,
+              "std": 0.4989509619494919,
+              "min": 0.0,
+              "max": 1.0,
+              "median": 0.0,
+              "skewness": 0.1748635212702186
+            }
+          },
+          "missing": {
+            "total_missing": 15,
+            "columns_with_missing": 1,
+            "by_column": {
+              "bmi": {
+                "count": 15,
+                "pct": 5.0
+              }
+            }
+          },
+          "sample": [
+            {
+              "age": 25.0,
+              "bmi": 32.3,
+              "glucose": 127.9,
+              "smoker": "No",
+              "gender": "Male",
+              "survived": 0
+            },
+            {
+              "age": 66.0,
+              "bmi": 27.8,
+              "glucose": 109.6,
+              "smoker": "No",
+              "gender": "Female",
+              "survived": 1
+            },
+            {
+              "age": 59.0,
+              "bmi": 26.2,
+              "glucose": 96.7,
+              "smoker": "No",
+              "gender": "Female",
+              "survived": 1
+            },
+            {
+              "age": 46.0,
+              "bmi": 21.8,
+              "glucose": 108.7,
+              "smoker": "No",
+              "gender": "Female",
+              "survived": 0
+            },
+            {
+              "age": 45.0,
+              "bmi": 18.6,
+              "glucose": 148.8,
+              "smoker": "Yes",
+              "gender": "Female",
+              "survived": 1
+            }
+          ],
+          "quality_flags": [],
+          "recommendations": [
+            "Impute missing numeric values (median recommended for skewed data).",
+            "Impute missing categorical values with mode or a dedicated 'Unknown' category.",
+            "Binary-encode `smoker` (Label Encoding is sufficient).",
+            "Binary-encode `gender` (Label Encoding is sufficient).",
+            "Scale numeric features with StandardScaler or MinMaxScaler before training."
+          ]
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 2,
+      "name": "detect_task",
+      "label": "Task detection",
+      "status": "done",
+      "data": {
+        "task": {
+          "target_col": "survived",
+          "task_type": "classification",
+          "confidence": "high",
+          "reasoning": "Target column `survived` matched from user description. User description suggests classification ('predict whether').",
+          "alternatives": [
+            "age",
+            "smoker",
+            "gender"
+          ],
+          "n_classes": 2,
+          "target_dtype": "int64"
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 3,
+      "name": "preprocess",
+      "label": "Preprocessing",
+      "status": "done",
+      "data": {
+        "prep": {
+          "feature_names": [
+            "age",
+            "bmi",
+            "glucose",
+            "smoker_No",
+            "smoker_Yes",
+            "gender_Female",
+            "gender_Male"
+          ],
+          "task_type": "classification",
+          "dropped_cols": [],
+          "encoding_summary": {
+            "age": "median imputation + standard scaling",
+            "bmi": "median imputation + standard scaling",
+            "glucose": "median imputation + standard scaling",
+            "smoker": "mode imputation + one-hot encoding",
+            "gender": "mode imputation + one-hot encoding"
+          },
+          "preprocessing_log": [
+            "Numeric columns (3): median imputation + standard scaling.",
+            "Categorical columns (2): mode imputation + one-hot encoding.",
+            "Target encoded with LabelEncoder. Classes: ['0', '1']",
+            "Train/test split: 240 train rows, 60 test rows (20% test).",
+            "Class imbalance ratio (majority/minority): 1.18.",
+            "Final feature matrix: 7 features."
+          ],
+          "num_cols": [
+            "age",
+            "bmi",
+            "glucose"
+          ],
+          "cat_cols": [
+            "smoker",
+            "gender"
+          ],
+          "n_classes": 2,
+          "log_transformed_cols": [],
+          "smote_applied": false,
+          "smote_log": "",
+          "train_size": 240,
+          "test_size": 60,
+          "final_feature_count": 7
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 4,
+      "name": "plan_training",
+      "label": "Training Plan",
+      "status": "done",
+      "data": {
+        "plan": {
+          "recommended_models": [
+            "Logistic Regression",
+            "Random Forest",
+            "XGBoost",
+            "LightGBM"
+          ],
+          "skip_models": [],
+          "skip_reasons": {},
+          "adjusted_params": {
+            "Random Forest": {
+              "n_estimators": 100,
+              "max_depth": 5
+            },
+            "XGBoost": {
+              "n_estimators": 100,
+              "max_depth": 4,
+              "learning_rate": 0.1
+            },
+            "LightGBM": {
+              "n_estimators": 100,
+              "num_leaves": 31
+            }
+          },
+          "primary_metric": "roc_auc",
+          "metric_reasoning": "Binary classification \u2014 ROC-AUC summarizes ranking quality across thresholds.",
+          "n_trials": 20,
+          "timeout": 60,
+          "warnings": [
+            "Small dataset \u2014 using conservative parameters to reduce overfitting risk."
+          ],
+          "notes": [
+            "Small dataset (300 rows): Optuna budget set to 20 trials and 60s timeout to avoid overfitting."
+          ],
+          "plan_summary": "The dataset has 300 rows and 7 features after preprocessing. Task: classification with 2 classes. Missing values were present in the raw data. Recommended models: Logistic Regression, Random Forest, XGBoost, LightGBM. Primary evaluation metric: roc_auc. Tuning budget: 20 trials, 60s.",
+          "dataset_profile": {
+            "n_rows": 300,
+            "n_features": 7,
+            "is_small": true,
+            "is_large": false,
+            "is_wide": false,
+            "is_binary": true,
+            "imbalance_ratio": 1.1818181818181819,
+            "smote_applied": false
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 5,
+      "name": "train_models",
+      "label": "Model training",
+      "status": "done",
+      "data": {
+        "train": {
+          "best_name": "Logistic Regression",
+          "best_metrics": {
+            "accuracy": 0.45,
+            "f1": 0.4489157983666573,
+            "roc_auc": 0.4511784511784511,
+            "train_time_s": 0.006,
+            "train_score": 0.5815384615384616,
+            "test_score": 0.4511784511784511,
+            "generalization_gap": 0.13036001036001044,
+            "overfit": false
+          },
+          "metric_name": "roc_auc",
+          "task_type": "classification",
+          "comparison_df": [
+            {
+              "Model": "Logistic Regression",
+              "Train Score": 0.5815,
+              "Test Score": 0.4512,
+              "Gap": 0.1304,
+              "CV Mean": 0.4976,
+              "CV Std": 0.0892,
+              "CV Train Mean": 0.5893,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.01
+            },
+            {
+              "Model": "Random Forest",
+              "Train Score": 0.9588,
+              "Test Score": 0.5432,
+              "Gap": 0.4156,
+              "CV Mean": 0.529,
+              "CV Std": 0.0591,
+              "CV Train Mean": 0.9664,
+              "CV Overfit": "Yes",
+              "Overfit": "Yes",
+              "Train Time(s)": 0.13
+            }
+          ],
+          "feature_importances": {
+            "smoker_Yes": 0.19699141983724053,
+            "smoker_No": 0.1939423075252067,
+            "gender_Female": 0.16565234608133855,
+            "age": 0.16404897591729706,
+            "gender_Male": 0.1626032337693049,
+            "bmi": 0.0917848834251347,
+            "glucose": 0.024976833444477486
+          },
+          "training_log": [
+            "Training 2 models for classification task.",
+            "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
+            "  Training Logistic Regression...",
+            "    Logistic Regression: acc=0.450, f1=0.449, auc=0.451  [0.01s]",
+            "  Training Random Forest...",
+            "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.13s]",
+            "\nBest model: Logistic Regression (roc_auc=0.4512)",
+            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+            "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512"
+          ],
+          "overfitting_warnings": [
+            "Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156",
+            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290"
+          ],
+          "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512",
+          "cv_folds_used": 5,
+          "results": [
+            {
+              "name": "Logistic Regression",
+              "metrics": {
+                "accuracy": 0.45,
+                "f1": 0.4489157983666573,
+                "roc_auc": 0.4511784511784511,
+                "train_time_s": 0.006,
+                "train_score": 0.5815384615384616,
+                "test_score": 0.4511784511784511,
+                "generalization_gap": 0.13036001036001044,
+                "overfit": false
+              },
+              "cv_scores": [
+                0.4632867132867133,
+                0.4073426573426573,
+                0.6048951048951049,
+                0.6031468531468531,
+                0.40909090909090917
+              ],
+              "cv_mean": 0.4975524475524475,
+              "cv_std": 0.08923005677423444,
+              "cv_train_scores": [
+                0.6059877622377623,
+                0.6217220279720279,
+                0.5741914335664335,
+                0.5557255244755246,
+                0.5890515734265735
+              ],
+              "cv_train_mean": 0.5893356643356643,
+              "cv_overfit": false,
+              "train_score": 0.5815384615384616,
+              "generalization_gap": 0.13036001036001044,
+              "overfit": false
+            },
+            {
+              "name": "Random Forest",
+              "metrics": {
+                "accuracy": 0.55,
+                "f1": 0.532,
+                "roc_auc": 0.5432098765432098,
+                "train_time_s": 0.13,
+                "train_score": 0.9588111888111888,
+                "test_score": 0.5432098765432098,
+                "generalization_gap": 0.4156013122679789,
+                "overfit": true
+              },
+              "cv_scores": [
+                0.513986013986014,
+                0.5017482517482517,
+                0.6206293706293706,
+                0.5629370629370629,
+                0.4458041958041957
+              ],
+              "cv_mean": 0.529020979020979,
+              "cv_std": 0.05905469159469648,
+              "cv_train_scores": [
+                0.9593531468531469,
+                0.9593531468531469,
+                0.9844842657342657,
+                0.9609921328671329,
+                0.9679851398601398
+              ],
+              "cv_train_mean": 0.9664335664335665,
+              "cv_overfit": true,
+              "train_score": 0.9588111888111888,
+              "generalization_gap": 0.4156013122679789,
+              "overfit": true
+            }
+          ]
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 6,
+      "name": "tune_model",
+      "label": "Hyperparameter tuning",
+      "status": "done",
+      "data": {
+        "tune": {
+          "success": false,
+          "error": "optuna not installed \u2014 run: pip install optuna",
+          "model_name": "Logistic Regression"
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 7,
+      "name": "evaluate_model",
+      "label": "Evaluation",
+      "status": "done",
+      "data": {
+        "eval": {
+          "metrics": {
+            "accuracy": 0.45,
+            "f1": 0.4489157983666573,
+            "classification_report": "              precision    recall  f1-score   support\n\n           0       0.50      0.52      0.51        33\n           1       0.38      0.37      0.38        27\n\n    accuracy                           0.45        60\n   macro avg       0.44      0.44      0.44        60\nweighted avg       0.45      0.45      0.45        60\n",
+            "roc_auc": 0.4511784511784511,
+            "y_prob": "[0.57014611 0.53596553 0.4241862  0.36509514 0.48147007 0.3187959\n 0.4747174  0.57359152 0.5056487  0.5028259  0.64256345 0.66002936\n 0.63778489 0.33171773 0.51338013 0.44263411 0.40235316 0.43268133\n 0.48608274 0.50569409 0.59623373 0.40039336 0.33733264 0.41309245\n 0.5975354  0.53161    0.53129141 0.3610581  0.57085109 0.49017402\n 0.50337386 0.5221093  0.42158069 0.37601336 0.46604688 0.62920635\n 0.38227093 0.40702436 0.54269723 0.35922024 0.49264623 0.41928929\n 0.47206829 0.62459893 0.56867975 0.4912891  0.62618004 0.44662953\n 0.49452991 0.48079494 0.34942465 0.46325945 0.48244211 0.51415148\n 0.4885389  0.46029596 0.53704264 0.54362534 0.58717205 0.47581249]"
+          },
+          "plot_paths": {
+            "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
+            "roc_curve": "outputs/demo_showcase_roc_curve.png",
+            "feature_importance": "outputs/demo_showcase_feature_importance.png"
+          },
+          "eval_log": [
+            "Computed evaluation metrics.",
+            "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_confusion_matrix.png",
+            "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_roc_curve.png",
+            "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_feature_importance.png",
+            "SHAP not installed \u2014 skipping (pip install shap)."
+          ],
+          "task_type": "classification",
+          "has_shap": false,
+          "shap_explanation_text": ""
+        }
+      },
+      "error": null
+    },
+    {
+      "step": 8,
+      "name": "final",
+      "label": "Final recommendation",
+      "status": "done",
+      "data": {
+        "status": "complete",
+        "eda": {
+          "overview": {
+            "rows": 300,
+            "columns": 6,
+            "numeric_cols": 4,
+            "categorical_cols": 2,
+            "duplicate_rows": 0,
+            "memory_mb": 0.039470672607421875,
+            "column_names": [
+              "age",
+              "bmi",
+              "glucose",
+              "smoker",
+              "gender",
+              "survived"
+            ]
+          },
+          "columns": {
+            "age": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 59,
+              "mean": 49.446666666666665,
+              "std": 16.354777632041777,
+              "min": 20.0,
+              "max": 79.0,
+              "median": 49.0,
+              "skewness": -0.0386360710697924
+            },
+            "bmi": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 15,
+              "n_unique": 144,
+              "mean": 26.975438596491227,
+              "std": 5.0432174750468315,
+              "min": 14.2,
+              "max": 41.5,
+              "median": 27.0,
+              "skewness": 0.036890158685425216
+            },
+            "glucose": {
+              "dtype": "float64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 254,
+              "mean": 98.09833333333333,
+              "std": 25.808506878803865,
+              "min": 25.9,
+              "max": 164.9,
+              "median": 98.25,
+              "skewness": -0.041962228874551685
+            },
+            "smoker": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 2,
+              "top_value": "No",
+              "top_freq": 150,
+              "value_counts": {
+                "No": 150,
+                "Yes": 150
+              }
+            },
+            "gender": {
+              "dtype": "object",
+              "dtype_group": "categorical",
+              "missing": 0,
+              "n_unique": 2,
+              "top_value": "Female",
+              "top_freq": 153,
+              "value_counts": {
+                "Female": 153,
+                "Male": 147
+              }
+            },
+            "survived": {
+              "dtype": "int64",
+              "dtype_group": "numeric",
+              "missing": 0,
+              "n_unique": 2,
+              "mean": 0.45666666666666667,
+              "std": 0.4989509619494919,
+              "min": 0.0,
+              "max": 1.0,
+              "median": 0.0,
+              "skewness": 0.1748635212702186
+            }
+          },
+          "missing": {
+            "total_missing": 15,
+            "columns_with_missing": 1,
+            "by_column": {
+              "bmi": {
+                "count": 15,
+                "pct": 5.0
+              }
+            }
+          },
+          "sample": [
+            {
+              "age": 25.0,
+              "bmi": 32.3,
+              "glucose": 127.9,
+              "smoker": "No",
+              "gender": "Male",
+              "survived": 0
+            },
+            {
+              "age": 66.0,
+              "bmi": 27.8,
+              "glucose": 109.6,
+              "smoker": "No",
+              "gender": "Female",
+              "survived": 1
+            },
+            {
+              "age": 59.0,
+              "bmi": 26.2,
+              "glucose": 96.7,
+              "smoker": "No",
+              "gender": "Female",
+              "survived": 1
+            },
+            {
+              "age": 46.0,
+              "bmi": 21.8,
+              "glucose": 108.7,
+              "smoker": "No",
+              "gender": "Female",
+              "survived": 0
+            },
+            {
+              "age": 45.0,
+              "bmi": 18.6,
+              "glucose": 148.8,
+              "smoker": "Yes",
+              "gender": "Female",
+              "survived": 1
+            }
+          ],
+          "quality_flags": [],
+          "recommendations": [
+            "Impute missing numeric values (median recommended for skewed data).",
+            "Impute missing categorical values with mode or a dedicated 'Unknown' category.",
+            "Binary-encode `smoker` (Label Encoding is sufficient).",
+            "Binary-encode `gender` (Label Encoding is sufficient).",
+            "Scale numeric features with StandardScaler or MinMaxScaler before training."
+          ]
+        },
+        "task": {
+          "target_col": "survived",
+          "task_type": "classification",
+          "confidence": "high",
+          "reasoning": "Target column `survived` matched from user description. User description suggests classification ('predict whether').",
+          "alternatives": [
+            "age",
+            "smoker",
+            "gender"
+          ],
+          "n_classes": 2,
+          "target_dtype": "int64"
+        },
+        "prep": {
+          "feature_names": [
+            "age",
+            "bmi",
+            "glucose",
+            "smoker_No",
+            "smoker_Yes",
+            "gender_Female",
+            "gender_Male"
+          ],
+          "task_type": "classification",
+          "dropped_cols": [],
+          "encoding_summary": {
+            "age": "median imputation + standard scaling",
+            "bmi": "median imputation + standard scaling",
+            "glucose": "median imputation + standard scaling",
+            "smoker": "mode imputation + one-hot encoding",
+            "gender": "mode imputation + one-hot encoding"
+          },
+          "preprocessing_log": [
+            "Numeric columns (3): median imputation + standard scaling.",
+            "Categorical columns (2): mode imputation + one-hot encoding.",
+            "Target encoded with LabelEncoder. Classes: ['0', '1']",
+            "Train/test split: 240 train rows, 60 test rows (20% test).",
+            "Class imbalance ratio (majority/minority): 1.18.",
+            "Final feature matrix: 7 features."
+          ],
+          "num_cols": [
+            "age",
+            "bmi",
+            "glucose"
+          ],
+          "cat_cols": [
+            "smoker",
+            "gender"
+          ],
+          "n_classes": 2,
+          "log_transformed_cols": [],
+          "smote_applied": false,
+          "smote_log": ""
+        },
+        "train": {
+          "best_name": "Logistic Regression",
+          "best_metrics": {
+            "accuracy": 0.45,
+            "f1": 0.4489157983666573,
+            "roc_auc": 0.4511784511784511,
+            "train_time_s": 0.006,
+            "train_score": 0.5815384615384616,
+            "test_score": 0.4511784511784511,
+            "generalization_gap": 0.13036001036001044,
+            "overfit": false
+          },
+          "metric_name": "roc_auc",
+          "task_type": "classification",
+          "comparison_df": [
+            {
+              "Model": "Logistic Regression",
+              "Train Score": 0.5815,
+              "Test Score": 0.4512,
+              "Gap": 0.1304,
+              "CV Mean": 0.4976,
+              "CV Std": 0.0892,
+              "CV Train Mean": 0.5893,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.01
+            },
+            {
+              "Model": "Random Forest",
+              "Train Score": 0.9588,
+              "Test Score": 0.5432,
+              "Gap": 0.4156,
+              "CV Mean": 0.529,
+              "CV Std": 0.0591,
+              "CV Train Mean": 0.9664,
+              "CV Overfit": "Yes",
+              "Overfit": "Yes",
+              "Train Time(s)": 0.13
+            }
+          ],
+          "feature_importances": {
+            "smoker_Yes": 0.19699141983724053,
+            "smoker_No": 0.1939423075252067,
+            "gender_Female": 0.16565234608133855,
+            "age": 0.16404897591729706,
+            "gender_Male": 0.1626032337693049,
+            "bmi": 0.0917848834251347,
+            "glucose": 0.024976833444477486
+          },
+          "training_log": [
+            "Training 2 models for classification task.",
+            "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
+            "  Training Logistic Regression...",
+            "    Logistic Regression: acc=0.450, f1=0.449, auc=0.451  [0.01s]",
+            "  Training Random Forest...",
+            "    Random Forest: acc=0.550, f1=0.532, auc=0.543  [0.13s]",
+            "\nBest model: Logistic Regression (roc_auc=0.4512)",
+            "Overfitting warnings: Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156; Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290",
+            "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512"
+          ],
+          "overfitting_warnings": [
+            "Random Forest is overfitting \u2014 train ROC-AUC 0.9588 vs test ROC-AUC 0.5432, gap 0.4156",
+            "Random Forest shows consistent overfitting across CV folds \u2014 CV train mean 0.9664 vs CV test mean 0.5290"
+          ],
+          "cv_summary": "5-fold cross-validation results: best model Logistic Regression achieved CV mean 0.4976 \u00b1 0.0892 vs single test score 0.4512",
+          "cv_folds_used": 5,
+          "results": [
+            {
+              "name": "Logistic Regression",
+              "metrics": {
+                "accuracy": 0.45,
+                "f1": 0.4489157983666573,
+                "roc_auc": 0.4511784511784511,
+                "train_time_s": 0.006,
+                "train_score": 0.5815384615384616,
+                "test_score": 0.4511784511784511,
+                "generalization_gap": 0.13036001036001044,
+                "overfit": false
+              },
+              "train_score": 0.5815384615384616,
+              "generalization_gap": 0.13036001036001044,
+              "overfit": false,
+              "cv_scores": [
+                0.4632867132867133,
+                0.4073426573426573,
+                0.6048951048951049,
+                0.6031468531468531,
+                0.40909090909090917
+              ],
+              "cv_mean": 0.4975524475524475,
+              "cv_std": 0.08923005677423444,
+              "cv_train_scores": [
+                0.6059877622377623,
+                0.6217220279720279,
+                0.5741914335664335,
+                0.5557255244755246,
+                0.5890515734265735
+              ],
+              "cv_train_mean": 0.5893356643356643,
+              "cv_overfit": false
+            },
+            {
+              "name": "Random Forest",
+              "metrics": {
+                "accuracy": 0.55,
+                "f1": 0.532,
+                "roc_auc": 0.5432098765432098,
+                "train_time_s": 0.13,
+                "train_score": 0.9588111888111888,
+                "test_score": 0.5432098765432098,
+                "generalization_gap": 0.4156013122679789,
+                "overfit": true
+              },
+              "train_score": 0.9588111888111888,
+              "generalization_gap": 0.4156013122679789,
+              "overfit": true,
+              "cv_scores": [
+                0.513986013986014,
+                0.5017482517482517,
+                0.6206293706293706,
+                0.5629370629370629,
+                0.4458041958041957
+              ],
+              "cv_mean": 0.529020979020979,
+              "cv_std": 0.05905469159469648,
+              "cv_train_scores": [
+                0.9593531468531469,
+                0.9593531468531469,
+                0.9844842657342657,
+                0.9609921328671329,
+                0.9679851398601398
+              ],
+              "cv_train_mean": 0.9664335664335665,
+              "cv_overfit": true
+            }
+          ]
+        },
+        "eval": {
+          "metrics": {
+            "accuracy": 0.45,
+            "f1": 0.4489157983666573,
+            "classification_report": "              precision    recall  f1-score   support\n\n           0       0.50      0.52      0.51        33\n           1       0.38      0.37      0.38        27\n\n    accuracy                           0.45        60\n   macro avg       0.44      0.44      0.44        60\nweighted avg       0.45      0.45      0.45        60\n",
+            "roc_auc": 0.4511784511784511,
+            "y_prob": "[0.57014611 0.53596553 0.4241862  0.36509514 0.48147007 0.3187959\n 0.4747174  0.57359152 0.5056487  0.5028259  0.64256345 0.66002936\n 0.63778489 0.33171773 0.51338013 0.44263411 0.40235316 0.43268133\n 0.48608274 0.50569409 0.59623373 0.40039336 0.33733264 0.41309245\n 0.5975354  0.53161    0.53129141 0.3610581  0.57085109 0.49017402\n 0.50337386 0.5221093  0.42158069 0.37601336 0.46604688 0.62920635\n 0.38227093 0.40702436 0.54269723 0.35922024 0.49264623 0.41928929\n 0.47206829 0.62459893 0.56867975 0.4912891  0.62618004 0.44662953\n 0.49452991 0.48079494 0.34942465 0.46325945 0.48244211 0.51415148\n 0.4885389  0.46029596 0.53704264 0.54362534 0.58717205 0.47581249]"
+          },
+          "plot_paths": {
+            "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
+            "roc_curve": "outputs/demo_showcase_roc_curve.png",
+            "feature_importance": "outputs/demo_showcase_feature_importance.png"
+          },
+          "eval_log": [
+            "Computed evaluation metrics.",
+            "Saved confusion matrix \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_confusion_matrix.png",
+            "Saved ROC curve \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_roc_curve.png",
+            "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\demo_showcase_feature_importance.png",
+            "SHAP not installed \u2014 skipping (pip install shap)."
+          ],
+          "task_type": "classification",
+          "has_shap": false,
+          "shap_explanation_text": ""
+        },
+        "target_col": "survived",
+        "task_type": "classification",
+        "best_model_name": "Logistic Regression",
+        "best_metrics": {
+          "accuracy": 0.45,
+          "f1": 0.4489157983666573,
+          "roc_auc": 0.4511784511784511,
+          "train_time_s": 0.006,
+          "train_score": 0.5815384615384616,
+          "test_score": 0.4511784511784511,
+          "generalization_gap": 0.13036001036001044,
+          "overfit": false
+        },
+        "comparison_df": [
+          {
+            "Model": "Logistic Regression",
+            "Train Score": 0.5815,
+            "Test Score": 0.4512,
+            "Gap": 0.1304,
+            "CV Mean": 0.4976,
+            "CV Std": 0.0892,
+            "CV Train Mean": 0.5893,
+            "CV Overfit": "No",
+            "Overfit": "No",
+            "Train Time(s)": 0.01
+          },
+          {
+            "Model": "Random Forest",
+            "Train Score": 0.9588,
+            "Test Score": 0.5432,
+            "Gap": 0.4156,
+            "CV Mean": 0.529,
+            "CV Std": 0.0591,
+            "CV Train Mean": 0.9664,
+            "CV Overfit": "Yes",
+            "Overfit": "Yes",
+            "Train Time(s)": 0.13
+          }
+        ],
+        "feature_importances": {
+          "smoker_Yes": 0.19699141983724053,
+          "smoker_No": 0.1939423075252067,
+          "gender_Female": 0.16565234608133855,
+          "age": 0.16404897591729706,
+          "gender_Male": 0.1626032337693049,
+          "bmi": 0.0917848834251347,
+          "glucose": 0.024976833444477486
+        },
+        "plot_paths": {
+          "confusion_matrix": "outputs/demo_showcase_confusion_matrix.png",
+          "roc_curve": "outputs/demo_showcase_roc_curve.png",
+          "feature_importance": "outputs/demo_showcase_feature_importance.png"
+        },
+        "metrics": {
+          "accuracy": 0.45,
+          "f1": 0.4489157983666573,
+          "classification_report": "              precision    recall  f1-score   support\n\n           0       0.50      0.52      0.51        33\n           1       0.38      0.37      0.38        27\n\n    accuracy                           0.45        60\n   macro avg       0.44      0.44      0.44        60\nweighted avg       0.45      0.45      0.45        60\n",
+          "roc_auc": 0.4511784511784511,
+          "y_prob": "[0.57014611 0.53596553 0.4241862  0.36509514 0.48147007 0.3187959\n 0.4747174  0.57359152 0.5056487  0.5028259  0.64256345 0.66002936\n 0.63778489 0.33171773 0.51338013 0.44263411 0.40235316 0.43268133\n 0.48608274 0.50569409 0.59623373 0.40039336 0.33733264 0.41309245\n 0.5975354  0.53161    0.53129141 0.3610581  0.57085109 0.49017402\n 0.50337386 0.5221093  0.42158069 0.37601336 0.46604688 0.62920635\n 0.38227093 0.40702436 0.54269723 0.35922024 0.49264623 0.41928929\n 0.47206829 0.62459893 0.56867975 0.4912891  0.62618004 0.44662953\n 0.49452991 0.48079494 0.34942465 0.46325945 0.48244211 0.51415148\n 0.4885389  0.46029596 0.53704264 0.54362534 0.58717205 0.47581249]"
+        },
+        "tune": {
+          "success": false,
+          "error": "optuna not installed \u2014 run: pip install optuna"
+        },
+        "plan": {
+          "recommended_models": [
+            "Logistic Regression",
+            "Random Forest",
+            "XGBoost",
+            "LightGBM"
+          ],
+          "skip_models": [],
+          "skip_reasons": {},
+          "adjusted_params": {
+            "Random Forest": {
+              "n_estimators": 100,
+              "max_depth": 5
+            },
+            "XGBoost": {
+              "n_estimators": 100,
+              "max_depth": 4,
+              "learning_rate": 0.1
+            },
+            "LightGBM": {
+              "n_estimators": 100,
+              "num_leaves": 31
+            }
+          },
+          "primary_metric": "roc_auc",
+          "metric_reasoning": "Binary classification \u2014 ROC-AUC summarizes ranking quality across thresholds.",
+          "n_trials": 20,
+          "timeout": 60,
+          "warnings": [
+            "Small dataset \u2014 using conservative parameters to reduce overfitting risk."
+          ],
+          "notes": [
+            "Small dataset (300 rows): Optuna budget set to 20 trials and 60s timeout to avoid overfitting."
+          ],
+          "plan_summary": "The dataset has 300 rows and 7 features after preprocessing. Task: classification with 2 classes. Missing values were present in the raw data. Recommended models: Logistic Regression, Random Forest, XGBoost, LightGBM. Primary evaluation metric: roc_auc. Tuning budget: 20 trials, 60s.",
+          "dataset_profile": {
+            "n_rows": 300,
+            "n_features": 7,
+            "is_small": true,
+            "is_large": false,
+            "is_wide": false,
+            "is_binary": true,
+            "imbalance_ratio": 1.1818181818181819,
+            "smote_applied": false
+          }
+        }
+      },
+      "error": null
+    }
+  ],
+  "log_lines": [
+    "<div class=\"log-line log-text\"><span class=\"log-ts\">00:00:00</span>Demo mode \u2014 pre-computed example run.</div>",
+    "<div class=\"log-line log-tool-done\"><span class=\"log-ts\">00:00:01</span>\u2713 <span class=\"tool-chip\">run_eda</span> \u2014 EDA complete</div>"
+  ]
+}

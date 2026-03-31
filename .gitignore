@@ -25,5 +25,9 @@ Thumbs.db
 # Project outputs (optional: track reports only)
 outputs/*
 !outputs/.gitkeep
+# Demo Mode assets (tracked for public demo)
+!outputs/demo_showcase_confusion_matrix.png
+!outputs/demo_showcase_roc_curve.png
+!outputs/demo_showcase_feature_importance.png
 reports/*
 !reports/.gitkeep
