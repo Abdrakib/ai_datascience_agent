@@ -1,20 +1,20 @@
 ---
-title: Ai Data Science Agent
-emoji: 🚀
-colorFrom: red
-colorTo: red
-sdk: docker
-app_port: 8501
-tags:
-- streamlit
-pinned: false
-short_description: Claude-powered AutoML agent — drop in any CSV, get EDA, mode
+title: AI Data Science Agent
+emoji: ⚡
+colorFrom: purple
+colorTo: indigo
+sdk: streamlit
+sdk_version: 1.35.0
+app_file: automl-engineer-agent/app.py
+pinned: true
+short_description: Claude-powered AutoML agent for any CSV
 license: mit
+tags:
+  - streamlit
+  - machine-learning
+  - automl
+  - claude
+  - data-science
+  - shap
+  - xgboost
 ---
-
-# Welcome to Streamlit!
-
-Edit `/src/streamlit_app.py` to customize this app to your heart's desire. :heart:
-
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
