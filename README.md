@@ -31,7 +31,9 @@ Drop in any CSV, describe your goal in plain English — it runs the full ML pip
     → 📄 Report Export → 🔮 Inference
 ```
 
-**Repository:** [github.com/Abdrakib/ai_datascience_agent](https://github.com/Abdrakib/ai_datascience_agent) · **Local package name:** `automl-engineer-agent`
+**Live demos:** [Streamlit Cloud](https://ai-data-science-agent.streamlit.app/) · [Hugging Face Space](https://huggingface.co/spaces/Abdourakib/ai-data-science-agent)
+
+**Repository:** [github.com/Abdrakib/ai_datascience_agent](https://github.com/Abdrakib/ai_datascience_agent) · `git clone https://github.com/Abdrakib/ai_datascience_agent.git` · **Local package name:** `automl-engineer-agent`
 
 </div>
 
