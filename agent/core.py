@@ -537,7 +537,8 @@ class AutoMLAgent:
         warnings = self._train_result.get("overfitting_warnings", [])
         if warnings:
             best_name = self._train_result.get("best_name", "model")
-            query = f"how to fix overfitting in {best_name} scikit-learn"
+            model_name = str(best_name).replace(" (tuned)", "").strip()
+            query = f"overfitting {model_name} regularization techniques machine learning"
             try:
                 search_results = web_search(query, num_results=5)
                 if search_results and "error" not in search_results[0]:
