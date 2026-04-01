@@ -273,13 +273,12 @@
     "train": {
       "best_name": "Linear Regression",
       "best_metrics": {
-        "rmse": 19244.30726602296,
-        "mae": 15054.427702432535,
-        "r2": 0.9704273023733059,
-        "train_time_s": 0.002,
-        "train_score": 0.9756910416636839,
-        "test_score": 0.9704273023733059,
-        "generalization_gap": 0.0052637392903780444,
+        "rmse": 19244.3993848345,
+        "mae": 15054.32546750226,
+        "r2": 0.9704270192549539,
+        "train_score": 0.9756910409906572,
+        "test_score": 0.9704270192549539,
+        "generalization_gap": 0.005264021735703284,
         "overfit": false
       },
       "metric_name": "r2",
@@ -295,7 +294,7 @@
           "CV Train Mean": 0.9758,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.0
+          "Train Time(s)": 0.01
         },
         {
           "Model": "Random Forest",
@@ -307,30 +306,58 @@
           "CV Train Mean": 0.9671,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.27
+          "Train Time(s)": 0.14
+        },
+        {
+          "Model": "XGBoost",
+          "Train Score": 0.9922,
+          "Test Score": 0.9476,
+          "Gap": 0.0445,
+          "CV Mean": 0.9567,
+          "CV Std": 0.0034,
+          "CV Train Mean": 0.994,
+          "CV Overfit": "No",
+          "Overfit": "No",
+          "Train Time(s)": 0.05
+        },
+        {
+          "Model": "LightGBM",
+          "Train Score": 0.986,
+          "Test Score": 0.9518,
+          "Gap": 0.0342,
+          "CV Mean": 0.9608,
+          "CV Std": 0.0038,
+          "CV Train Mean": 0.9851,
+          "CV Overfit": "No",
+          "Overfit": "No",
+          "Train Time(s)": 0.03
         }
       ],
       "feature_importances": {
-        "sqft": 0.4456337619008317,
-        "condition_Excellent": 0.09867873673380126,
-        "condition_Poor": 0.09862712100350611,
-        "neighborhood_Rural": 0.08316060875648672,
-        "neighborhood_Urban": 0.07165072715118431,
-        "bedrooms": 0.04627311654026055,
-        "garage_spaces": 0.04394104044341039,
-        "bathrooms": 0.03780987481042804,
-        "age_years": 0.027697024059765596,
-        "condition_Fair": 0.017534861362659047,
-        "condition_Good": 0.017483245632363906,
-        "neighborhood_Suburban": 0.011509881605302424
+        "sqft": 0.4456435087879694,
+        "condition_Excellent": 0.09867448822812258,
+        "condition_Poor": 0.0986206784824437,
+        "neighborhood_Rural": 0.08315954104508148,
+        "neighborhood_Urban": 0.0716489877463011,
+        "bedrooms": 0.046274064304399475,
+        "garage_spaces": 0.04394295807733568,
+        "bathrooms": 0.037811195041493086,
+        "age_years": 0.027697291642748048,
+        "condition_Fair": 0.01753527154492642,
+        "condition_Good": 0.0174814617999633,
+        "neighborhood_Suburban": 0.01151055329921564
       },
       "training_log": [
-        "Training 2 models for regression task.",
+        "Training 4 models for regression task.",
         "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
         "  Training Linear Regression...",
-        "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.00s]",
+        "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
         "  Training Random Forest...",
-        "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.27s]",
+        "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.13s]",
+        "  Training XGBoost...",
+        "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.05s]",
+        "  Training LightGBM...",
+        "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
         "\nBest model: Linear Regression (r2=0.9704)",
         "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
       ],
@@ -344,7 +371,7 @@
             "rmse": 19244.30726602296,
             "mae": 15054.427702432535,
             "r2": 0.9704273023733059,
-            "train_time_s": 0.002,
+            "train_time_s": 0.009,
             "train_score": 0.9756910416636839,
             "test_score": 0.9704273023733059,
             "generalization_gap": 0.0052637392903780444,
@@ -376,9 +403,9 @@
           "name": "Random Forest",
           "metrics": {
             "rmse": 34041.3103717993,
-            "mae": 27600.13834049763,
+            "mae": 27600.138340497626,
             "r2": 0.9074665155441051,
-            "train_time_s": 0.267,
+            "train_time_s": 0.135,
             "train_score": 0.9635729463513367,
             "test_score": 0.9074665155441051,
             "generalization_gap": 0.056106430807231655,
@@ -388,14 +415,14 @@
           "generalization_gap": 0.056106430807231655,
           "overfit": false,
           "cv_scores": [
-            0.9357359945589843,
+            0.9357359945589842,
             0.9382614289622773,
             0.9301892382602968,
             0.9268878476820184,
             0.9318488429287124
           ],
           "cv_mean": 0.9325846704784577,
-          "cv_std": 0.004022182442727391,
+          "cv_std": 0.004022182442727374,
           "cv_train_scores": [
             0.967156970877803,
             0.967581448731281,
@@ -405,43 +432,121 @@
           ],
           "cv_train_mean": 0.9670902167684107,
           "cv_overfit": false
+        },
+        {
+          "name": "XGBoost",
+          "metrics": {
+            "rmse": 25605.403548893355,
+            "mae": 20573.833333333332,
+            "r2": 0.9476460290782922,
+            "train_time_s": 0.05,
+            "train_score": 0.9921668774926053,
+            "test_score": 0.9476460290782922,
+            "generalization_gap": 0.04452084841431314,
+            "overfit": false
+          },
+          "train_score": 0.9921668774926053,
+          "generalization_gap": 0.04452084841431314,
+          "overfit": false,
+          "cv_scores": [
+            0.9564472610777743,
+            0.9624837677039059,
+            0.9578105825027486,
+            0.952828336453084,
+            0.9539833529591583
+          ],
+          "cv_mean": 0.9567106601393341,
+          "cv_std": 0.003379900024649941,
+          "cv_train_scores": [
+            0.9943620674093794,
+            0.9939179417068826,
+            0.9930728083566575,
+            0.9941910326518375,
+            0.9944765624332212
+          ],
+          "cv_train_mean": 0.9940040825115956,
+          "cv_overfit": false
+        },
+        {
+          "name": "LightGBM",
+          "metrics": {
+            "rmse": 24557.54614248733,
+            "mae": 19483.402159085697,
+            "r2": 0.9518433447340738,
+            "train_time_s": 0.033,
+            "train_score": 0.9860135698556134,
+            "test_score": 0.9518433447340738,
+            "generalization_gap": 0.034170225121539555,
+            "overfit": false
+          },
+          "train_score": 0.9860135698556134,
+          "generalization_gap": 0.034170225121539555,
+          "overfit": false,
+          "cv_scores": [
+            0.9645952804827025,
+            0.9598903361108475,
+            0.9637275951657004,
+            0.9540209656863238,
+            0.961609264856611
+          ],
+          "cv_mean": 0.960768688460437,
+          "cv_std": 0.003752539661600903,
+          "cv_train_scores": [
+            0.9852874580944649,
+            0.9846055359075653,
+            0.9847562253726434,
+            0.9855759230625724,
+            0.9853512046454515
+          ],
+          "cv_train_mean": 0.9851152694165396,
+          "cv_overfit": false
         }
       ]
     },
     "eval": {
       "metrics": {
-        "r2": 0.9704273023733059,
-        "rmse": 19244.30726602296,
-        "mae": 15054.427702432535,
-        "mape": 4.0922959657818865
+        "r2": 0.9704270192549539,
+        "rmse": 19244.3993848345,
+        "mae": 15054.32546750226,
+        "mape": 4.092251039954261
       },
       "plot_paths": {
         "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
         "residuals": "outputs/housing_residuals.png",
-        "feature_importance": "outputs/housing_feature_importance.png"
+        "feature_importance": "outputs/housing_feature_importance.png",
+        "shap_bar": "outputs/housing_shap_bar.png",
+        "shap_summary": "outputs/housing_shap_summary.png",
+        "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+        "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+        "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+        "shap_waterfall": "outputs/housing_shap_waterfall.png"
       },
       "eval_log": [
         "Computed evaluation metrics.",
         "Saved actual vs predicted \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_actual_vs_predicted.png",
         "Saved residuals plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_residuals.png",
         "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_feature_importance.png",
-        "SHAP not installed \u2014 skipping (pip install shap)."
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_bar.png (shap_bar)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_summary.png (shap_summary)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_sqft.png (shap_dependence_sqft)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_bedrooms.png (shap_dependence_bedrooms)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_condition_Excellent.png (shap_dependence_condition_Excellent)",
+        "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_waterfall.png (shap_waterfall)"
       ],
       "task_type": "regression",
-      "has_shap": false,
-      "shap_explanation_text": ""
+      "has_shap": true,
+      "shap_explanation_text": "This prediction is mainly influenced by sqft, garage_spaces, and bedrooms."
     },
     "target_col": "price",
     "task_type": "regression",
     "best_model_name": "Linear Regression",
     "best_metrics": {
-      "rmse": 19244.30726602296,
-      "mae": 15054.427702432535,
-      "r2": 0.9704273023733059,
-      "train_time_s": 0.002,
-      "train_score": 0.9756910416636839,
-      "test_score": 0.9704273023733059,
-      "generalization_gap": 0.0052637392903780444,
+      "rmse": 19244.3993848345,
+      "mae": 15054.32546750226,
+      "r2": 0.9704270192549539,
+      "train_score": 0.9756910409906572,
+      "test_score": 0.9704270192549539,
+      "generalization_gap": 0.005264021735703284,
       "overfit": false
     },
     "comparison_df": [
@@ -455,7 +560,7 @@
         "CV Train Mean": 0.9758,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.0
+        "Train Time(s)": 0.01
       },
       {
         "Model": "Random Forest",
@@ -467,37 +572,91 @@
         "CV Train Mean": 0.9671,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.27
+        "Train Time(s)": 0.14
+      },
+      {
+        "Model": "XGBoost",
+        "Train Score": 0.9922,
+        "Test Score": 0.9476,
+        "Gap": 0.0445,
+        "CV Mean": 0.9567,
+        "CV Std": 0.0034,
+        "CV Train Mean": 0.994,
+        "CV Overfit": "No",
+        "Overfit": "No",
+        "Train Time(s)": 0.05
+      },
+      {
+        "Model": "LightGBM",
+        "Train Score": 0.986,
+        "Test Score": 0.9518,
+        "Gap": 0.0342,
+        "CV Mean": 0.9608,
+        "CV Std": 0.0038,
+        "CV Train Mean": 0.9851,
+        "CV Overfit": "No",
+        "Overfit": "No",
+        "Train Time(s)": 0.03
       }
     ],
     "feature_importances": {
-      "sqft": 0.4456337619008317,
-      "condition_Excellent": 0.09867873673380126,
-      "condition_Poor": 0.09862712100350611,
-      "neighborhood_Rural": 0.08316060875648672,
-      "neighborhood_Urban": 0.07165072715118431,
-      "bedrooms": 0.04627311654026055,
-      "garage_spaces": 0.04394104044341039,
-      "bathrooms": 0.03780987481042804,
-      "age_years": 0.027697024059765596,
-      "condition_Fair": 0.017534861362659047,
-      "condition_Good": 0.017483245632363906,
-      "neighborhood_Suburban": 0.011509881605302424
+      "sqft": 0.4456435087879694,
+      "condition_Excellent": 0.09867448822812258,
+      "condition_Poor": 0.0986206784824437,
+      "neighborhood_Rural": 0.08315954104508148,
+      "neighborhood_Urban": 0.0716489877463011,
+      "bedrooms": 0.046274064304399475,
+      "garage_spaces": 0.04394295807733568,
+      "bathrooms": 0.037811195041493086,
+      "age_years": 0.027697291642748048,
+      "condition_Fair": 0.01753527154492642,
+      "condition_Good": 0.0174814617999633,
+      "neighborhood_Suburban": 0.01151055329921564
     },
     "plot_paths": {
       "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
       "residuals": "outputs/housing_residuals.png",
-      "feature_importance": "outputs/housing_feature_importance.png"
+      "feature_importance": "outputs/housing_feature_importance.png",
+      "shap_bar": "outputs/housing_shap_bar.png",
+      "shap_summary": "outputs/housing_shap_summary.png",
+      "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+      "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+      "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+      "shap_waterfall": "outputs/housing_shap_waterfall.png"
     },
     "metrics": {
-      "r2": 0.9704273023733059,
-      "rmse": 19244.30726602296,
-      "mae": 15054.427702432535,
-      "mape": 4.0922959657818865
+      "r2": 0.9704270192549539,
+      "rmse": 19244.3993848345,
+      "mae": 15054.32546750226,
+      "mape": 4.092251039954261
     },
     "tune": {
-      "success": false,
-      "error": "optuna not installed \u2014 run: pip install optuna"
+      "success": true,
+      "best_params": {
+        "alpha": 0.010128544009274777
+      },
+      "best_score": 0.9704270192549539,
+      "baseline_score": 0.9704273023733059,
+      "improvement": -2.8311835198469026e-07,
+      "n_trials_run": 20,
+      "tuning_time_s": 0.06488943099975586,
+      "generalization_gap": 0.005264021735703284,
+      "overfit": false,
+      "tuning_log": [
+        "Dataset has 480 training rows (<1000); using n_trials=20.",
+        "Optuna completed 20 trials in 0.1s.",
+        "Best test score: 0.9704 (baseline 0.9704, improvement -0.0000)."
+      ],
+      "test_metrics_full": {
+        "rmse": 19244.3993848345,
+        "mae": 15054.32546750226,
+        "r2": 0.9704270192549539
+      },
+      "train_metrics_full": {
+        "rmse": 19947.328180899563,
+        "mae": 16177.14425128797,
+        "r2": 0.9756910409906572
+      }
     },
     "plan": {
       "recommended_models": [
@@ -907,13 +1066,12 @@
         "train": {
           "best_name": "Linear Regression",
           "best_metrics": {
-            "rmse": 19244.30726602296,
-            "mae": 15054.427702432535,
-            "r2": 0.9704273023733059,
-            "train_time_s": 0.002,
-            "train_score": 0.9756910416636839,
-            "test_score": 0.9704273023733059,
-            "generalization_gap": 0.0052637392903780444,
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539,
+            "train_score": 0.9756910409906572,
+            "test_score": 0.9704270192549539,
+            "generalization_gap": 0.005264021735703284,
             "overfit": false
           },
           "metric_name": "r2",
@@ -929,7 +1087,7 @@
               "CV Train Mean": 0.9758,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.0
+              "Train Time(s)": 0.01
             },
             {
               "Model": "Random Forest",
@@ -941,30 +1099,58 @@
               "CV Train Mean": 0.9671,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.27
+              "Train Time(s)": 0.14
+            },
+            {
+              "Model": "XGBoost",
+              "Train Score": 0.9922,
+              "Test Score": 0.9476,
+              "Gap": 0.0445,
+              "CV Mean": 0.9567,
+              "CV Std": 0.0034,
+              "CV Train Mean": 0.994,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.05
+            },
+            {
+              "Model": "LightGBM",
+              "Train Score": 0.986,
+              "Test Score": 0.9518,
+              "Gap": 0.0342,
+              "CV Mean": 0.9608,
+              "CV Std": 0.0038,
+              "CV Train Mean": 0.9851,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.03
             }
           ],
           "feature_importances": {
-            "sqft": 0.4456337619008317,
-            "condition_Excellent": 0.09867873673380126,
-            "condition_Poor": 0.09862712100350611,
-            "neighborhood_Rural": 0.08316060875648672,
-            "neighborhood_Urban": 0.07165072715118431,
-            "bedrooms": 0.04627311654026055,
-            "garage_spaces": 0.04394104044341039,
-            "bathrooms": 0.03780987481042804,
-            "age_years": 0.027697024059765596,
-            "condition_Fair": 0.017534861362659047,
-            "condition_Good": 0.017483245632363906,
-            "neighborhood_Suburban": 0.011509881605302424
+            "sqft": 0.4456435087879694,
+            "condition_Excellent": 0.09867448822812258,
+            "condition_Poor": 0.0986206784824437,
+            "neighborhood_Rural": 0.08315954104508148,
+            "neighborhood_Urban": 0.0716489877463011,
+            "bedrooms": 0.046274064304399475,
+            "garage_spaces": 0.04394295807733568,
+            "bathrooms": 0.037811195041493086,
+            "age_years": 0.027697291642748048,
+            "condition_Fair": 0.01753527154492642,
+            "condition_Good": 0.0174814617999633,
+            "neighborhood_Suburban": 0.01151055329921564
           },
           "training_log": [
-            "Training 2 models for regression task.",
+            "Training 4 models for regression task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Linear Regression...",
-            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.00s]",
+            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.27s]",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.13s]",
+            "  Training XGBoost...",
+            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.05s]",
+            "  Training LightGBM...",
+            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
             "\nBest model: Linear Regression (r2=0.9704)",
             "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
           ],
@@ -978,7 +1164,7 @@
                 "rmse": 19244.30726602296,
                 "mae": 15054.427702432535,
                 "r2": 0.9704273023733059,
-                "train_time_s": 0.002,
+                "train_time_s": 0.009,
                 "train_score": 0.9756910416636839,
                 "test_score": 0.9704273023733059,
                 "generalization_gap": 0.0052637392903780444,
@@ -1010,23 +1196,23 @@
               "name": "Random Forest",
               "metrics": {
                 "rmse": 34041.3103717993,
-                "mae": 27600.13834049763,
+                "mae": 27600.138340497626,
                 "r2": 0.9074665155441051,
-                "train_time_s": 0.267,
+                "train_time_s": 0.135,
                 "train_score": 0.9635729463513367,
                 "test_score": 0.9074665155441051,
                 "generalization_gap": 0.056106430807231655,
                 "overfit": false
               },
               "cv_scores": [
-                0.9357359945589843,
+                0.9357359945589842,
                 0.9382614289622773,
                 0.9301892382602968,
                 0.9268878476820184,
                 0.9318488429287124
               ],
               "cv_mean": 0.9325846704784577,
-              "cv_std": 0.004022182442727391,
+              "cv_std": 0.004022182442727374,
               "cv_train_scores": [
                 0.967156970877803,
                 0.967581448731281,
@@ -1038,6 +1224,74 @@
               "cv_overfit": false,
               "train_score": 0.9635729463513367,
               "generalization_gap": 0.056106430807231655,
+              "overfit": false
+            },
+            {
+              "name": "XGBoost",
+              "metrics": {
+                "rmse": 25605.403548893355,
+                "mae": 20573.833333333332,
+                "r2": 0.9476460290782922,
+                "train_time_s": 0.05,
+                "train_score": 0.9921668774926053,
+                "test_score": 0.9476460290782922,
+                "generalization_gap": 0.04452084841431314,
+                "overfit": false
+              },
+              "cv_scores": [
+                0.9564472610777743,
+                0.9624837677039059,
+                0.9578105825027486,
+                0.952828336453084,
+                0.9539833529591583
+              ],
+              "cv_mean": 0.9567106601393341,
+              "cv_std": 0.003379900024649941,
+              "cv_train_scores": [
+                0.9943620674093794,
+                0.9939179417068826,
+                0.9930728083566575,
+                0.9941910326518375,
+                0.9944765624332212
+              ],
+              "cv_train_mean": 0.9940040825115956,
+              "cv_overfit": false,
+              "train_score": 0.9921668774926053,
+              "generalization_gap": 0.04452084841431314,
+              "overfit": false
+            },
+            {
+              "name": "LightGBM",
+              "metrics": {
+                "rmse": 24557.54614248733,
+                "mae": 19483.402159085697,
+                "r2": 0.9518433447340738,
+                "train_time_s": 0.033,
+                "train_score": 0.9860135698556134,
+                "test_score": 0.9518433447340738,
+                "generalization_gap": 0.034170225121539555,
+                "overfit": false
+              },
+              "cv_scores": [
+                0.9645952804827025,
+                0.9598903361108475,
+                0.9637275951657004,
+                0.9540209656863238,
+                0.961609264856611
+              ],
+              "cv_mean": 0.960768688460437,
+              "cv_std": 0.003752539661600903,
+              "cv_train_scores": [
+                0.9852874580944649,
+                0.9846055359075653,
+                0.9847562253726434,
+                0.9855759230625724,
+                0.9853512046454515
+              ],
+              "cv_train_mean": 0.9851152694165396,
+              "cv_overfit": false,
+              "train_score": 0.9860135698556134,
+              "generalization_gap": 0.034170225121539555,
               "overfit": false
             }
           ]
@@ -1052,8 +1306,32 @@
       "status": "done",
       "data": {
         "tune": {
-          "success": false,
-          "error": "optuna not installed \u2014 run: pip install optuna",
+          "success": true,
+          "best_params": {
+            "alpha": 0.010128544009274777
+          },
+          "best_score": 0.9704270192549539,
+          "baseline_score": 0.9704273023733059,
+          "improvement": -2.8311835198469026e-07,
+          "n_trials_run": 20,
+          "tuning_time_s": 0.06488943099975586,
+          "generalization_gap": 0.005264021735703284,
+          "overfit": false,
+          "tuning_log": [
+            "Dataset has 480 training rows (<1000); using n_trials=20.",
+            "Optuna completed 20 trials in 0.1s.",
+            "Best test score: 0.9704 (baseline 0.9704, improvement -0.0000)."
+          ],
+          "test_metrics_full": {
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539
+          },
+          "train_metrics_full": {
+            "rmse": 19947.328180899563,
+            "mae": 16177.14425128797,
+            "r2": 0.9756910409906572
+          },
           "model_name": "Linear Regression"
         }
       },
@@ -1067,26 +1345,37 @@
       "data": {
         "eval": {
           "metrics": {
-            "r2": 0.9704273023733059,
-            "rmse": 19244.30726602296,
-            "mae": 15054.427702432535,
-            "mape": 4.0922959657818865
+            "r2": 0.9704270192549539,
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "mape": 4.092251039954261
           },
           "plot_paths": {
             "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
             "residuals": "outputs/housing_residuals.png",
-            "feature_importance": "outputs/housing_feature_importance.png"
+            "feature_importance": "outputs/housing_feature_importance.png",
+            "shap_bar": "outputs/housing_shap_bar.png",
+            "shap_summary": "outputs/housing_shap_summary.png",
+            "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+            "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+            "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+            "shap_waterfall": "outputs/housing_shap_waterfall.png"
           },
           "eval_log": [
             "Computed evaluation metrics.",
             "Saved actual vs predicted \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_actual_vs_predicted.png",
             "Saved residuals plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_residuals.png",
             "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_feature_importance.png",
-            "SHAP not installed \u2014 skipping (pip install shap)."
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_bar.png (shap_bar)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_summary.png (shap_summary)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_sqft.png (shap_dependence_sqft)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_bedrooms.png (shap_dependence_bedrooms)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_condition_Excellent.png (shap_dependence_condition_Excellent)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_waterfall.png (shap_waterfall)"
           ],
           "task_type": "regression",
-          "has_shap": false,
-          "shap_explanation_text": ""
+          "has_shap": true,
+          "shap_explanation_text": "This prediction is mainly influenced by sqft, garage_spaces, and bedrooms."
         }
       },
       "error": null
@@ -1367,13 +1656,12 @@
         "train": {
           "best_name": "Linear Regression",
           "best_metrics": {
-            "rmse": 19244.30726602296,
-            "mae": 15054.427702432535,
-            "r2": 0.9704273023733059,
-            "train_time_s": 0.002,
-            "train_score": 0.9756910416636839,
-            "test_score": 0.9704273023733059,
-            "generalization_gap": 0.0052637392903780444,
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539,
+            "train_score": 0.9756910409906572,
+            "test_score": 0.9704270192549539,
+            "generalization_gap": 0.005264021735703284,
             "overfit": false
           },
           "metric_name": "r2",
@@ -1389,7 +1677,7 @@
               "CV Train Mean": 0.9758,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.0
+              "Train Time(s)": 0.01
             },
             {
               "Model": "Random Forest",
@@ -1401,30 +1689,58 @@
               "CV Train Mean": 0.9671,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.27
+              "Train Time(s)": 0.14
+            },
+            {
+              "Model": "XGBoost",
+              "Train Score": 0.9922,
+              "Test Score": 0.9476,
+              "Gap": 0.0445,
+              "CV Mean": 0.9567,
+              "CV Std": 0.0034,
+              "CV Train Mean": 0.994,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.05
+            },
+            {
+              "Model": "LightGBM",
+              "Train Score": 0.986,
+              "Test Score": 0.9518,
+              "Gap": 0.0342,
+              "CV Mean": 0.9608,
+              "CV Std": 0.0038,
+              "CV Train Mean": 0.9851,
+              "CV Overfit": "No",
+              "Overfit": "No",
+              "Train Time(s)": 0.03
             }
           ],
           "feature_importances": {
-            "sqft": 0.4456337619008317,
-            "condition_Excellent": 0.09867873673380126,
-            "condition_Poor": 0.09862712100350611,
-            "neighborhood_Rural": 0.08316060875648672,
-            "neighborhood_Urban": 0.07165072715118431,
-            "bedrooms": 0.04627311654026055,
-            "garage_spaces": 0.04394104044341039,
-            "bathrooms": 0.03780987481042804,
-            "age_years": 0.027697024059765596,
-            "condition_Fair": 0.017534861362659047,
-            "condition_Good": 0.017483245632363906,
-            "neighborhood_Suburban": 0.011509881605302424
+            "sqft": 0.4456435087879694,
+            "condition_Excellent": 0.09867448822812258,
+            "condition_Poor": 0.0986206784824437,
+            "neighborhood_Rural": 0.08315954104508148,
+            "neighborhood_Urban": 0.0716489877463011,
+            "bedrooms": 0.046274064304399475,
+            "garage_spaces": 0.04394295807733568,
+            "bathrooms": 0.037811195041493086,
+            "age_years": 0.027697291642748048,
+            "condition_Fair": 0.01753527154492642,
+            "condition_Good": 0.0174814617999633,
+            "neighborhood_Suburban": 0.01151055329921564
           },
           "training_log": [
-            "Training 2 models for regression task.",
+            "Training 4 models for regression task.",
             "  Parameter overrides applied for: LightGBM, Random Forest, XGBoost",
             "  Training Linear Regression...",
-            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.00s]",
+            "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.27s]",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.13s]",
+            "  Training XGBoost...",
+            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.05s]",
+            "  Training LightGBM...",
+            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
             "\nBest model: Linear Regression (r2=0.9704)",
             "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
           ],
@@ -1438,7 +1754,7 @@
                 "rmse": 19244.30726602296,
                 "mae": 15054.427702432535,
                 "r2": 0.9704273023733059,
-                "train_time_s": 0.002,
+                "train_time_s": 0.009,
                 "train_score": 0.9756910416636839,
                 "test_score": 0.9704273023733059,
                 "generalization_gap": 0.0052637392903780444,
@@ -1470,9 +1786,9 @@
               "name": "Random Forest",
               "metrics": {
                 "rmse": 34041.3103717993,
-                "mae": 27600.13834049763,
+                "mae": 27600.138340497626,
                 "r2": 0.9074665155441051,
-                "train_time_s": 0.267,
+                "train_time_s": 0.135,
                 "train_score": 0.9635729463513367,
                 "test_score": 0.9074665155441051,
                 "generalization_gap": 0.056106430807231655,
@@ -1482,14 +1798,14 @@
               "generalization_gap": 0.056106430807231655,
               "overfit": false,
               "cv_scores": [
-                0.9357359945589843,
+                0.9357359945589842,
                 0.9382614289622773,
                 0.9301892382602968,
                 0.9268878476820184,
                 0.9318488429287124
               ],
               "cv_mean": 0.9325846704784577,
-              "cv_std": 0.004022182442727391,
+              "cv_std": 0.004022182442727374,
               "cv_train_scores": [
                 0.967156970877803,
                 0.967581448731281,
@@ -1499,43 +1815,121 @@
               ],
               "cv_train_mean": 0.9670902167684107,
               "cv_overfit": false
+            },
+            {
+              "name": "XGBoost",
+              "metrics": {
+                "rmse": 25605.403548893355,
+                "mae": 20573.833333333332,
+                "r2": 0.9476460290782922,
+                "train_time_s": 0.05,
+                "train_score": 0.9921668774926053,
+                "test_score": 0.9476460290782922,
+                "generalization_gap": 0.04452084841431314,
+                "overfit": false
+              },
+              "train_score": 0.9921668774926053,
+              "generalization_gap": 0.04452084841431314,
+              "overfit": false,
+              "cv_scores": [
+                0.9564472610777743,
+                0.9624837677039059,
+                0.9578105825027486,
+                0.952828336453084,
+                0.9539833529591583
+              ],
+              "cv_mean": 0.9567106601393341,
+              "cv_std": 0.003379900024649941,
+              "cv_train_scores": [
+                0.9943620674093794,
+                0.9939179417068826,
+                0.9930728083566575,
+                0.9941910326518375,
+                0.9944765624332212
+              ],
+              "cv_train_mean": 0.9940040825115956,
+              "cv_overfit": false
+            },
+            {
+              "name": "LightGBM",
+              "metrics": {
+                "rmse": 24557.54614248733,
+                "mae": 19483.402159085697,
+                "r2": 0.9518433447340738,
+                "train_time_s": 0.033,
+                "train_score": 0.9860135698556134,
+                "test_score": 0.9518433447340738,
+                "generalization_gap": 0.034170225121539555,
+                "overfit": false
+              },
+              "train_score": 0.9860135698556134,
+              "generalization_gap": 0.034170225121539555,
+              "overfit": false,
+              "cv_scores": [
+                0.9645952804827025,
+                0.9598903361108475,
+                0.9637275951657004,
+                0.9540209656863238,
+                0.961609264856611
+              ],
+              "cv_mean": 0.960768688460437,
+              "cv_std": 0.003752539661600903,
+              "cv_train_scores": [
+                0.9852874580944649,
+                0.9846055359075653,
+                0.9847562253726434,
+                0.9855759230625724,
+                0.9853512046454515
+              ],
+              "cv_train_mean": 0.9851152694165396,
+              "cv_overfit": false
             }
           ]
         },
         "eval": {
           "metrics": {
-            "r2": 0.9704273023733059,
-            "rmse": 19244.30726602296,
-            "mae": 15054.427702432535,
-            "mape": 4.0922959657818865
+            "r2": 0.9704270192549539,
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "mape": 4.092251039954261
           },
           "plot_paths": {
             "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
             "residuals": "outputs/housing_residuals.png",
-            "feature_importance": "outputs/housing_feature_importance.png"
+            "feature_importance": "outputs/housing_feature_importance.png",
+            "shap_bar": "outputs/housing_shap_bar.png",
+            "shap_summary": "outputs/housing_shap_summary.png",
+            "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+            "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+            "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+            "shap_waterfall": "outputs/housing_shap_waterfall.png"
           },
           "eval_log": [
             "Computed evaluation metrics.",
             "Saved actual vs predicted \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_actual_vs_predicted.png",
             "Saved residuals plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_residuals.png",
             "Saved feature importance chart \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_feature_importance.png",
-            "SHAP not installed \u2014 skipping (pip install shap)."
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_bar.png (shap_bar)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_summary.png (shap_summary)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_sqft.png (shap_dependence_sqft)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_bedrooms.png (shap_dependence_bedrooms)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_dependence_condition_Excellent.png (shap_dependence_condition_Excellent)",
+            "Saved SHAP plot \u2192 C:\\Users\\rakab\\Videos\\ai-data-science-agent\\automl-engineer-agent\\outputs\\housing_shap_waterfall.png (shap_waterfall)"
           ],
           "task_type": "regression",
-          "has_shap": false,
-          "shap_explanation_text": ""
+          "has_shap": true,
+          "shap_explanation_text": "This prediction is mainly influenced by sqft, garage_spaces, and bedrooms."
         },
         "target_col": "price",
         "task_type": "regression",
         "best_model_name": "Linear Regression",
         "best_metrics": {
-          "rmse": 19244.30726602296,
-          "mae": 15054.427702432535,
-          "r2": 0.9704273023733059,
-          "train_time_s": 0.002,
-          "train_score": 0.9756910416636839,
-          "test_score": 0.9704273023733059,
-          "generalization_gap": 0.0052637392903780444,
+          "rmse": 19244.3993848345,
+          "mae": 15054.32546750226,
+          "r2": 0.9704270192549539,
+          "train_score": 0.9756910409906572,
+          "test_score": 0.9704270192549539,
+          "generalization_gap": 0.005264021735703284,
           "overfit": false
         },
         "comparison_df": [
@@ -1549,7 +1943,7 @@
             "CV Train Mean": 0.9758,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.0
+            "Train Time(s)": 0.01
           },
           {
             "Model": "Random Forest",
@@ -1561,37 +1955,91 @@
             "CV Train Mean": 0.9671,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.27
+            "Train Time(s)": 0.14
+          },
+          {
+            "Model": "XGBoost",
+            "Train Score": 0.9922,
+            "Test Score": 0.9476,
+            "Gap": 0.0445,
+            "CV Mean": 0.9567,
+            "CV Std": 0.0034,
+            "CV Train Mean": 0.994,
+            "CV Overfit": "No",
+            "Overfit": "No",
+            "Train Time(s)": 0.05
+          },
+          {
+            "Model": "LightGBM",
+            "Train Score": 0.986,
+            "Test Score": 0.9518,
+            "Gap": 0.0342,
+            "CV Mean": 0.9608,
+            "CV Std": 0.0038,
+            "CV Train Mean": 0.9851,
+            "CV Overfit": "No",
+            "Overfit": "No",
+            "Train Time(s)": 0.03
           }
         ],
         "feature_importances": {
-          "sqft": 0.4456337619008317,
-          "condition_Excellent": 0.09867873673380126,
-          "condition_Poor": 0.09862712100350611,
-          "neighborhood_Rural": 0.08316060875648672,
-          "neighborhood_Urban": 0.07165072715118431,
-          "bedrooms": 0.04627311654026055,
-          "garage_spaces": 0.04394104044341039,
-          "bathrooms": 0.03780987481042804,
-          "age_years": 0.027697024059765596,
-          "condition_Fair": 0.017534861362659047,
-          "condition_Good": 0.017483245632363906,
-          "neighborhood_Suburban": 0.011509881605302424
+          "sqft": 0.4456435087879694,
+          "condition_Excellent": 0.09867448822812258,
+          "condition_Poor": 0.0986206784824437,
+          "neighborhood_Rural": 0.08315954104508148,
+          "neighborhood_Urban": 0.0716489877463011,
+          "bedrooms": 0.046274064304399475,
+          "garage_spaces": 0.04394295807733568,
+          "bathrooms": 0.037811195041493086,
+          "age_years": 0.027697291642748048,
+          "condition_Fair": 0.01753527154492642,
+          "condition_Good": 0.0174814617999633,
+          "neighborhood_Suburban": 0.01151055329921564
         },
         "plot_paths": {
           "actual_vs_predicted": "outputs/housing_actual_vs_predicted.png",
           "residuals": "outputs/housing_residuals.png",
-          "feature_importance": "outputs/housing_feature_importance.png"
+          "feature_importance": "outputs/housing_feature_importance.png",
+          "shap_bar": "outputs/housing_shap_bar.png",
+          "shap_summary": "outputs/housing_shap_summary.png",
+          "shap_dependence_sqft": "outputs/housing_shap_dependence_sqft.png",
+          "shap_dependence_bedrooms": "outputs/housing_shap_dependence_bedrooms.png",
+          "shap_dependence_condition_Excellent": "outputs/housing_shap_dependence_condition_Excellent.png",
+          "shap_waterfall": "outputs/housing_shap_waterfall.png"
         },
         "metrics": {
-          "r2": 0.9704273023733059,
-          "rmse": 19244.30726602296,
-          "mae": 15054.427702432535,
-          "mape": 4.0922959657818865
+          "r2": 0.9704270192549539,
+          "rmse": 19244.3993848345,
+          "mae": 15054.32546750226,
+          "mape": 4.092251039954261
         },
         "tune": {
-          "success": false,
-          "error": "optuna not installed \u2014 run: pip install optuna"
+          "success": true,
+          "best_params": {
+            "alpha": 0.010128544009274777
+          },
+          "best_score": 0.9704270192549539,
+          "baseline_score": 0.9704273023733059,
+          "improvement": -2.8311835198469026e-07,
+          "n_trials_run": 20,
+          "tuning_time_s": 0.06488943099975586,
+          "generalization_gap": 0.005264021735703284,
+          "overfit": false,
+          "tuning_log": [
+            "Dataset has 480 training rows (<1000); using n_trials=20.",
+            "Optuna completed 20 trials in 0.1s.",
+            "Best test score: 0.9704 (baseline 0.9704, improvement -0.0000)."
+          ],
+          "test_metrics_full": {
+            "rmse": 19244.3993848345,
+            "mae": 15054.32546750226,
+            "r2": 0.9704270192549539
+          },
+          "train_metrics_full": {
+            "rmse": 19947.328180899563,
+            "mae": 16177.14425128797,
+            "r2": 0.9756910409906572
+          }
         },
         "plan": {
           "recommended_models": [
