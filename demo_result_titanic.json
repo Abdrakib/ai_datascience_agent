@@ -280,7 +280,7 @@
           "CV Train Mean": 0.9317,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.15
+          "Train Time(s)": 0.19
         },
         {
           "Model": "XGBoost",
@@ -292,7 +292,7 @@
           "CV Train Mean": 0.9885,
           "CV Overfit": "No",
           "Overfit": "Yes",
-          "Train Time(s)": 0.05
+          "Train Time(s)": 0.04
         },
         {
           "Model": "LightGBM",
@@ -304,7 +304,7 @@
           "CV Train Mean": 0.9962,
           "CV Overfit": "No",
           "Overfit": "Yes",
-          "Train Time(s)": 0.06
+          "Train Time(s)": 0.15
         }
       ],
       "feature_importances": {
@@ -325,11 +325,11 @@
         "  Training Logistic Regression...",
         "    Logistic Regression: acc=0.775, f1=0.779, auc=0.846  [0.01s]",
         "  Training Random Forest...",
-        "    Random Forest: acc=0.800, f1=0.802, auc=0.842  [0.15s]",
+        "    Random Forest: acc=0.800, f1=0.802, auc=0.842  [0.19s]",
         "  Training XGBoost...",
-        "    XGBoost: acc=0.762, f1=0.760, auc=0.828  [0.05s]",
+        "    XGBoost: acc=0.762, f1=0.760, auc=0.828  [0.04s]",
         "  Training LightGBM...",
-        "    LightGBM: acc=0.762, f1=0.764, auc=0.821  [0.06s]",
+        "    LightGBM: acc=0.762, f1=0.764, auc=0.821  [0.15s]",
         "\nBest model: LightGBM (roc_auc=0.8210)",
         "Overfitting warnings: XGBoost is overfitting \u2014 train ROC-AUC 0.9838 vs test ROC-AUC 0.8282, gap 0.1556; LightGBM is overfitting \u2014 train ROC-AUC 0.9964 vs test ROC-AUC 0.8210, gap 0.1754",
         "5-fold cross-validation results: best model LightGBM achieved CV mean 0.8790 \u00b1 0.0241 vs single test score 0.8210"
@@ -340,33 +340,6 @@
       ],
       "cv_summary": "5-fold cross-validation results: best model LightGBM achieved CV mean 0.8790 \u00b1 0.0241 vs single test score 0.8210",
       "cv_folds_used": 5,
-      "overfitting_search_results": [
-        {
-          "title": "THE FIX - Altoona PA - Hours, Directions, Reviews - Loc8NearMe",
-          "url": "https://www.loc8nearme.com/pennsylvania/altoona/quick-fix/4711919/",
-          "snippet": "The Fix at 5580 Goods Ln K - 11, Altoona PA 16602 - hours, address, map, directions, phone number, customer ratings and reviews."
-        },
-        {
-          "title": "The Fix, Altoona, PA - Reviews (12), Photos (6) - BestProsInTown",
-          "url": "https://www.bestprosintown.com/pa/altoona/the-fix-/",
-          "snippet": "Read what people in Altoona are saying about their experience with The Fix at 5580 Goods Ln K - 11 - hours, phone number, address and map."
-        },
-        {
-          "title": "FIX Definition & Meaning - Merriam-Webster",
-          "url": "https://www.merriam-webster.com/dictionary/fix",
-          "snippet": "The meaning of FIX is to make something whole or able to work properly again : repair, mend. How to use fix in a sentence. Synonym Discussion of Fix."
-        },
-        {
-          "title": "FIX | definition in the Cambridge English Dictionary",
-          "url": "https://dictionary.cambridge.org/us/dictionary/english/fix",
-          "snippet": "FIX meaning: 1. to repair something: 2. to arrange or agree a time, place, price, etc.: 3. to fasten something\u2026. Learn more."
-        },
-        {
-          "title": "FIX Definition & Meaning | Dictionary.com",
-          "url": "https://www.dictionary.com/browse/fix",
-          "snippet": "To fix is to fasten in position securely or to make more or less permanent against change, especially something already existing: to fix a bayonet on a gun; fix a principle in one's mind."
-        }
-      ],
       "results": [
         {
           "name": "Logistic Regression",
@@ -374,7 +347,7 @@
             "accuracy": 0.775,
             "f1": 0.7791835699797159,
             "roc_auc": 0.8462352318815024,
-            "train_time_s": 0.01,
+            "train_time_s": 0.012,
             "train_score": 0.827190147611145,
             "test_score": 0.8462352318815024,
             "generalization_gap": -0.01904508427035745,
@@ -408,7 +381,7 @@
             "accuracy": 0.8,
             "f1": 0.8017316017316019,
             "roc_auc": 0.8416505025568682,
-            "train_time_s": 0.147,
+            "train_time_s": 0.187,
             "train_score": 0.926019739715259,
             "test_score": 0.8416505025568682,
             "generalization_gap": 0.08436923715839073,
@@ -442,7 +415,7 @@
             "accuracy": 0.7625,
             "f1": 0.7600220363374708,
             "roc_auc": 0.8282489860694763,
-            "train_time_s": 0.053,
+            "train_time_s": 0.042,
             "train_score": 0.9838304655428421,
             "test_score": 0.8282489860694763,
             "generalization_gap": 0.15558147947336587,
@@ -476,7 +449,7 @@
             "accuracy": 0.7625,
             "f1": 0.7635787910552063,
             "roc_auc": 0.8210192205960148,
-            "train_time_s": 0.062,
+            "train_time_s": 0.151,
             "train_score": 0.9964461961743384,
             "test_score": 0.8210192205960148,
             "generalization_gap": 0.17542697557832354,
@@ -737,7 +710,7 @@
         "CV Train Mean": 0.9317,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.15
+        "Train Time(s)": 0.19
       },
       {
         "Model": "XGBoost",
@@ -749,7 +722,7 @@
         "CV Train Mean": 0.9885,
         "CV Overfit": "No",
         "Overfit": "Yes",
-        "Train Time(s)": 0.05
+        "Train Time(s)": 0.04
       },
       {
         "Model": "LightGBM",
@@ -761,7 +734,7 @@
         "CV Train Mean": 0.9962,
         "CV Overfit": "No",
         "Overfit": "Yes",
-        "Train Time(s)": 0.06
+        "Train Time(s)": 0.15
       }
     ],
     "feature_importances": {
@@ -955,33 +928,6 @@
         0.14669657075937007
       ]
     },
-    "overfitting_search_results": [
-      {
-        "title": "THE FIX - Altoona PA - Hours, Directions, Reviews - Loc8NearMe",
-        "url": "https://www.loc8nearme.com/pennsylvania/altoona/quick-fix/4711919/",
-        "snippet": "The Fix at 5580 Goods Ln K - 11, Altoona PA 16602 - hours, address, map, directions, phone number, customer ratings and reviews."
-      },
-      {
-        "title": "The Fix, Altoona, PA - Reviews (12), Photos (6) - BestProsInTown",
-        "url": "https://www.bestprosintown.com/pa/altoona/the-fix-/",
-        "snippet": "Read what people in Altoona are saying about their experience with The Fix at 5580 Goods Ln K - 11 - hours, phone number, address and map."
-      },
-      {
-        "title": "FIX Definition & Meaning - Merriam-Webster",
-        "url": "https://www.merriam-webster.com/dictionary/fix",
-        "snippet": "The meaning of FIX is to make something whole or able to work properly again : repair, mend. How to use fix in a sentence. Synonym Discussion of Fix."
-      },
-      {
-        "title": "FIX | definition in the Cambridge English Dictionary",
-        "url": "https://dictionary.cambridge.org/us/dictionary/english/fix",
-        "snippet": "FIX meaning: 1. to repair something: 2. to arrange or agree a time, place, price, etc.: 3. to fasten something\u2026. Learn more."
-      },
-      {
-        "title": "FIX Definition & Meaning | Dictionary.com",
-        "url": "https://www.dictionary.com/browse/fix",
-        "snippet": "To fix is to fasten in position securely or to make more or less permanent against change, especially something already existing: to fix a bayonet on a gun; fix a principle in one's mind."
-      }
-    ],
     "tune": {
       "success": true,
       "best_params": {
@@ -996,12 +942,12 @@
       "baseline_score": 0.8210192205960148,
       "improvement": 0.027861047434314834,
       "n_trials_run": 20,
-      "tuning_time_s": 10.456519365310669,
+      "tuning_time_s": 2.784282684326172,
       "generalization_gap": 0.1015357071640105,
       "overfit": false,
       "tuning_log": [
         "Dataset has 856 training rows (<1000); using n_trials=20.",
-        "Optuna completed 20 trials in 10.5s.",
+        "Optuna completed 20 trials in 2.8s.",
         "Best test score: 0.8489 (baseline 0.8210, improvement +0.0279)."
       ],
       "test_metrics_full": {
@@ -1430,7 +1376,7 @@
               "CV Train Mean": 0.9317,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.15
+              "Train Time(s)": 0.19
             },
             {
               "Model": "XGBoost",
@@ -1442,7 +1388,7 @@
               "CV Train Mean": 0.9885,
               "CV Overfit": "No",
               "Overfit": "Yes",
-              "Train Time(s)": 0.05
+              "Train Time(s)": 0.04
             },
             {
               "Model": "LightGBM",
@@ -1454,7 +1400,7 @@
               "CV Train Mean": 0.9962,
               "CV Overfit": "No",
               "Overfit": "Yes",
-              "Train Time(s)": 0.06
+              "Train Time(s)": 0.15
             }
           ],
           "feature_importances": {
@@ -1475,11 +1421,11 @@
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.775, f1=0.779, auc=0.846  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.800, f1=0.802, auc=0.842  [0.15s]",
+            "    Random Forest: acc=0.800, f1=0.802, auc=0.842  [0.19s]",
             "  Training XGBoost...",
-            "    XGBoost: acc=0.762, f1=0.760, auc=0.828  [0.05s]",
+            "    XGBoost: acc=0.762, f1=0.760, auc=0.828  [0.04s]",
             "  Training LightGBM...",
-            "    LightGBM: acc=0.762, f1=0.764, auc=0.821  [0.06s]",
+            "    LightGBM: acc=0.762, f1=0.764, auc=0.821  [0.15s]",
             "\nBest model: LightGBM (roc_auc=0.8210)",
             "Overfitting warnings: XGBoost is overfitting \u2014 train ROC-AUC 0.9838 vs test ROC-AUC 0.8282, gap 0.1556; LightGBM is overfitting \u2014 train ROC-AUC 0.9964 vs test ROC-AUC 0.8210, gap 0.1754",
             "5-fold cross-validation results: best model LightGBM achieved CV mean 0.8790 \u00b1 0.0241 vs single test score 0.8210"
@@ -1490,33 +1436,6 @@
           ],
           "cv_summary": "5-fold cross-validation results: best model LightGBM achieved CV mean 0.8790 \u00b1 0.0241 vs single test score 0.8210",
           "cv_folds_used": 5,
-          "overfitting_search_results": [
-            {
-              "title": "THE FIX - Altoona PA - Hours, Directions, Reviews - Loc8NearMe",
-              "url": "https://www.loc8nearme.com/pennsylvania/altoona/quick-fix/4711919/",
-              "snippet": "The Fix at 5580 Goods Ln K - 11, Altoona PA 16602 - hours, address, map, directions, phone number, customer ratings and reviews."
-            },
-            {
-              "title": "The Fix, Altoona, PA - Reviews (12), Photos (6) - BestProsInTown",
-              "url": "https://www.bestprosintown.com/pa/altoona/the-fix-/",
-              "snippet": "Read what people in Altoona are saying about their experience with The Fix at 5580 Goods Ln K - 11 - hours, phone number, address and map."
-            },
-            {
-              "title": "FIX Definition & Meaning - Merriam-Webster",
-              "url": "https://www.merriam-webster.com/dictionary/fix",
-              "snippet": "The meaning of FIX is to make something whole or able to work properly again : repair, mend. How to use fix in a sentence. Synonym Discussion of Fix."
-            },
-            {
-              "title": "FIX | definition in the Cambridge English Dictionary",
-              "url": "https://dictionary.cambridge.org/us/dictionary/english/fix",
-              "snippet": "FIX meaning: 1. to repair something: 2. to arrange or agree a time, place, price, etc.: 3. to fasten something\u2026. Learn more."
-            },
-            {
-              "title": "FIX Definition & Meaning | Dictionary.com",
-              "url": "https://www.dictionary.com/browse/fix",
-              "snippet": "To fix is to fasten in position securely or to make more or less permanent against change, especially something already existing: to fix a bayonet on a gun; fix a principle in one's mind."
-            }
-          ],
           "results": [
             {
               "name": "Logistic Regression",
@@ -1524,7 +1443,7 @@
                 "accuracy": 0.775,
                 "f1": 0.7791835699797159,
                 "roc_auc": 0.8462352318815024,
-                "train_time_s": 0.01,
+                "train_time_s": 0.012,
                 "train_score": 0.827190147611145,
                 "test_score": 0.8462352318815024,
                 "generalization_gap": -0.01904508427035745,
@@ -1558,7 +1477,7 @@
                 "accuracy": 0.8,
                 "f1": 0.8017316017316019,
                 "roc_auc": 0.8416505025568682,
-                "train_time_s": 0.147,
+                "train_time_s": 0.187,
                 "train_score": 0.926019739715259,
                 "test_score": 0.8416505025568682,
                 "generalization_gap": 0.08436923715839073,
@@ -1592,7 +1511,7 @@
                 "accuracy": 0.7625,
                 "f1": 0.7600220363374708,
                 "roc_auc": 0.8282489860694763,
-                "train_time_s": 0.053,
+                "train_time_s": 0.042,
                 "train_score": 0.9838304655428421,
                 "test_score": 0.8282489860694763,
                 "generalization_gap": 0.15558147947336587,
@@ -1626,7 +1545,7 @@
                 "accuracy": 0.7625,
                 "f1": 0.7635787910552063,
                 "roc_auc": 0.8210192205960148,
-                "train_time_s": 0.062,
+                "train_time_s": 0.151,
                 "train_score": 0.9964461961743384,
                 "test_score": 0.8210192205960148,
                 "generalization_gap": 0.17542697557832354,
@@ -1679,12 +1598,12 @@
           "baseline_score": 0.8210192205960148,
           "improvement": 0.027861047434314834,
           "n_trials_run": 20,
-          "tuning_time_s": 10.456519365310669,
+          "tuning_time_s": 2.784282684326172,
           "generalization_gap": 0.1015357071640105,
           "overfit": false,
           "tuning_log": [
             "Dataset has 856 training rows (<1000); using n_trials=20.",
-            "Optuna completed 20 trials in 10.5s.",
+            "Optuna completed 20 trials in 2.8s.",
             "Best test score: 0.8489 (baseline 0.8210, improvement +0.0279)."
           ],
           "test_metrics_full": {
@@ -2190,7 +2109,7 @@
               "CV Train Mean": 0.9317,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.15
+              "Train Time(s)": 0.19
             },
             {
               "Model": "XGBoost",
@@ -2202,7 +2121,7 @@
               "CV Train Mean": 0.9885,
               "CV Overfit": "No",
               "Overfit": "Yes",
-              "Train Time(s)": 0.05
+              "Train Time(s)": 0.04
             },
             {
               "Model": "LightGBM",
@@ -2214,7 +2133,7 @@
               "CV Train Mean": 0.9962,
               "CV Overfit": "No",
               "Overfit": "Yes",
-              "Train Time(s)": 0.06
+              "Train Time(s)": 0.15
             }
           ],
           "feature_importances": {
@@ -2235,11 +2154,11 @@
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.775, f1=0.779, auc=0.846  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.800, f1=0.802, auc=0.842  [0.15s]",
+            "    Random Forest: acc=0.800, f1=0.802, auc=0.842  [0.19s]",
             "  Training XGBoost...",
-            "    XGBoost: acc=0.762, f1=0.760, auc=0.828  [0.05s]",
+            "    XGBoost: acc=0.762, f1=0.760, auc=0.828  [0.04s]",
             "  Training LightGBM...",
-            "    LightGBM: acc=0.762, f1=0.764, auc=0.821  [0.06s]",
+            "    LightGBM: acc=0.762, f1=0.764, auc=0.821  [0.15s]",
             "\nBest model: LightGBM (roc_auc=0.8210)",
             "Overfitting warnings: XGBoost is overfitting \u2014 train ROC-AUC 0.9838 vs test ROC-AUC 0.8282, gap 0.1556; LightGBM is overfitting \u2014 train ROC-AUC 0.9964 vs test ROC-AUC 0.8210, gap 0.1754",
             "5-fold cross-validation results: best model LightGBM achieved CV mean 0.8790 \u00b1 0.0241 vs single test score 0.8210"
@@ -2250,33 +2169,6 @@
           ],
           "cv_summary": "5-fold cross-validation results: best model LightGBM achieved CV mean 0.8790 \u00b1 0.0241 vs single test score 0.8210",
           "cv_folds_used": 5,
-          "overfitting_search_results": [
-            {
-              "title": "THE FIX - Altoona PA - Hours, Directions, Reviews - Loc8NearMe",
-              "url": "https://www.loc8nearme.com/pennsylvania/altoona/quick-fix/4711919/",
-              "snippet": "The Fix at 5580 Goods Ln K - 11, Altoona PA 16602 - hours, address, map, directions, phone number, customer ratings and reviews."
-            },
-            {
-              "title": "The Fix, Altoona, PA - Reviews (12), Photos (6) - BestProsInTown",
-              "url": "https://www.bestprosintown.com/pa/altoona/the-fix-/",
-              "snippet": "Read what people in Altoona are saying about their experience with The Fix at 5580 Goods Ln K - 11 - hours, phone number, address and map."
-            },
-            {
-              "title": "FIX Definition & Meaning - Merriam-Webster",
-              "url": "https://www.merriam-webster.com/dictionary/fix",
-              "snippet": "The meaning of FIX is to make something whole or able to work properly again : repair, mend. How to use fix in a sentence. Synonym Discussion of Fix."
-            },
-            {
-              "title": "FIX | definition in the Cambridge English Dictionary",
-              "url": "https://dictionary.cambridge.org/us/dictionary/english/fix",
-              "snippet": "FIX meaning: 1. to repair something: 2. to arrange or agree a time, place, price, etc.: 3. to fasten something\u2026. Learn more."
-            },
-            {
-              "title": "FIX Definition & Meaning | Dictionary.com",
-              "url": "https://www.dictionary.com/browse/fix",
-              "snippet": "To fix is to fasten in position securely or to make more or less permanent against change, especially something already existing: to fix a bayonet on a gun; fix a principle in one's mind."
-            }
-          ],
           "results": [
             {
               "name": "Logistic Regression",
@@ -2284,7 +2176,7 @@
                 "accuracy": 0.775,
                 "f1": 0.7791835699797159,
                 "roc_auc": 0.8462352318815024,
-                "train_time_s": 0.01,
+                "train_time_s": 0.012,
                 "train_score": 0.827190147611145,
                 "test_score": 0.8462352318815024,
                 "generalization_gap": -0.01904508427035745,
@@ -2318,7 +2210,7 @@
                 "accuracy": 0.8,
                 "f1": 0.8017316017316019,
                 "roc_auc": 0.8416505025568682,
-                "train_time_s": 0.147,
+                "train_time_s": 0.187,
                 "train_score": 0.926019739715259,
                 "test_score": 0.8416505025568682,
                 "generalization_gap": 0.08436923715839073,
@@ -2352,7 +2244,7 @@
                 "accuracy": 0.7625,
                 "f1": 0.7600220363374708,
                 "roc_auc": 0.8282489860694763,
-                "train_time_s": 0.053,
+                "train_time_s": 0.042,
                 "train_score": 0.9838304655428421,
                 "test_score": 0.8282489860694763,
                 "generalization_gap": 0.15558147947336587,
@@ -2386,7 +2278,7 @@
                 "accuracy": 0.7625,
                 "f1": 0.7635787910552063,
                 "roc_auc": 0.8210192205960148,
-                "train_time_s": 0.062,
+                "train_time_s": 0.151,
                 "train_score": 0.9964461961743384,
                 "test_score": 0.8210192205960148,
                 "generalization_gap": 0.17542697557832354,
@@ -2647,7 +2539,7 @@
             "CV Train Mean": 0.9317,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.15
+            "Train Time(s)": 0.19
           },
           {
             "Model": "XGBoost",
@@ -2659,7 +2551,7 @@
             "CV Train Mean": 0.9885,
             "CV Overfit": "No",
             "Overfit": "Yes",
-            "Train Time(s)": 0.05
+            "Train Time(s)": 0.04
           },
           {
             "Model": "LightGBM",
@@ -2671,7 +2563,7 @@
             "CV Train Mean": 0.9962,
             "CV Overfit": "No",
             "Overfit": "Yes",
-            "Train Time(s)": 0.06
+            "Train Time(s)": 0.15
           }
         ],
         "feature_importances": {
@@ -2865,33 +2757,6 @@
             0.14669657075937007
           ]
         },
-        "overfitting_search_results": [
-          {
-            "title": "THE FIX - Altoona PA - Hours, Directions, Reviews - Loc8NearMe",
-            "url": "https://www.loc8nearme.com/pennsylvania/altoona/quick-fix/4711919/",
-            "snippet": "The Fix at 5580 Goods Ln K - 11, Altoona PA 16602 - hours, address, map, directions, phone number, customer ratings and reviews."
-          },
-          {
-            "title": "The Fix, Altoona, PA - Reviews (12), Photos (6) - BestProsInTown",
-            "url": "https://www.bestprosintown.com/pa/altoona/the-fix-/",
-            "snippet": "Read what people in Altoona are saying about their experience with The Fix at 5580 Goods Ln K - 11 - hours, phone number, address and map."
-          },
-          {
-            "title": "FIX Definition & Meaning - Merriam-Webster",
-            "url": "https://www.merriam-webster.com/dictionary/fix",
-            "snippet": "The meaning of FIX is to make something whole or able to work properly again : repair, mend. How to use fix in a sentence. Synonym Discussion of Fix."
-          },
-          {
-            "title": "FIX | definition in the Cambridge English Dictionary",
-            "url": "https://dictionary.cambridge.org/us/dictionary/english/fix",
-            "snippet": "FIX meaning: 1. to repair something: 2. to arrange or agree a time, place, price, etc.: 3. to fasten something\u2026. Learn more."
-          },
-          {
-            "title": "FIX Definition & Meaning | Dictionary.com",
-            "url": "https://www.dictionary.com/browse/fix",
-            "snippet": "To fix is to fasten in position securely or to make more or less permanent against change, especially something already existing: to fix a bayonet on a gun; fix a principle in one's mind."
-          }
-        ],
         "tune": {
           "success": true,
           "best_params": {
@@ -2906,12 +2771,12 @@
           "baseline_score": 0.8210192205960148,
           "improvement": 0.027861047434314834,
           "n_trials_run": 20,
-          "tuning_time_s": 10.456519365310669,
+          "tuning_time_s": 2.784282684326172,
           "generalization_gap": 0.1015357071640105,
           "overfit": false,
           "tuning_log": [
             "Dataset has 856 training rows (<1000); using n_trials=20.",
-            "Optuna completed 20 trials in 10.5s.",
+            "Optuna completed 20 trials in 2.8s.",
             "Best test score: 0.8489 (baseline 0.8210, improvement +0.0279)."
           ],
           "test_metrics_full": {

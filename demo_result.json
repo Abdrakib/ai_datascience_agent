@@ -343,7 +343,7 @@
           "CV Train Mean": 0.9824,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.19
+          "Train Time(s)": 0.18
         },
         {
           "Model": "XGBoost",
@@ -367,7 +367,7 @@
           "CV Train Mean": 0.9969,
           "CV Overfit": "Yes",
           "Overfit": "Yes",
-          "Train Time(s)": 2.6
+          "Train Time(s)": 2.01
         }
       ],
       "feature_importances": {
@@ -392,11 +392,11 @@
         "  Training Logistic Regression...",
         "    Logistic Regression: acc=0.670, f1=0.670, auc=0.779  [0.01s]",
         "  Training Random Forest...",
-        "    Random Forest: acc=0.740, f1=0.740, auc=0.825  [0.19s]",
+        "    Random Forest: acc=0.740, f1=0.740, auc=0.825  [0.18s]",
         "  Training XGBoost...",
         "    XGBoost: acc=0.760, f1=0.761, auc=0.853  [0.10s]",
         "  Training LightGBM...",
-        "    LightGBM: acc=0.750, f1=0.751, auc=0.833  [2.60s]",
+        "    LightGBM: acc=0.750, f1=0.751, auc=0.833  [2.01s]",
         "\nBest model: XGBoost (roc_auc=0.8529)",
         "Overfitting warnings: XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 1.0000 vs CV test mean 0.8384; LightGBM is overfitting \u2014 train ROC-AUC 0.9989 vs test ROC-AUC 0.8327, gap 0.1662; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9969 vs CV test mean 0.8372",
         "5-fold cross-validation results: best model XGBoost achieved CV mean 0.8384 \u00b1 0.0528 vs single test score 0.8529"
@@ -415,7 +415,7 @@
             "accuracy": 0.67,
             "f1": 0.6696369636963696,
             "roc_auc": 0.7793939393939393,
-            "train_time_s": 0.012,
+            "train_time_s": 0.008,
             "train_score": 0.793560606060606,
             "test_score": 0.7793939393939393,
             "generalization_gap": 0.01416666666666666,
@@ -449,7 +449,7 @@
             "accuracy": 0.74,
             "f1": 0.7404161664665867,
             "roc_auc": 0.8246464646464646,
-            "train_time_s": 0.189,
+            "train_time_s": 0.178,
             "train_score": 0.9717424242424243,
             "test_score": 0.8246464646464646,
             "generalization_gap": 0.14709595959595967,
@@ -483,7 +483,7 @@
             "accuracy": 0.76,
             "f1": 0.760578081091931,
             "roc_auc": 0.8529292929292929,
-            "train_time_s": 0.095,
+            "train_time_s": 0.101,
             "train_score": 0.9998484848484848,
             "test_score": 0.8529292929292929,
             "generalization_gap": 0.1469191919191919,
@@ -517,7 +517,7 @@
             "accuracy": 0.75,
             "f1": 0.7506265664160401,
             "roc_auc": 0.8327272727272728,
-            "train_time_s": 2.596,
+            "train_time_s": 2.01,
             "train_score": 0.9988888888888889,
             "test_score": 0.8327272727272728,
             "generalization_gap": 0.16616161616161618,
@@ -718,7 +718,7 @@
         "CV Train Mean": 0.9824,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.19
+        "Train Time(s)": 0.18
       },
       {
         "Model": "XGBoost",
@@ -742,7 +742,7 @@
         "CV Train Mean": 0.9969,
         "CV Overfit": "Yes",
         "Overfit": "Yes",
-        "Train Time(s)": 2.6
+        "Train Time(s)": 2.01
       }
     ],
     "feature_importances": {
@@ -895,12 +895,12 @@
       "baseline_score": 0.8529292929292929,
       "improvement": 0.004040404040404066,
       "n_trials_run": 20,
-      "tuning_time_s": 6.468728542327881,
+      "tuning_time_s": 4.07582950592041,
       "generalization_gap": 0.14295454545454545,
       "overfit": false,
       "tuning_log": [
         "Dataset has 400 training rows (<1000); using n_trials=20.",
-        "Optuna completed 20 trials in 6.5s.",
+        "Optuna completed 20 trials in 4.1s.",
         "Best test score: 0.8570 (baseline 0.8529, improvement +0.0040)."
       ],
       "test_metrics_full": {
@@ -1392,7 +1392,7 @@
               "CV Train Mean": 0.9824,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.19
+              "Train Time(s)": 0.18
             },
             {
               "Model": "XGBoost",
@@ -1416,7 +1416,7 @@
               "CV Train Mean": 0.9969,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 2.6
+              "Train Time(s)": 2.01
             }
           ],
           "feature_importances": {
@@ -1441,11 +1441,11 @@
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.670, f1=0.670, auc=0.779  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.740, f1=0.740, auc=0.825  [0.19s]",
+            "    Random Forest: acc=0.740, f1=0.740, auc=0.825  [0.18s]",
             "  Training XGBoost...",
             "    XGBoost: acc=0.760, f1=0.761, auc=0.853  [0.10s]",
             "  Training LightGBM...",
-            "    LightGBM: acc=0.750, f1=0.751, auc=0.833  [2.60s]",
+            "    LightGBM: acc=0.750, f1=0.751, auc=0.833  [2.01s]",
             "\nBest model: XGBoost (roc_auc=0.8529)",
             "Overfitting warnings: XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 1.0000 vs CV test mean 0.8384; LightGBM is overfitting \u2014 train ROC-AUC 0.9989 vs test ROC-AUC 0.8327, gap 0.1662; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9969 vs CV test mean 0.8372",
             "5-fold cross-validation results: best model XGBoost achieved CV mean 0.8384 \u00b1 0.0528 vs single test score 0.8529"
@@ -1464,7 +1464,7 @@
                 "accuracy": 0.67,
                 "f1": 0.6696369636963696,
                 "roc_auc": 0.7793939393939393,
-                "train_time_s": 0.012,
+                "train_time_s": 0.008,
                 "train_score": 0.793560606060606,
                 "test_score": 0.7793939393939393,
                 "generalization_gap": 0.01416666666666666,
@@ -1498,7 +1498,7 @@
                 "accuracy": 0.74,
                 "f1": 0.7404161664665867,
                 "roc_auc": 0.8246464646464646,
-                "train_time_s": 0.189,
+                "train_time_s": 0.178,
                 "train_score": 0.9717424242424243,
                 "test_score": 0.8246464646464646,
                 "generalization_gap": 0.14709595959595967,
@@ -1532,7 +1532,7 @@
                 "accuracy": 0.76,
                 "f1": 0.760578081091931,
                 "roc_auc": 0.8529292929292929,
-                "train_time_s": 0.095,
+                "train_time_s": 0.101,
                 "train_score": 0.9998484848484848,
                 "test_score": 0.8529292929292929,
                 "generalization_gap": 0.1469191919191919,
@@ -1566,7 +1566,7 @@
                 "accuracy": 0.75,
                 "f1": 0.7506265664160401,
                 "roc_auc": 0.8327272727272728,
-                "train_time_s": 2.596,
+                "train_time_s": 2.01,
                 "train_score": 0.9988888888888889,
                 "test_score": 0.8327272727272728,
                 "generalization_gap": 0.16616161616161618,
@@ -1620,12 +1620,12 @@
           "baseline_score": 0.8529292929292929,
           "improvement": 0.004040404040404066,
           "n_trials_run": 20,
-          "tuning_time_s": 6.468728542327881,
+          "tuning_time_s": 4.07582950592041,
           "generalization_gap": 0.14295454545454545,
           "overfit": false,
           "tuning_log": [
             "Dataset has 400 training rows (<1000); using n_trials=20.",
-            "Optuna completed 20 trials in 6.5s.",
+            "Optuna completed 20 trials in 4.1s.",
             "Best test score: 0.8570 (baseline 0.8529, improvement +0.0040)."
           ],
           "test_metrics_full": {
@@ -2134,7 +2134,7 @@
               "CV Train Mean": 0.9824,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.19
+              "Train Time(s)": 0.18
             },
             {
               "Model": "XGBoost",
@@ -2158,7 +2158,7 @@
               "CV Train Mean": 0.9969,
               "CV Overfit": "Yes",
               "Overfit": "Yes",
-              "Train Time(s)": 2.6
+              "Train Time(s)": 2.01
             }
           ],
           "feature_importances": {
@@ -2183,11 +2183,11 @@
             "  Training Logistic Regression...",
             "    Logistic Regression: acc=0.670, f1=0.670, auc=0.779  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: acc=0.740, f1=0.740, auc=0.825  [0.19s]",
+            "    Random Forest: acc=0.740, f1=0.740, auc=0.825  [0.18s]",
             "  Training XGBoost...",
             "    XGBoost: acc=0.760, f1=0.761, auc=0.853  [0.10s]",
             "  Training LightGBM...",
-            "    LightGBM: acc=0.750, f1=0.751, auc=0.833  [2.60s]",
+            "    LightGBM: acc=0.750, f1=0.751, auc=0.833  [2.01s]",
             "\nBest model: XGBoost (roc_auc=0.8529)",
             "Overfitting warnings: XGBoost shows consistent overfitting across CV folds \u2014 CV train mean 1.0000 vs CV test mean 0.8384; LightGBM is overfitting \u2014 train ROC-AUC 0.9989 vs test ROC-AUC 0.8327, gap 0.1662; LightGBM shows consistent overfitting across CV folds \u2014 CV train mean 0.9969 vs CV test mean 0.8372",
             "5-fold cross-validation results: best model XGBoost achieved CV mean 0.8384 \u00b1 0.0528 vs single test score 0.8529"
@@ -2206,7 +2206,7 @@
                 "accuracy": 0.67,
                 "f1": 0.6696369636963696,
                 "roc_auc": 0.7793939393939393,
-                "train_time_s": 0.012,
+                "train_time_s": 0.008,
                 "train_score": 0.793560606060606,
                 "test_score": 0.7793939393939393,
                 "generalization_gap": 0.01416666666666666,
@@ -2240,7 +2240,7 @@
                 "accuracy": 0.74,
                 "f1": 0.7404161664665867,
                 "roc_auc": 0.8246464646464646,
-                "train_time_s": 0.189,
+                "train_time_s": 0.178,
                 "train_score": 0.9717424242424243,
                 "test_score": 0.8246464646464646,
                 "generalization_gap": 0.14709595959595967,
@@ -2274,7 +2274,7 @@
                 "accuracy": 0.76,
                 "f1": 0.760578081091931,
                 "roc_auc": 0.8529292929292929,
-                "train_time_s": 0.095,
+                "train_time_s": 0.101,
                 "train_score": 0.9998484848484848,
                 "test_score": 0.8529292929292929,
                 "generalization_gap": 0.1469191919191919,
@@ -2308,7 +2308,7 @@
                 "accuracy": 0.75,
                 "f1": 0.7506265664160401,
                 "roc_auc": 0.8327272727272728,
-                "train_time_s": 2.596,
+                "train_time_s": 2.01,
                 "train_score": 0.9988888888888889,
                 "test_score": 0.8327272727272728,
                 "generalization_gap": 0.16616161616161618,
@@ -2509,7 +2509,7 @@
             "CV Train Mean": 0.9824,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.19
+            "Train Time(s)": 0.18
           },
           {
             "Model": "XGBoost",
@@ -2533,7 +2533,7 @@
             "CV Train Mean": 0.9969,
             "CV Overfit": "Yes",
             "Overfit": "Yes",
-            "Train Time(s)": 2.6
+            "Train Time(s)": 2.01
           }
         ],
         "feature_importances": {
@@ -2686,12 +2686,12 @@
           "baseline_score": 0.8529292929292929,
           "improvement": 0.004040404040404066,
           "n_trials_run": 20,
-          "tuning_time_s": 6.468728542327881,
+          "tuning_time_s": 4.07582950592041,
           "generalization_gap": 0.14295454545454545,
           "overfit": false,
           "tuning_log": [
             "Dataset has 400 training rows (<1000); using n_trials=20.",
-            "Optuna completed 20 trials in 6.5s.",
+            "Optuna completed 20 trials in 4.1s.",
             "Best test score: 0.8570 (baseline 0.8529, improvement +0.0040)."
           ],
           "test_metrics_full": {

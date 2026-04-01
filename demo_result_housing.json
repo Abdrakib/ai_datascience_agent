@@ -306,7 +306,7 @@
           "CV Train Mean": 0.9671,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.14
+          "Train Time(s)": 0.12
         },
         {
           "Model": "XGBoost",
@@ -318,7 +318,7 @@
           "CV Train Mean": 0.994,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.05
+          "Train Time(s)": 0.07
         },
         {
           "Model": "LightGBM",
@@ -330,7 +330,7 @@
           "CV Train Mean": 0.9851,
           "CV Overfit": "No",
           "Overfit": "No",
-          "Train Time(s)": 0.03
+          "Train Time(s)": 0.06
         }
       ],
       "feature_importances": {
@@ -353,11 +353,11 @@
         "  Training Linear Regression...",
         "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
         "  Training Random Forest...",
-        "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.13s]",
+        "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.12s]",
         "  Training XGBoost...",
-        "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.05s]",
+        "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.07s]",
         "  Training LightGBM...",
-        "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
+        "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.06s]",
         "\nBest model: Linear Regression (r2=0.9704)",
         "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
       ],
@@ -371,7 +371,7 @@
             "rmse": 19244.30726602296,
             "mae": 15054.427702432535,
             "r2": 0.9704273023733059,
-            "train_time_s": 0.009,
+            "train_time_s": 0.005,
             "train_score": 0.9756910416636839,
             "test_score": 0.9704273023733059,
             "generalization_gap": 0.0052637392903780444,
@@ -403,9 +403,9 @@
           "name": "Random Forest",
           "metrics": {
             "rmse": 34041.3103717993,
-            "mae": 27600.138340497626,
+            "mae": 27600.138340497622,
             "r2": 0.9074665155441051,
-            "train_time_s": 0.135,
+            "train_time_s": 0.119,
             "train_score": 0.9635729463513367,
             "test_score": 0.9074665155441051,
             "generalization_gap": 0.056106430807231655,
@@ -415,14 +415,14 @@
           "generalization_gap": 0.056106430807231655,
           "overfit": false,
           "cv_scores": [
-            0.9357359945589842,
+            0.9357359945589843,
             0.9382614289622773,
-            0.9301892382602968,
+            0.9301892382602969,
             0.9268878476820184,
             0.9318488429287124
           ],
           "cv_mean": 0.9325846704784577,
-          "cv_std": 0.004022182442727374,
+          "cv_std": 0.004022182442727378,
           "cv_train_scores": [
             0.967156970877803,
             0.967581448731281,
@@ -439,7 +439,7 @@
             "rmse": 25605.403548893355,
             "mae": 20573.833333333332,
             "r2": 0.9476460290782922,
-            "train_time_s": 0.05,
+            "train_time_s": 0.066,
             "train_score": 0.9921668774926053,
             "test_score": 0.9476460290782922,
             "generalization_gap": 0.04452084841431314,
@@ -473,7 +473,7 @@
             "rmse": 24557.54614248733,
             "mae": 19483.402159085697,
             "r2": 0.9518433447340738,
-            "train_time_s": 0.033,
+            "train_time_s": 0.063,
             "train_score": 0.9860135698556134,
             "test_score": 0.9518433447340738,
             "generalization_gap": 0.034170225121539555,
@@ -572,7 +572,7 @@
         "CV Train Mean": 0.9671,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.14
+        "Train Time(s)": 0.12
       },
       {
         "Model": "XGBoost",
@@ -584,7 +584,7 @@
         "CV Train Mean": 0.994,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.05
+        "Train Time(s)": 0.07
       },
       {
         "Model": "LightGBM",
@@ -596,7 +596,7 @@
         "CV Train Mean": 0.9851,
         "CV Overfit": "No",
         "Overfit": "No",
-        "Train Time(s)": 0.03
+        "Train Time(s)": 0.06
       }
     ],
     "feature_importances": {
@@ -639,7 +639,7 @@
       "baseline_score": 0.9704273023733059,
       "improvement": -2.8311835198469026e-07,
       "n_trials_run": 20,
-      "tuning_time_s": 0.06488943099975586,
+      "tuning_time_s": 0.06388998031616211,
       "generalization_gap": 0.005264021735703284,
       "overfit": false,
       "tuning_log": [
@@ -1099,7 +1099,7 @@
               "CV Train Mean": 0.9671,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.14
+              "Train Time(s)": 0.12
             },
             {
               "Model": "XGBoost",
@@ -1111,7 +1111,7 @@
               "CV Train Mean": 0.994,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.05
+              "Train Time(s)": 0.07
             },
             {
               "Model": "LightGBM",
@@ -1123,7 +1123,7 @@
               "CV Train Mean": 0.9851,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.03
+              "Train Time(s)": 0.06
             }
           ],
           "feature_importances": {
@@ -1146,11 +1146,11 @@
             "  Training Linear Regression...",
             "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.13s]",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.12s]",
             "  Training XGBoost...",
-            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.05s]",
+            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.07s]",
             "  Training LightGBM...",
-            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
+            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.06s]",
             "\nBest model: Linear Regression (r2=0.9704)",
             "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
           ],
@@ -1164,7 +1164,7 @@
                 "rmse": 19244.30726602296,
                 "mae": 15054.427702432535,
                 "r2": 0.9704273023733059,
-                "train_time_s": 0.009,
+                "train_time_s": 0.005,
                 "train_score": 0.9756910416636839,
                 "test_score": 0.9704273023733059,
                 "generalization_gap": 0.0052637392903780444,
@@ -1196,23 +1196,23 @@
               "name": "Random Forest",
               "metrics": {
                 "rmse": 34041.3103717993,
-                "mae": 27600.138340497626,
+                "mae": 27600.138340497622,
                 "r2": 0.9074665155441051,
-                "train_time_s": 0.135,
+                "train_time_s": 0.119,
                 "train_score": 0.9635729463513367,
                 "test_score": 0.9074665155441051,
                 "generalization_gap": 0.056106430807231655,
                 "overfit": false
               },
               "cv_scores": [
-                0.9357359945589842,
+                0.9357359945589843,
                 0.9382614289622773,
-                0.9301892382602968,
+                0.9301892382602969,
                 0.9268878476820184,
                 0.9318488429287124
               ],
               "cv_mean": 0.9325846704784577,
-              "cv_std": 0.004022182442727374,
+              "cv_std": 0.004022182442727378,
               "cv_train_scores": [
                 0.967156970877803,
                 0.967581448731281,
@@ -1232,7 +1232,7 @@
                 "rmse": 25605.403548893355,
                 "mae": 20573.833333333332,
                 "r2": 0.9476460290782922,
-                "train_time_s": 0.05,
+                "train_time_s": 0.066,
                 "train_score": 0.9921668774926053,
                 "test_score": 0.9476460290782922,
                 "generalization_gap": 0.04452084841431314,
@@ -1266,7 +1266,7 @@
                 "rmse": 24557.54614248733,
                 "mae": 19483.402159085697,
                 "r2": 0.9518433447340738,
-                "train_time_s": 0.033,
+                "train_time_s": 0.063,
                 "train_score": 0.9860135698556134,
                 "test_score": 0.9518433447340738,
                 "generalization_gap": 0.034170225121539555,
@@ -1314,7 +1314,7 @@
           "baseline_score": 0.9704273023733059,
           "improvement": -2.8311835198469026e-07,
           "n_trials_run": 20,
-          "tuning_time_s": 0.06488943099975586,
+          "tuning_time_s": 0.06388998031616211,
           "generalization_gap": 0.005264021735703284,
           "overfit": false,
           "tuning_log": [
@@ -1689,7 +1689,7 @@
               "CV Train Mean": 0.9671,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.14
+              "Train Time(s)": 0.12
             },
             {
               "Model": "XGBoost",
@@ -1701,7 +1701,7 @@
               "CV Train Mean": 0.994,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.05
+              "Train Time(s)": 0.07
             },
             {
               "Model": "LightGBM",
@@ -1713,7 +1713,7 @@
               "CV Train Mean": 0.9851,
               "CV Overfit": "No",
               "Overfit": "No",
-              "Train Time(s)": 0.03
+              "Train Time(s)": 0.06
             }
           ],
           "feature_importances": {
@@ -1736,11 +1736,11 @@
             "  Training Linear Regression...",
             "    Linear Regression: r2=0.970, rmse=19244.31, mae=15054.43  [0.01s]",
             "  Training Random Forest...",
-            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.13s]",
+            "    Random Forest: r2=0.907, rmse=34041.31, mae=27600.14  [0.12s]",
             "  Training XGBoost...",
-            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.05s]",
+            "    XGBoost: r2=0.948, rmse=25605.40, mae=20573.83  [0.07s]",
             "  Training LightGBM...",
-            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.03s]",
+            "    LightGBM: r2=0.952, rmse=24557.55, mae=19483.40  [0.06s]",
             "\nBest model: Linear Regression (r2=0.9704)",
             "5-fold cross-validation results: best model Linear Regression achieved CV mean 0.9741 \u00b1 0.0031 vs single test score 0.9704"
           ],
@@ -1754,7 +1754,7 @@
                 "rmse": 19244.30726602296,
                 "mae": 15054.427702432535,
                 "r2": 0.9704273023733059,
-                "train_time_s": 0.009,
+                "train_time_s": 0.005,
                 "train_score": 0.9756910416636839,
                 "test_score": 0.9704273023733059,
                 "generalization_gap": 0.0052637392903780444,
@@ -1786,9 +1786,9 @@
               "name": "Random Forest",
               "metrics": {
                 "rmse": 34041.3103717993,
-                "mae": 27600.138340497626,
+                "mae": 27600.138340497622,
                 "r2": 0.9074665155441051,
-                "train_time_s": 0.135,
+                "train_time_s": 0.119,
                 "train_score": 0.9635729463513367,
                 "test_score": 0.9074665155441051,
                 "generalization_gap": 0.056106430807231655,
@@ -1798,14 +1798,14 @@
               "generalization_gap": 0.056106430807231655,
               "overfit": false,
               "cv_scores": [
-                0.9357359945589842,
+                0.9357359945589843,
                 0.9382614289622773,
-                0.9301892382602968,
+                0.9301892382602969,
                 0.9268878476820184,
                 0.9318488429287124
               ],
               "cv_mean": 0.9325846704784577,
-              "cv_std": 0.004022182442727374,
+              "cv_std": 0.004022182442727378,
               "cv_train_scores": [
                 0.967156970877803,
                 0.967581448731281,
@@ -1822,7 +1822,7 @@
                 "rmse": 25605.403548893355,
                 "mae": 20573.833333333332,
                 "r2": 0.9476460290782922,
-                "train_time_s": 0.05,
+                "train_time_s": 0.066,
                 "train_score": 0.9921668774926053,
                 "test_score": 0.9476460290782922,
                 "generalization_gap": 0.04452084841431314,
@@ -1856,7 +1856,7 @@
                 "rmse": 24557.54614248733,
                 "mae": 19483.402159085697,
                 "r2": 0.9518433447340738,
-                "train_time_s": 0.033,
+                "train_time_s": 0.063,
                 "train_score": 0.9860135698556134,
                 "test_score": 0.9518433447340738,
                 "generalization_gap": 0.034170225121539555,
@@ -1955,7 +1955,7 @@
             "CV Train Mean": 0.9671,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.14
+            "Train Time(s)": 0.12
           },
           {
             "Model": "XGBoost",
@@ -1967,7 +1967,7 @@
             "CV Train Mean": 0.994,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.05
+            "Train Time(s)": 0.07
           },
           {
             "Model": "LightGBM",
@@ -1979,7 +1979,7 @@
             "CV Train Mean": 0.9851,
             "CV Overfit": "No",
             "Overfit": "No",
-            "Train Time(s)": 0.03
+            "Train Time(s)": 0.06
           }
         ],
         "feature_importances": {
@@ -2022,7 +2022,7 @@
           "baseline_score": 0.9704273023733059,
           "improvement": -2.8311835198469026e-07,
           "n_trials_run": 20,
-          "tuning_time_s": 0.06488943099975586,
+          "tuning_time_s": 0.06388998031616211,
           "generalization_gap": 0.005264021735703284,
           "overfit": false,
           "tuning_log": [
