@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-MODEL_ID = "meta-llama/Llama-3.1-8B-Instruct"
+MODEL_ID = "Qwen/Qwen2.5-7B-Instruct"
 MAX_NEW_TOKENS = 300
 TEST_SIZE = 0.2
 CV_FOLDS = 5
