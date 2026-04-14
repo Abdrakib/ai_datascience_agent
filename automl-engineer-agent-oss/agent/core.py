@@ -1,10 +1,11 @@
 """
-LLM orchestrator: fixed sequential ML pipeline + Llama for plain-English blurbs only.
+LLM orchestrator: fixed sequential ML pipeline + local LLM for plain-English blurbs.
 """
 
 from __future__ import annotations
 
 import json
+import time
 from typing import Any, Generator
 
 import numpy as np
@@ -114,7 +115,7 @@ def generate_explanation(
 
 @spaces.GPU
 def load_llm_pipeline():
-    """Load Llama for text generation (ZeroGPU on Hugging Face Spaces)."""
+    """Load the instruction-tuned model for text generation (ZeroGPU on Hugging Face Spaces)."""
     return pipeline(
         "text-generation",
         model=MODEL_ID,
@@ -137,64 +138,18 @@ def _sanitize_metrics(m: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
-def _prep_for_step_ui(prep: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "task_type": prep.get("task_type"),
-        "feature_count": len(prep.get("feature_names") or []),
-        "n_classes": prep.get("n_classes"),
-        "dropped_cols": prep.get("dropped_cols"),
-        "smote_applied": prep.get("smote_applied"),
-        "preprocessing_log": prep.get("preprocessing_log"),
-        "train_shape": tuple(prep["X_train"].shape),
-        "test_shape": tuple(prep["X_test"].shape),
-    }
-
-
-def _train_for_step_ui(tr: dict[str, Any]) -> dict[str, Any]:
-    cdf = tr.get("comparison_df")
-    cdf_md = ""
-    try:
-        if cdf is not None and hasattr(cdf, "to_markdown"):
-            cdf_md = cdf.to_markdown(index=False)
-    except Exception:
-        cdf_md = str(cdf)
-    return {
-        "best_name": tr.get("best_name"),
-        "metric_name": tr.get("metric_name"),
-        "best_metrics": _sanitize_metrics(tr.get("best_metrics") or {}),
-        "comparison_md": cdf_md[:8000],
-        "training_log": tr.get("training_log"),
-        "overfitting_warnings": tr.get("overfitting_warnings"),
-        "feature_importances": tr.get("feature_importances"),
-    }
-
-
-def _tune_for_step_ui(tu: dict[str, Any]) -> dict[str, Any]:
-    if not tu.get("success"):
-        return {"success": False, "error": tu.get("error", "Tuning failed.")}
-    return {
-        "success": True,
-        "best_score": tu.get("best_score"),
-        "baseline_score": tu.get("baseline_score"),
-        "improvement": tu.get("improvement"),
-        "n_trials_run": tu.get("n_trials_run"),
-        "tuning_log": tu.get("tuning_log"),
-        "overfit": tu.get("overfit"),
-    }
-
-
-def _eval_for_step_ui(ev: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "metrics": _sanitize_metrics(ev.get("metrics") or {}),
-        "plot_paths": ev.get("plot_paths"),
-        "has_shap": ev.get("has_shap"),
-        "eval_log": ev.get("eval_log"),
-        "shap_explanation_text": (ev.get("shap_explanation_text") or "")[:4000],
-    }
+def _prep_for_report(prep: dict[str, Any]) -> dict[str, Any]:
+    """Serializable prep dict + fields expected by agent/report.py."""
+    out = {k: v for k, v in prep.items() if k not in ("X_train", "X_test", "y_train", "y_test", "pipeline")}
+    fn = prep.get("feature_names") or []
+    out["final_feature_count"] = len(fn)
+    out["train_size"] = int(prep["X_train"].shape[0])
+    out["test_size"] = int(prep["X_test"].shape[0])
+    return out
 
 
 class OssAutoMLAgent:
-    """Fixed-order pipeline; Llama explains EDA, model choice, SHAP, and final summary."""
+    """Fixed-order pipeline; local LLM explains EDA, model choice, SHAP, and final summary."""
 
     def __init__(self, df: pd.DataFrame, goal: str, pipe: Any) -> None:
         self.df = df
@@ -202,7 +157,10 @@ class OssAutoMLAgent:
         self.pipe = pipe
 
     def run(self) -> Generator[dict[str, Any], None, None]:
+        yield {"type": "log", "content": "Pipeline run started — executing fixed AutoML sequence."}
+
         yield {"type": "step_start", "name": "EDA", "step": 1}
+        t0 = time.perf_counter()
         eda_result = run_eda(self.df)
         eda_prompt = (
             "Explain these dataset statistics in plain English: "
@@ -210,27 +168,45 @@ class OssAutoMLAgent:
         )
         eda_result = dict(eda_result)
         eda_result["explanation"] = generate_explanation(self.pipe, eda_prompt)
+        elapsed = time.perf_counter() - t0
         yield {"type": "step_done", "name": "EDA", "step": 1, "result": eda_result}
+        yield {"type": "log", "content": f"✓ EDA completed in {elapsed:.1f}s"}
 
         yield {"type": "step_start", "name": "Task detection", "step": 2}
+        t0 = time.perf_counter()
         task_info = detect_task(self.df, user_hint=self.goal)
+        elapsed = time.perf_counter() - t0
+        task_info = dict(task_info)
+        task_info["explanation"] = generate_explanation(
+            self.pipe,
+            "Summarize the detected ML task and target column: " + _safe_json_snippet(task_info),
+        )
         yield {"type": "step_done", "name": "Task detection", "step": 2, "result": task_info}
+        yield {"type": "log", "content": f"✓ Task detection completed in {elapsed:.1f}s"}
 
         yield {"type": "step_start", "name": "Preprocessing", "step": 3}
+        t0 = time.perf_counter()
         prep = build_preprocessing_pipeline(
             self.df,
             target_col=task_info["target_col"],
             task_type=task_info["task_type"],
         )
-        prep_summary = _prep_for_step_ui(prep)
-        prep_summary["explanation"] = generate_explanation(
+        prep_explain = generate_explanation(
             self.pipe,
             "Summarize what preprocessing did and why it matters for modeling, in plain English: "
-            + _safe_json_snippet(prep_summary),
+            + _safe_json_snippet(_prep_for_report(prep)),
         )
-        yield {"type": "step_done", "name": "Preprocessing", "step": 3, "result": prep_summary}
+        elapsed = time.perf_counter() - t0
+        yield {
+            "type": "step_done",
+            "name": "Preprocessing",
+            "step": 3,
+            "result": {"prep": prep, "explanation": prep_explain},
+        }
+        yield {"type": "log", "content": f"✓ Preprocessing completed in {elapsed:.1f}s"}
 
         yield {"type": "step_start", "name": "Training plan", "step": 4}
+        t0 = time.perf_counter()
         plan_result = plan_training(eda_result, task_info, prep)
         plan_explain = generate_explanation(
             self.pipe,
@@ -239,7 +215,9 @@ class OssAutoMLAgent:
         )
         plan_out = dict(plan_result)
         plan_out["explanation"] = plan_explain
+        elapsed = time.perf_counter() - t0
         yield {"type": "step_done", "name": "Training plan", "step": 4, "result": plan_out}
+        yield {"type": "log", "content": f"✓ Training plan completed in {elapsed:.1f}s"}
 
         X_train = prep["X_train"]
         X_test = prep["X_test"]
@@ -254,6 +232,7 @@ class OssAutoMLAgent:
         label_encoder = prep.get("label_encoder")
 
         yield {"type": "step_start", "name": "Training", "step": 5}
+        t0 = time.perf_counter()
         train_result = train_and_compare(
             X_train,
             X_test,
@@ -267,16 +246,30 @@ class OssAutoMLAgent:
             skip_reasons=plan_result.get("skip_reasons"),
             primary_metric=plan_result.get("primary_metric"),
         )
-        train_ui = _train_for_step_ui(train_result)
-        train_ui["explanation"] = generate_explanation(
+        train_expl = generate_explanation(
             self.pipe,
             "Explain briefly why this model may be a reasonable choice given these results "
             f"(best: {train_result.get('best_name')}): "
-            + _safe_json_snippet(train_ui.get("best_metrics")),
+            + _safe_json_snippet(_sanitize_metrics(train_result.get("best_metrics") or {})),
         )
-        yield {"type": "step_done", "name": "Training", "step": 5, "result": train_ui}
+        elapsed = time.perf_counter() - t0
+        yield {
+            "type": "step_done",
+            "name": "Training",
+            "step": 5,
+            "result": {"train": train_result, "explanation": train_expl},
+        }
+        yield {"type": "log", "content": f"✓ Training completed in {elapsed:.1f}s"}
+
+        for w in train_result.get("overfitting_warnings") or []:
+            yield {"type": "log", "content": f"⚠ Overfitting warning: {w}"}
+        for r in train_result.get("results") or []:
+            if r.get("metrics", {}).get("overfit"):
+                nm = r.get("name", "model")
+                yield {"type": "log", "content": f"⚠ {nm}: elevated train vs test gap (overfit flag)."}
 
         yield {"type": "step_start", "name": "Tuning", "step": 6}
+        t0 = time.perf_counter()
         baseline_score = float(
             _get_primary_score(
                 train_result.get("best_metrics") or {},
@@ -296,19 +289,36 @@ class OssAutoMLAgent:
             n_trials=int(plan_result.get("n_trials") or 50),
             timeout=int(plan_result.get("timeout") or 120),
         )
-        tune_ui = _tune_for_step_ui(tune_result)
-        tune_ui["explanation"] = generate_explanation(
+        tune_result = dict(tune_result)
+        tune_result["model_name"] = str(train_result["best_name"])
+        tune_expl = generate_explanation(
             self.pipe,
             "In one short paragraph, describe hyperparameter tuning outcome: "
-            + _safe_json_snippet(tune_ui),
+            + _safe_json_snippet({k: tune_result.get(k) for k in ("success", "best_score", "improvement", "error")}),
         )
-        yield {"type": "step_done", "name": "Tuning", "step": 6, "result": tune_ui}
+        elapsed = time.perf_counter() - t0
+        yield {
+            "type": "step_done",
+            "name": "Tuning",
+            "step": 6,
+            "result": {"tune": tune_result, "explanation": tune_expl},
+        }
+        yield {"type": "log", "content": f"✓ Tuning completed in {elapsed:.1f}s"}
+        if tune_result.get("success") and float(tune_result.get("improvement") or 0) > 1e-6:
+            yield {
+                "type": "log",
+                "content": (
+                    f"Tuning improved primary metric by {float(tune_result.get('improvement')):+.4f} "
+                    f"vs baseline."
+                ),
+            }
 
         model_for_eval = train_result["best_model"]
         if tune_result.get("success") and tune_result.get("tuned_model") is not None:
             model_for_eval = tune_result["tuned_model"]
 
         yield {"type": "step_start", "name": "Evaluation", "step": 7}
+        t0 = time.perf_counter()
         eval_result = evaluate_model(
             model_for_eval,
             X_test,
@@ -321,13 +331,21 @@ class OssAutoMLAgent:
             run_id="oss_run",
             n_classes=n_classes,
         )
-        eval_ui = _eval_for_step_ui(eval_result)
         shap_txt = eval_result.get("shap_explanation_text") or ""
-        eval_ui["explanation"] = generate_explanation(
+        eval_expl = generate_explanation(
             self.pipe,
             "Interpret these SHAP / explainability notes in plain English: " + (shap_txt or "No SHAP text."),
         )
-        yield {"type": "step_done", "name": "Evaluation", "step": 7, "result": eval_ui}
+        elapsed = time.perf_counter() - t0
+        yield {
+            "type": "step_done",
+            "name": "Evaluation",
+            "step": 7,
+            "result": {"eval": eval_result, "explanation": eval_expl},
+        }
+        yield {"type": "log", "content": f"✓ Evaluation completed in {elapsed:.1f}s — metrics and plots ready."}
+
+        eda_rich = run_eda(self.df, target_col=task_info["target_col"])
 
         final_summary = generate_explanation(
             self.pipe,
@@ -336,39 +354,53 @@ class OssAutoMLAgent:
                 {
                     "goal": self.goal,
                     "best_model": train_result.get("best_name"),
-                    "metrics": eval_ui.get("metrics"),
-                    "tuning": tune_ui,
+                    "metrics": _sanitize_metrics(eval_result.get("metrics") or {}),
+                    "tuning": {k: tune_result.get(k) for k in ("success", "improvement", "best_score")},
                 }
             ),
             max_tokens=400,
         )
 
+        prep_report = _prep_for_report(prep)
+
         final_result: dict[str, Any] = {
-            "status": "success",
+            "status": "complete",
             "goal": self.goal,
             "target_col": task_info["target_col"],
             "task_type": task_type,
-            "eda": eda_result,
+            "eda": eda_rich,
             "task": task_info,
-            "prep": prep,
+            "prep": prep_report,
+            "prep_raw": prep,
             "plan": plan_result,
             "train": train_result,
             "tune": tune_result,
             "eval": eval_result,
             "final_summary": final_summary,
             "best_model_name": train_result.get("best_name"),
+            "best_metrics": train_result.get("best_metrics"),
+            "feature_importances": train_result.get("feature_importances"),
+            "comparison_df": train_result.get("comparison_df"),
+            "metrics": eval_result.get("metrics"),
+            "plot_paths": eval_result.get("plot_paths"),
             "model_for_inference": model_for_eval,
             "prep_pipeline": prep.get("pipeline"),
             "label_encoder": label_encoder,
             "feature_names": feature_names,
+            "overfitting_search_results": [],
         }
+
+        yield {
+            "type": "step_done",
+            "name": "Final summary",
+            "step": 8,
+            "result": {"explanation": final_summary, "full": final_result},
+        }
+        yield {"type": "log", "content": "Pipeline finished successfully."}
         yield {"type": "done", "result": final_result}
 
 
 @spaces.GPU
 def run_pipeline(pipe: Any, df: pd.DataFrame, goal: str) -> list[dict[str, Any]]:
-    """
-    Optional single-GPU entry for Spaces: same steps as OssAutoMLAgent.run(), materialized as a list.
-    The Streamlit app uses OssAutoMLAgent.run() directly for progressive yields.
-    """
+    """Optional: materialize the full event stream as a list."""
     return list(OssAutoMLAgent(df, goal, pipe).run())
