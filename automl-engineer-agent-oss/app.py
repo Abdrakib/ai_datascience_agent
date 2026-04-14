@@ -6,10 +6,12 @@ from __future__ import annotations
 import html as html_mod
 import re
 import sys
+import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -27,7 +29,13 @@ from agent.report import (  # noqa: E402
 )
 from agent.tools.eda import run_eda  # noqa: E402
 from config import OUTPUT_DIR  # noqa: E402
-from predict import save_model  # noqa: E402
+from predict import (  # noqa: E402
+    get_model_summary,
+    load_model,
+    predict,
+    prepare_transformed_features,
+    save_model,
+)
 
 st.set_page_config(
     page_title="AutoML Engineer OSS",
@@ -54,6 +62,9 @@ def _init_state() -> None:
         "log_lines_oss": [],
         "report_export": None,
         "saved_model_path": None,
+        "oss_saved_model_path": None,
+        "oss_inference_bundle": None,
+        "oss_inference_predictions": None,
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -99,6 +110,8 @@ def _render_step_body(ev: dict) -> None:
     elif name == "Task detection":
         d = {k: v for k, v in r.items() if k != "explanation"}
         render_step_2_task(d)
+    elif name == "Step 2b: Domain Research":
+        render_step_2b_domain_research(r)
     elif name == "Preprocessing":
         render_step_3_prep(r["prep"])
     elif name == "Training plan":
@@ -348,6 +361,46 @@ def render_step_1_eda(eda: dict) -> None:
     high_missing = [col for col, info in (miss.get("by_column") or {}).items() if info.get("pct", 0) > 30]
     if high_missing:
         st.warning("High missing rate detected in one or more columns", icon="⚠️")
+
+
+def render_step_2b_domain_research(r: dict) -> None:
+    dr = r.get("domain_research") or {}
+    msg = r.get(
+        "message",
+        "The agent searched the web to better understand your dataset. Here is what it found:",
+    )
+    p = pal()
+    st.markdown(
+        f'<p style="font-family:\'DM Sans\',sans-serif;color:{p["text"]};line-height:1.5;">'
+        f"{esc(msg)}</p>",
+        unsafe_allow_html=True,
+    )
+    q = esc(str(dr.get("query", "")))
+    st.markdown(
+        f'<p style="color:{p["muted"]};font-size:12px;"><strong>Query:</strong> {q}</p>',
+        unsafe_allow_html=True,
+    )
+    for i, row in enumerate(dr.get("results") or [], 1):
+        if isinstance(row, dict) and row.get("error"):
+            st.markdown(
+                f'<p style="color:{p["amber"]};">{esc(str(row["error"]))}</p>',
+                unsafe_allow_html=True,
+            )
+            break
+        if not isinstance(row, dict):
+            continue
+        title = esc(str(row.get("title", "")))
+        url = str(row.get("url", "") or "")
+        sn = esc((row.get("snippet") or "")[:600])
+        link = esc(url)
+        st.markdown(
+            f'<div style="margin:12px 0;padding:10px;border-left:3px solid {p["accent"]};'
+            f'background:#141416;border-radius:4px;">'
+            f"<strong>{i}. {title}</strong><br/>"
+            f'<a href="{link}" target="_blank" rel="noopener noreferrer">{link}</a><br/>'
+            f'<span style="color:{p["muted"]};font-size:13px;">{sn}</span></div>',
+            unsafe_allow_html=True,
+        )
 
 
 def render_step_2_task(task: dict) -> None:
@@ -860,6 +913,326 @@ def render_step_8_final(result: dict, llm_summary: str | None = None) -> None:
         st.write(llm_summary)
 
 
+def _inference_empty_state() -> None:
+    p = pal()
+    st.markdown(
+        f'<p style="color:{p["muted"]};line-height:1.6;font-size:15px;">'
+        "Train a model in the <strong style=\"color:#e2e0d8;\">Pipeline</strong> tab first, "
+        "then click <strong style=\"color:#e2e0d8;\">Save Model</strong> to use it here. "
+        "Or upload a <code>.pkl</code> file produced by this app.</p>",
+        unsafe_allow_html=True,
+    )
+
+
+def _inference_load_bundle(path: str) -> bool:
+    try:
+        b = load_model(path)
+        st.session_state["oss_inference_bundle"] = b
+        st.session_state["oss_inference_predictions"] = None
+        return True
+    except Exception as e:
+        st.error(f"Could not load model: {e}")
+        return False
+
+
+def _confidence_for_classification(bundle: dict, df_in: pd.DataFrame) -> np.ndarray | None:
+    """Max class probability per row for display (app-side; does not change predict.py)."""
+    model = bundle.get("model")
+    task = bundle.get("task_type")
+    if task != "classification" or model is None or not hasattr(model, "predict_proba"):
+        return None
+    df2 = df_in.drop(
+        columns=[c for c in ("prediction", "probability") if c in df_in.columns],
+        errors="ignore",
+    )
+    try:
+        X_t, _ = prepare_transformed_features(bundle, df2)
+        proba = model.predict_proba(X_t)
+        if proba.ndim == 1:
+            return np.asarray(proba).ravel() * 100.0
+        return np.max(proba, axis=1) * 100.0
+    except Exception:
+        return None
+
+
+def _class_color_style(pred: object, le_classes: np.ndarray | None) -> str:
+    """Green / red heuristic for binary-ish class names."""
+    p = pal()
+    s = str(pred).strip().lower()
+    pos = ("1", "true", "yes", "pos", "surviv", "good", "approved", "positive")
+    neg = ("0", "false", "no", "neg", "death", "bad", "denied", "negative")
+    if any(x in s for x in pos):
+        return p["green"]
+    if any(x in s for x in neg):
+        return p["red"]
+    if le_classes is not None and len(le_classes) == 2:
+        try:
+            idx = list(le_classes).index(pred)
+            return p["green"] if idx == 0 else p["red"]
+        except ValueError:
+            pass
+    return p["text"]
+
+
+def render_inference_tab() -> None:
+    p = pal()
+    st.markdown(
+        f'<p class="section-head" style="margin-top:0;">Inference</p>',
+        unsafe_allow_html=True,
+    )
+
+    bundle = st.session_state.get("oss_inference_bundle")
+
+    st.markdown(f'### <span style="color:{p["text"]};">Load a trained model</span>', unsafe_allow_html=True)
+    if bundle is None:
+        _inference_empty_state()
+
+    c1, c2 = st.columns(2)
+    with c1:
+        sess_path = st.session_state.get("oss_saved_model_path") or st.session_state.get("saved_model_path")
+        if sess_path and Path(sess_path).exists():
+            if st.button("Use current session model", key="oss_inf_use_session", use_container_width=True):
+                if _inference_load_bundle(str(sess_path)):
+                    st.rerun()
+        else:
+            st.caption("No model saved in this session yet.")
+    with c2:
+        up_m = st.file_uploader("Upload a saved model (.pkl)", type=["pkl"], key="oss_inf_model_upload")
+        if up_m is not None:
+            if st.button("Load uploaded model", key="oss_inf_load_upload"):
+                try:
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".pkl") as tmp:
+                        tmp.write(up_m.getvalue())
+                        tmp_path = tmp.name
+                    if _inference_load_bundle(tmp_path):
+                        st.rerun()
+                except Exception as e:
+                    st.error(str(e))
+
+    if bundle is None:
+        return
+
+    summary = get_model_summary(bundle)
+    st.markdown("---")
+    st.markdown("#### Model info")
+    badge = (
+        f'<span style="background:#1e3a2a;color:#4ade80;padding:4px 10px;border-radius:6px;'
+        f'font-size:12px;border:1px solid #2d5e3e;font-family:JetBrains Mono,monospace;">'
+        f"Model loaded ✓</span>"
+    )
+    st.markdown(badge, unsafe_allow_html=True)
+    mcols = st.columns(2)
+    with mcols[0]:
+        st.markdown(f"**Model name:** {esc(summary.get('model_name', '—'))}")
+        st.markdown(f"**Task type:** {esc(summary.get('task_type', '—'))}")
+        st.markdown(f"**Target column:** `{esc(summary.get('target_col', '—'))}`")
+    with mcols[1]:
+        st.markdown("**Key metrics (test)**")
+        met = summary.get("metrics") or {}
+        if met:
+            for k, v in list(met.items())[:8]:
+                st.caption(f"{k}: {v}")
+        else:
+            st.caption("—")
+    feats = summary.get("expected_input_columns") or []
+    st.markdown("**Feature columns expected:**")
+    st.code(", ".join(str(x) for x in feats) if feats else "—", language=None)
+
+    st.markdown("---")
+    st.markdown(f'### <span style="color:{p["text"]};">Upload new data for prediction</span>', unsafe_allow_html=True)
+
+    inf_csv = st.file_uploader("CSV with rows to score", type=["csv"], key="oss_inf_csv")
+    pred_df: pd.DataFrame | None = None
+    if inf_csv is not None:
+        try:
+            pred_df = pd.read_csv(inf_csv)
+            st.dataframe(pred_df.head(5), use_container_width=True)
+            exp_cols = set(feats)
+            have = set(pred_df.columns)
+            missing = [c for c in feats if c not in have]
+            if missing:
+                st.warning(f"Missing feature columns (will be imputed like predict.py): {missing}")
+            tc = bundle.get("target_col")
+            if tc and tc in pred_df.columns:
+                st.warning(
+                    f"Target column `{tc}` is present — it will be ignored for prediction "
+                    "(dropped before scoring)."
+                )
+        except Exception as e:
+            st.error(f"Could not read CSV: {e}")
+            pred_df = None
+
+    csv_btn = st.button("Predict on uploaded CSV", key="oss_inf_predict_csv", disabled=pred_df is None)
+    if csv_btn and pred_df is not None:
+        try:
+            out, _fill = predict(bundle, pred_df)
+            st.session_state["oss_inference_predictions"] = {
+                "kind": "csv",
+                "result_df": out,
+                "task_type": bundle.get("task_type"),
+                "bundle": bundle,
+            }
+            st.rerun()
+        except Exception as e:
+            st.error(f"Prediction failed: {e}")
+
+    n_feat = len(feats)
+    manual_vals: dict[str, Any] = {}
+    if n_feat > 0 and n_feat <= 10:
+        st.markdown("##### Manual input (single row)")
+        means = bundle.get("feature_means") or {}
+        modes = bundle.get("feature_modes") or {}
+        cat_u = bundle.get("categorical_uniques") or {}
+        num_cols = set(bundle.get("num_cols") or [])
+        cat_cols = set(bundle.get("cat_cols") or [])
+        for fi, col in enumerate(feats):
+            key = f"oss_inf_f_{fi}"
+            choices = cat_u.get(col)
+            if choices:
+                default = modes.get(col, choices[0])
+                try:
+                    idx = int(list(choices).index(default)) if default in list(choices) else 0
+                except ValueError:
+                    idx = 0
+                manual_vals[col] = st.selectbox(
+                    str(col),
+                    options=list(choices),
+                    index=min(idx, len(choices) - 1),
+                    key=key,
+                )
+            elif col in num_cols or (col in means and col not in cat_cols):
+                default = float(means.get(col, 0.0))
+                manual_vals[col] = st.number_input(
+                    str(col),
+                    value=default,
+                    key=key,
+                    format="%.6f",
+                )
+            elif col in cat_cols and not choices:
+                default = modes.get(col, "")
+                manual_vals[col] = st.text_input(str(col), value=str(default), key=key)
+            else:
+                default = float(means.get(col, 0.0)) if col in means else 0.0
+                manual_vals[col] = st.number_input(
+                    str(col),
+                    value=default,
+                    key=key,
+                    format="%.6f",
+                )
+
+        manual_btn = st.button("Predict (manual row)", key="oss_inf_predict_manual")
+        if manual_btn:
+            try:
+                row_df = pd.DataFrame([manual_vals])
+                out, _fill = predict(bundle, row_df)
+                st.session_state["oss_inference_predictions"] = {
+                    "kind": "manual",
+                    "result_df": out,
+                    "task_type": bundle.get("task_type"),
+                    "bundle": bundle,
+                }
+                st.rerun()
+            except Exception as e:
+                st.error(f"Prediction failed: {e}")
+
+    st.markdown("---")
+    st.markdown(f'### <span style="color:{p["text"]};">Prediction results</span>', unsafe_allow_html=True)
+
+    pred_pack = st.session_state.get("oss_inference_predictions")
+    if not pred_pack:
+        st.info("Run a prediction from CSV or manual input to see results here.")
+        return
+
+    result_df: pd.DataFrame = pred_pack["result_df"]
+    ttype = pred_pack.get("task_type") or bundle.get("task_type")
+    le = bundle.get("label_encoder")
+    classes = le.classes_ if le is not None else None
+
+    csv_bytes = result_df.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="Download predictions as CSV",
+        data=csv_bytes,
+        file_name="predictions.csv",
+        mime="text/csv",
+        key="oss_inf_dl_csv",
+    )
+
+    if ttype == "classification":
+        conf_pct: np.ndarray | None = None
+        if "probability" in result_df.columns:
+            conf_pct = (pd.to_numeric(result_df["probability"], errors="coerce").fillna(0) * 100).values
+        else:
+            base_df = result_df.drop(
+                columns=[c for c in ("prediction", "probability") if c in result_df.columns],
+                errors="ignore",
+            )
+            conf_pct = _confidence_for_classification(bundle, base_df)
+
+        if len(result_df) == 1:
+            pred0 = result_df["prediction"].iloc[0]
+            col = _class_color_style(pred0, classes)
+            st.markdown(
+                f'<div style="font-size:36px;font-weight:700;color:{col};line-height:1.2;">'
+                f"{esc(pred0)}</div>",
+                unsafe_allow_html=True,
+            )
+            if conf_pct is not None and len(conf_pct) > 0:
+                cp = float(np.clip(conf_pct[0], 0, 100))
+                st.progress(cp / 100.0)
+                st.caption(f"Confidence: **{cp:.1f}%**")
+        else:
+            disp = result_df.copy()
+            if conf_pct is not None and len(conf_pct) == len(disp):
+                disp["Confidence %"] = np.round(conf_pct, 2)
+            rows_html = []
+            for row_num, (_, row) in enumerate(disp.iterrows(), start=1):
+                pr = row.get("prediction")
+                col = _class_color_style(pr, classes)
+                conf_cell = ""
+                if "Confidence %" in disp.columns:
+                    conf_cell = esc(row.get("Confidence %"))
+                rows_html.append(
+                    f"<tr><td>{row_num}</td>"
+                    f"<td style='color:{col};font-weight:600;'>{esc(pr)}</td>"
+                    f"<td>{conf_cell}</td></tr>"
+                )
+            st.markdown(
+                f'<table style="width:100%;border-collapse:collapse;font-family:JetBrains Mono,monospace;font-size:13px;">'
+                f"<thead><tr><th>Row</th><th>Predicted class</th><th>Confidence %</th></tr></thead>"
+                f"<tbody>{''.join(rows_html)}</tbody></table>",
+                unsafe_allow_html=True,
+            )
+    else:
+        preds = pd.to_numeric(result_df["prediction"], errors="coerce")
+        if len(result_df) == 1:
+            v = float(preds.iloc[0])
+            st.markdown(
+                f'<div style="font-size:36px;font-weight:700;color:{p["accent_soft"]};line-height:1.2;">'
+                f"{v:.6f}</div>",
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                f'<div style="font-size:28px;font-weight:600;color:{p["accent_soft"]};">'
+                f"Predicted values ({len(result_df)} rows)</div>",
+                unsafe_allow_html=True,
+            )
+            tbl = pd.DataFrame(
+                {
+                    "Row": np.arange(1, len(result_df) + 1),
+                    "Predicted value": preds.values,
+                }
+            )
+            st.dataframe(tbl, use_container_width=True, hide_index=True)
+            m1, m2, m3 = st.columns(3)
+            with m1:
+                st.metric("Min", f"{float(preds.min()):.6f}")
+            with m2:
+                st.metric("Mean", f"{float(preds.mean()):.6f}")
+            with m3:
+                st.metric("Max", f"{float(preds.max()):.6f}")
+
+
 # ── Page chrome ───────────────────────────────────────────────────────────────
 _init_state()
 
@@ -974,204 +1347,211 @@ if df is None:
 
 st.caption(f"Dataset: **{st.session_state.filename}** · {len(df):,} rows × {df.shape[1]} columns")
 
-if run:
-    st.session_state.run_error = None
-    st.session_state.pipeline_events = []
-    st.session_state.final_result = None
-    st.session_state.log_lines_oss = []
-    st.session_state.report_export = None
-    try:
-        with st.spinner("Loading Qwen2.5 — this may take ~30s on first run..."):
-            pipe = get_llm_pipeline()
-    except Exception as e:
-        st.session_state.run_error = f"Failed to load model: {e}"
+tab_pipeline, tab_inference = st.tabs(["Pipeline", "Inference"])
+
+with tab_pipeline:
+    if run:
+        st.session_state.run_error = None
+        st.session_state.pipeline_events = []
+        st.session_state.final_result = None
+        st.session_state.log_lines_oss = []
+        st.session_state.report_export = None
+        try:
+            with st.spinner("Loading Qwen2.5 — this may take ~30s on first run..."):
+                pipe = get_llm_pipeline()
+        except Exception as e:
+            st.session_state.run_error = f"Failed to load model: {e}"
+            st.error(st.session_state.run_error)
+            st.stop()
+
+        agent = OssAutoMLAgent(df, st.session_state.goal, pipe)
+        all_events: list = []
+        log_lines: list[str] = []
+        pipe_ph = st.empty()
+        log_ph = st.empty()
+        step_dones: list[dict] = []
+
+        try:
+            for ev in agent.run():
+                all_events.append(ev)
+                et = ev.get("type")
+                if et == "log":
+                    ts = datetime.now().strftime("%H:%M:%S")
+                    line = f"[{ts}] {ev.get('content', '')}"
+                    log_lines.append(line)
+                    log_ph.markdown(_log_html(log_lines), unsafe_allow_html=True)
+                elif et == "step_done":
+                    step_dones.append(ev)
+                    with pipe_ph.container():
+                        for s in step_dones:
+                            _step_card_header(s.get("name", ""), s.get("step", ""))
+                            _render_step_body(s)
+                elif et == "done":
+                    st.session_state.final_result = ev.get("result")
+
+            st.session_state.pipeline_events = all_events
+            st.session_state.log_lines_oss = log_lines
+        except Exception as e:
+            st.session_state.run_error = str(e)
+            st.error(f"Pipeline error: {e}")
+
+        st.rerun()
+
+    if st.session_state.run_error and not run:
         st.error(st.session_state.run_error)
-        st.stop()
 
-    agent = OssAutoMLAgent(df, st.session_state.goal, pipe)
-    all_events: list = []
-    log_lines: list[str] = []
-    pipe_ph = st.empty()
-    log_ph = st.empty()
-    step_dones: list[dict] = []
-
-    try:
-        for ev in agent.run():
-            all_events.append(ev)
-            et = ev.get("type")
-            if et == "log":
-                ts = datetime.now().strftime("%H:%M:%S")
-                line = f"[{ts}] {ev.get('content', '')}"
-                log_lines.append(line)
-                log_ph.markdown(_log_html(log_lines), unsafe_allow_html=True)
-            elif et == "step_done":
-                step_dones.append(ev)
-                with pipe_ph.container():
-                    for s in step_dones:
-                        _step_card_header(s.get("name", ""), s.get("step", ""))
-                        _render_step_body(s)
-            elif et == "done":
-                st.session_state.final_result = ev.get("result")
-
-        st.session_state.pipeline_events = all_events
-        st.session_state.log_lines_oss = log_lines
-    except Exception as e:
-        st.session_state.run_error = str(e)
-        st.error(f"Pipeline error: {e}")
-
-    st.rerun()
-
-if st.session_state.run_error and not run:
-    st.error(st.session_state.run_error)
-
-st.markdown(
-    '<p class="section-head">Pipeline steps</p>',
-    unsafe_allow_html=True,
-)
-
-for ev in st.session_state.get("pipeline_events") or []:
-    if ev.get("type") == "step_done":
-        _step_card_header(ev.get("name", ""), ev.get("step", ""))
-        _render_step_body(ev)
-
-log_lines = st.session_state.get("log_lines_oss") or []
-if log_lines:
-    with st.expander("Activity log", expanded=False):
-        st.markdown(_log_html(log_lines), unsafe_allow_html=True)
-
-fr = st.session_state.get("final_result")
-if fr and fr.get("status") == "complete":
-    st.markdown("---")
-    st.markdown("### Results")
-    result = fr
-    metrics = result.get("metrics", {})
-    task = result.get("task_type", "")
-    best = result.get("best_model_name", "—")
-
-    cards_html = (
-        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0;">'
-        f'<div style="background:#141416;border:1px solid #2a2a2e;border-radius:8px;padding:16px;">'
-        f'<div style="font-size:10px;color:#888780;">Best model</div>'
-        f'<div style="font-size:20px;color:#7c3aed;font-weight:600;">{html_mod.escape(str(best))}</div></div>'
-        f'<div style="background:#141416;border:1px solid #2a2a2e;border-radius:8px;padding:16px;">'
-        f'<div style="font-size:10px;color:#888780;">Task</div>'
-        f'<div style="font-size:18px;">{html_mod.escape(str(task).capitalize())}</div></div>'
-        f'<div style="background:#141416;border:1px solid #2a2a2e;border-radius:8px;padding:16px;">'
-        f'<div style="font-size:10px;color:#888780;">Target</div>'
-        f'<div style="font-size:18px;">{html_mod.escape(str(result.get("target_col", "—")))}</div></div>'
-        "</div>"
-    )
-    st.markdown(cards_html, unsafe_allow_html=True)
-
-    tab_model, tab_plots, tab_feat, tab_data = st.tabs(
-        ["Model comparison", "Plots", "Features", "Data profile"]
+    st.markdown(
+        '<p class="section-head">Pipeline steps</p>',
+        unsafe_allow_html=True,
     )
 
-    with tab_model:
-        comp_df = result.get("comparison_df")
-        if comp_df is not None:
-            st.dataframe(comp_df, use_container_width=True, hide_index=True)
-        tr = result.get("train") or {}
-        if tr.get("training_log"):
-            with st.expander("Training log", expanded=False):
-                st.code("\n".join(tr["training_log"]), language=None)
+    for ev in st.session_state.get("pipeline_events") or []:
+        if ev.get("type") == "step_done":
+            _step_card_header(ev.get("name", ""), ev.get("step", ""))
+            _render_step_body(ev)
 
-    with tab_plots:
-        pp = result.get("plot_paths") or {}
-        base_order = [
-            "confusion_matrix",
-            "roc_curve",
-            "actual_vs_predicted",
-            "residuals",
-            "feature_importance",
-        ]
-        ordered = [p for p in base_order if p in pp]
-        ordered += [p for p in pp if p not in ordered and not str(p).startswith("shap_")]
-        cols = st.columns(2)
-        for i, name in enumerate(ordered):
-            path = pp.get(name)
-            if path and Path(path).exists():
-                cols[i % 2].image(str(path), caption=name.replace("_", " ").title(), use_container_width=True)
-        render_shap_ui(pp)
+    log_lines = st.session_state.get("log_lines_oss") or []
+    if log_lines:
+        with st.expander("Activity log", expanded=False):
+            st.markdown(_log_html(log_lines), unsafe_allow_html=True)
 
-    with tab_feat:
-        fi = result.get("feature_importances") or {}
-        if fi:
-            top = sorted(fi.items(), key=lambda x: -x[1])[:15]
-            chart_df = pd.DataFrame(
-                {"importance": [float(t[1]) for t in top]},
-                index=[str(t[0]) for t in top],
-            )
-            st.bar_chart(chart_df)
-        else:
-            st.info("No feature importance available.")
+    fr = st.session_state.get("final_result")
+    if fr and fr.get("status") == "complete":
+        st.markdown("---")
+        st.markdown("### Results")
+        result = fr
+        metrics = result.get("metrics", {})
+        task = result.get("task_type", "")
+        best = result.get("best_model_name", "—")
 
-    with tab_data:
-        eda_full = run_eda(df, target_col=result.get("target_col"))
-        render_step_1_eda(eda_full)
+        cards_html = (
+            '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0;">'
+            f'<div style="background:#141416;border:1px solid #2a2a2e;border-radius:8px;padding:16px;">'
+            f'<div style="font-size:10px;color:#888780;">Best model</div>'
+            f'<div style="font-size:20px;color:#7c3aed;font-weight:600;">{html_mod.escape(str(best))}</div></div>'
+            f'<div style="background:#141416;border:1px solid #2a2a2e;border-radius:8px;padding:16px;">'
+            f'<div style="font-size:10px;color:#888780;">Task</div>'
+            f'<div style="font-size:18px;">{html_mod.escape(str(task).capitalize())}</div></div>'
+            f'<div style="background:#141416;border:1px solid #2a2a2e;border-radius:8px;padding:16px;">'
+            f'<div style="font-size:10px;color:#888780;">Target</div>'
+            f'<div style="font-size:18px;">{html_mod.escape(str(result.get("target_col", "—")))}</div></div>'
+            "</div>"
+        )
+        st.markdown(cards_html, unsafe_allow_html=True)
 
-    st.markdown("### Export")
-    ex1, ex2 = st.columns(2)
-    with ex1:
-        if st.button("Generate Report", key="oss_gen_report", use_container_width=True):
-            try:
-                OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-                md_text = _build_markdown(result)
-                html_text = _build_html(result)
-                html_path = OUTPUT_DIR / "automl_report.html"
-                md_path = OUTPUT_DIR / "automl_report.md"
-                html_path.write_text(html_text, encoding="utf-8")
-                md_path.write_text(md_text, encoding="utf-8")
-                generate_report(
-                    result.get("goal", ""),
-                    st.session_state.get("filename", "dataset"),
-                    result.get("metrics", {}),
-                    str(result.get("best_model_name", "")),
-                    output_dir=OUTPUT_DIR,
-                )
-                st.session_state.report_export = {
-                    "html_path": str(html_path.resolve()),
-                    "md_path": str(md_path.resolve()),
-                    "size_kb": html_path.stat().st_size / 1024.0,
-                    "n_plots": count_embedded_plots_html(html_text),
-                }
-            except Exception as ex:
-                st.error(str(ex))
-    with ex2:
-        if st.button("Save Model", key="oss_save_model", use_container_width=True):
-            try:
-                prep_raw = result.get("prep_raw")
-                tr = result.get("train")
-                if not prep_raw or not tr:
-                    st.error("Pipeline artifacts missing.")
-                else:
-                    run_id = datetime.now().strftime("oss_%Y%m%d_%H%M%S")
-                    fn = result.get("feature_names") or prep_raw.get("feature_names")
-                    X_raw = _original_feature_frame(df, prep_raw, result["target_col"])
-                    path = save_model(
-                        pipeline=prep_raw["pipeline"],
-                        model=result.get("model_for_inference"),
-                        label_encoder=prep_raw.get("label_encoder"),
-                        feature_names=list(fn) if fn is not None else [],
-                        task_type=result["task_type"],
-                        target_col=result["target_col"],
-                        best_metrics=result.get("best_metrics") or {},
-                        model_name=str(result.get("best_model_name", "model")),
-                        run_id=run_id,
-                        X_train=X_raw,
-                        num_cols=prep_raw.get("num_cols"),
-                        cat_cols=prep_raw.get("cat_cols"),
-                        n_training_rows=(result.get("prep") or {}).get("train_size"),
-                    )
-                    st.session_state.saved_model_path = path
-                    st.success(f"Model saved to `{path}`")
-            except Exception as ex:
-                st.error(str(ex))
-
-    exp = st.session_state.get("report_export")
-    if exp:
-        st.success(
-            f"Saved reports to `{exp['html_path']}` and `{exp.get('md_path', '')}` — "
-            f"**{exp['size_kb']:.1f} KB** HTML, **{exp['n_plots']}** plot(s) embedded."
+        tab_model, tab_plots, tab_feat, tab_data = st.tabs(
+            ["Model comparison", "Plots", "Features", "Data profile"]
         )
 
+        with tab_model:
+            comp_df = result.get("comparison_df")
+            if comp_df is not None:
+                st.dataframe(comp_df, use_container_width=True, hide_index=True)
+            tr = result.get("train") or {}
+            if tr.get("training_log"):
+                with st.expander("Training log", expanded=False):
+                    st.code("\n".join(tr["training_log"]), language=None)
+
+        with tab_plots:
+            pp = result.get("plot_paths") or {}
+            base_order = [
+                "confusion_matrix",
+                "roc_curve",
+                "actual_vs_predicted",
+                "residuals",
+                "feature_importance",
+            ]
+            ordered = [p for p in base_order if p in pp]
+            ordered += [p for p in pp if p not in ordered and not str(p).startswith("shap_")]
+            cols = st.columns(2)
+            for i, name in enumerate(ordered):
+                path = pp.get(name)
+                if path and Path(path).exists():
+                    cols[i % 2].image(str(path), caption=name.replace("_", " ").title(), use_container_width=True)
+            render_shap_ui(pp)
+
+        with tab_feat:
+            fi = result.get("feature_importances") or {}
+            if fi:
+                top = sorted(fi.items(), key=lambda x: -x[1])[:15]
+                chart_df = pd.DataFrame(
+                    {"importance": [float(t[1]) for t in top]},
+                    index=[str(t[0]) for t in top],
+                )
+                st.bar_chart(chart_df)
+            else:
+                st.info("No feature importance available.")
+
+        with tab_data:
+            eda_full = run_eda(df, target_col=result.get("target_col"))
+            render_step_1_eda(eda_full)
+
+        st.markdown("### Export")
+        ex1, ex2 = st.columns(2)
+        with ex1:
+            if st.button("Generate Report", key="oss_gen_report", use_container_width=True):
+                try:
+                    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+                    md_text = _build_markdown(result)
+                    html_text = _build_html(result)
+                    html_path = OUTPUT_DIR / "automl_report.html"
+                    md_path = OUTPUT_DIR / "automl_report.md"
+                    html_path.write_text(html_text, encoding="utf-8")
+                    md_path.write_text(md_text, encoding="utf-8")
+                    generate_report(
+                        result.get("goal", ""),
+                        st.session_state.get("filename", "dataset"),
+                        result.get("metrics", {}),
+                        str(result.get("best_model_name", "")),
+                        output_dir=OUTPUT_DIR,
+                    )
+                    st.session_state.report_export = {
+                        "html_path": str(html_path.resolve()),
+                        "md_path": str(md_path.resolve()),
+                        "size_kb": html_path.stat().st_size / 1024.0,
+                        "n_plots": count_embedded_plots_html(html_text),
+                    }
+                except Exception as ex:
+                    st.error(str(ex))
+        with ex2:
+            if st.button("Save Model", key="oss_save_model", use_container_width=True):
+                try:
+                    prep_raw = result.get("prep_raw")
+                    tr = result.get("train")
+                    if not prep_raw or not tr:
+                        st.error("Pipeline artifacts missing.")
+                    else:
+                        run_id = datetime.now().strftime("oss_%Y%m%d_%H%M%S")
+                        fn = result.get("feature_names") or prep_raw.get("feature_names")
+                        X_raw = _original_feature_frame(df, prep_raw, result["target_col"])
+                        path = save_model(
+                            pipeline=prep_raw["pipeline"],
+                            model=result.get("model_for_inference"),
+                            label_encoder=prep_raw.get("label_encoder"),
+                            feature_names=list(fn) if fn is not None else [],
+                            task_type=result["task_type"],
+                            target_col=result["target_col"],
+                            best_metrics=result.get("best_metrics") or {},
+                            model_name=str(result.get("best_model_name", "model")),
+                            run_id=run_id,
+                            X_train=X_raw,
+                            num_cols=prep_raw.get("num_cols"),
+                            cat_cols=prep_raw.get("cat_cols"),
+                            n_training_rows=(result.get("prep") or {}).get("train_size"),
+                        )
+                        st.session_state.saved_model_path = path
+                        st.session_state["oss_saved_model_path"] = path
+                        st.success(f"Model saved to `{path}`")
+                except Exception as ex:
+                    st.error(str(ex))
+
+        exp = st.session_state.get("report_export")
+        if exp:
+            st.success(
+                f"Saved reports to `{exp['html_path']}` and `{exp.get('md_path', '')}` — "
+                f"**{exp['size_kb']:.1f} KB** HTML, **{exp['n_plots']}** plot(s) embedded."
+            )
+
+
+with tab_inference:
+    render_inference_tab()

@@ -803,7 +803,7 @@ def _render_step_content(step: int, name: str, data: dict, header: str, card_cls
     if name == "run_eda" and "eda" in data:
         _render_step_1_eda(data["eda"])
     elif name == "detect_task" and "task" in data:
-        _render_step_2_task(data["task"])
+        _render_step_2_task(data["task"], data.get("domain_research"))
     elif name == "preprocess" and "prep" in data:
         _render_step_3_prep(data["prep"])
     elif name == "plan_training" and data.get("plan"):
@@ -889,7 +889,48 @@ def _render_step_1_eda(eda: dict):
         st.warning("High missing rate detected in one or more columns", icon="⚠️")
 
 
-def _render_step_2_task(task: dict):
+def _render_step_2b_domain_research(domain_research: dict):
+    """Separate card after task detection when confidence was low/medium."""
+    p = _pal()
+    header = (
+        f'<div class="step-card-header">'
+        f'<span style="font-family:\'JetBrains Mono\',monospace;font-size:14px;color:{p["muted"]};">Step 2b</span>'
+        f'<span style="font-family:\'JetBrains Mono\',monospace;font-size:16px;font-weight:600;color:{p["text"]};">'
+        f'Domain Research</span>'
+        f'<span class="step-badge step-badge-done">✓ Done</span></div>'
+    )
+    intro = (
+        f'<p style="font-family:\'DM Sans\',sans-serif;color:{p["text"]};">'
+        "The agent searched the web to better understand your dataset. "
+        "Here is what it found:</p>"
+    )
+    q = html.escape(str(domain_research.get("query", "")))
+    body = f'<p style="color:{p["muted"]};font-size:12px;"><strong>Query:</strong> {q}</p>'
+    for i, r in enumerate(domain_research.get("results") or [], 1):
+        if isinstance(r, dict) and r.get("error"):
+            body += f'<p style="color:{p["amber"]};">{html.escape(str(r["error"]))}</p>'
+            break
+        if not isinstance(r, dict):
+            continue
+        title = html.escape(str(r.get("title", "")))
+        url = html.escape(str(r.get("url", "")))
+        sn = html.escape((r.get("snippet") or "")[:600])
+        uhref = r.get("url") or ""
+        body += (
+            f'<div style="margin:12px 0;padding:10px;border-left:3px solid {p["accent"]};'
+            f'background:#141416;border-radius:4px;">'
+            f"<strong>{i}. {title}</strong><br/>"
+            f'<a href="{html.escape(str(uhref), quote=True)}" target="_blank" rel="noopener noreferrer">'
+            f"{url}</a><br/>"
+            f'<span style="color:{p["muted"]};font-size:13px;">{sn}</span></div>'
+        )
+    st.markdown(
+        f'<div class="step-card">{header}<div class="step-card-body">{intro}{body}</div></div>',
+        unsafe_allow_html=True,
+    )
+
+
+def _render_step_2_task(task: dict, domain_research: dict | None = None):
     html = (
         f"<p><strong>Target column:</strong> <code>{task.get('target_col', '—')}</code></p>"
         f"<p><strong>Task type:</strong> {task.get('task_type', '—')}</p>"
@@ -899,6 +940,8 @@ def _render_step_2_task(task: dict):
     if task.get("alternatives"):
         html += f"<p><strong>Alternative candidate columns:</strong> {', '.join(str(x) for x in task['alternatives'])}</p>"
     st.markdown(f'<div class="step-card-body">{html}</div>', unsafe_allow_html=True)
+    if domain_research:
+        _render_step_2b_domain_research(domain_research)
 
 
 def _render_step_3_prep(prep: dict):

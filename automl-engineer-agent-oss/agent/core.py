@@ -22,6 +22,7 @@ from agent.tools.preprocess import build_preprocessing_pipeline
 from agent.tools.task_detector import detect_task
 from agent.tools.train import _get_primary_score, train_and_compare
 from agent.tools.tune import tune_best_model
+from agent.tools.search import web_search
 
 try:
     import spaces  # type: ignore
@@ -38,6 +39,23 @@ except ImportError:
 DEFAULT_EXPLANATION = (
     "Explanation unavailable — the model did not return text, but the pipeline step completed successfully."
 )
+
+
+def _domain_research_log_lines(domain_research: dict[str, Any]) -> list[str]:
+    """Lines prepended to preprocessing_log from web search context."""
+    q = str(domain_research.get("query", ""))
+    lines: list[str] = [f"Domain research query: {q}"]
+    rows = domain_research.get("results") or []
+    if rows and isinstance(rows[0], dict) and rows[0].get("error"):
+        lines.append(f"Web search: {rows[0]['error']}")
+        return lines
+    for i, r in enumerate(rows[:5], 1):
+        if not isinstance(r, dict):
+            continue
+        title = (r.get("title") or "")[:200]
+        sn = (r.get("snippet") or "")[:500]
+        lines.append(f"[{i}] {title} — {sn}")
+    return lines
 
 
 def _safe_json_snippet(obj: Any, max_len: int = 2000) -> str:
@@ -184,6 +202,33 @@ class OssAutoMLAgent:
         yield {"type": "step_done", "name": "Task detection", "step": 2, "result": task_info}
         yield {"type": "log", "content": f"✓ Task detection completed in {elapsed:.1f}s"}
 
+        domain_research: dict[str, Any] | None = None
+        conf = str(task_info.get("confidence", "")).lower()
+        if conf in ("low", "medium"):
+            col_names = list(self.df.columns)[:5]
+            query = f"{self.goal} dataset {' '.join(col_names)} machine learning features"
+            try:
+                domain_research = {"query": query, "results": web_search(query, num_results=5)}
+            except Exception as e:
+                domain_research = {
+                    "query": query,
+                    "results": [{"error": f"{type(e).__name__}: {e}"}],
+                }
+            dr_result = {
+                "domain_research": domain_research,
+                "message": (
+                    "The agent searched the web to better understand your dataset. "
+                    "Here is what it found:"
+                ),
+            }
+            yield {
+                "type": "step_done",
+                "name": "Step 2b: Domain Research",
+                "step": "2b",
+                "result": dr_result,
+            }
+            yield {"type": "log", "content": "✓ Domain research (web) completed"}
+
         yield {"type": "step_start", "name": "Preprocessing", "step": 3}
         t0 = time.perf_counter()
         prep = build_preprocessing_pipeline(
@@ -191,9 +236,22 @@ class OssAutoMLAgent:
             target_col=task_info["target_col"],
             task_type=task_info["task_type"],
         )
+        if domain_research:
+            extra = ["--- Domain research context (for preprocessing) ---"] + _domain_research_log_lines(
+                domain_research
+            )
+            log = list(prep.get("preprocessing_log") or [])
+            prep["preprocessing_log"] = extra + log
+            prep["domain_research"] = domain_research
+        prep_ctx = ""
+        if domain_research:
+            prep_ctx = "Web research context (may inform feature handling): " + _safe_json_snippet(
+                domain_research
+            ) + "\n\n"
         prep_explain = generate_explanation(
             self.pipe,
-            "Summarize what preprocessing did and why it matters for modeling, in plain English: "
+            "Summarize what preprocessing did and why it matters for modeling, in plain English. "
+            + prep_ctx
             + _safe_json_snippet(_prep_for_report(prep)),
         )
         elapsed = time.perf_counter() - t0
@@ -370,6 +428,7 @@ class OssAutoMLAgent:
             "task_type": task_type,
             "eda": eda_rich,
             "task": task_info,
+            "domain_research": domain_research,
             "prep": prep_report,
             "prep_raw": prep,
             "plan": plan_result,

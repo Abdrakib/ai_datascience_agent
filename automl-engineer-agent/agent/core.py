@@ -44,6 +44,23 @@ from agent.tools.evaluate import evaluate_model, evaluation_to_markdown
 from agent.tools.search import web_search
 
 
+def _domain_research_log_lines(domain_research: dict[str, Any]) -> list[str]:
+    """Lines prepended to preprocessing_log from web search context."""
+    q = str(domain_research.get("query", ""))
+    lines: list[str] = [f"Domain research query: {q}"]
+    rows = domain_research.get("results") or []
+    if rows and isinstance(rows[0], dict) and rows[0].get("error"):
+        lines.append(f"Web search: {rows[0]['error']}")
+        return lines
+    for i, r in enumerate(rows[:5], 1):
+        if not isinstance(r, dict):
+            continue
+        title = (r.get("title") or "")[:200]
+        sn = (r.get("snippet") or "")[:500]
+        lines.append(f"[{i}] {title} — {sn}")
+    return lines
+
+
 # ── Tool schemas (passed to Claude API) ──────────────────────────────────────
 
 TOOL_SCHEMAS = [
@@ -244,6 +261,7 @@ class AutoMLAgent:
         # Shared state populated by tool calls
         self._eda_report: dict | None = None
         self._task_result: dict | None = None
+        self._domain_research: dict[str, Any] | None = None
         self._prep_result: dict | None = None
         self._plan_result: dict | None = None
         self._train_result: dict | None = None
@@ -377,7 +395,10 @@ class AutoMLAgent:
         if tool_name == "run_eda" and self._eda_report:
             return {"eda": self._eda_report}
         if tool_name == "detect_task" and self._task_result:
-            return {"task": self._task_result}
+            out: dict[str, Any] = {"task": self._task_result}
+            if self._domain_research:
+                out["domain_research"] = self._domain_research
+            return out
         if tool_name == "plan_training" and getattr(self, "_plan_result", None):
             return {"plan": self._plan_result}
         if tool_name == "preprocess" and self._prep_result:
@@ -458,7 +479,34 @@ class AutoMLAgent:
         else:
             self._task_result = detect_task(self.df, user_hint=user_hint)
 
-        return task_detection_to_markdown(self._task_result)
+        self._domain_research = None
+        conf = str(self._task_result.get("confidence", "")).lower()
+        if conf in ("low", "medium"):
+            goal = (user_hint or self.user_message or "").strip()
+            col_names = list(self.df.columns)[:5]
+            query = f"{goal} dataset {' '.join(col_names)} machine learning features"
+            try:
+                results = web_search(query, num_results=5)
+                self._domain_research = {"query": query, "results": results}
+            except Exception as e:
+                self._domain_research = {
+                    "query": query,
+                    "results": [{"error": f"{type(e).__name__}: {e}"}],
+                }
+
+        md = task_detection_to_markdown(self._task_result)
+        if self._domain_research:
+            md += "\n\n## Domain research (web)\n"
+            for i, r in enumerate((self._domain_research.get("results") or [])[:5], 1):
+                if isinstance(r, dict) and r.get("error"):
+                    md += f"\n*Search note:* {r['error']}\n"
+                    break
+                if not isinstance(r, dict):
+                    continue
+                title = r.get("title", "")
+                snippet = (r.get("snippet", "") or "")[:240]
+                md += f"\n{i}. **{title}** — {snippet}...\n"
+        return md
 
     def _tool_preprocess(self, inputs: dict) -> str:
         target_col  = inputs["target_col"]
@@ -471,6 +519,12 @@ class AutoMLAgent:
             task_type=task_type,
             scaler_type=scaler_type,
         )
+        if self._domain_research:
+            dr = self._domain_research
+            extra = ["--- Domain research context (for preprocessing) ---"] + _domain_research_log_lines(dr)
+            log = list(self._prep_result.get("preprocessing_log") or [])
+            self._prep_result["preprocessing_log"] = extra + log
+            self._prep_result["domain_research"] = dr
         return preprocessing_log_to_markdown(self._prep_result)
 
     def _tool_plan_training(self, _inputs: dict) -> str:
@@ -703,5 +757,8 @@ class AutoMLAgent:
         pr = getattr(self, "_plan_result", None)
         if pr is not None:
             result["plan"] = pr
+
+        if self._domain_research:
+            result["domain_research"] = self._domain_research
 
         return result
