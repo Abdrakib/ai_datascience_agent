@@ -65,6 +65,7 @@ def _init_state() -> None:
         "oss_saved_model_path": None,
         "oss_inference_bundle": None,
         "oss_inference_predictions": None,
+        "oss_model_pkl_bytes": None,
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -1148,15 +1149,6 @@ def render_inference_tab() -> None:
     le = bundle.get("label_encoder")
     classes = le.classes_ if le is not None else None
 
-    csv_bytes = result_df.to_csv(index=False).encode("utf-8")
-    st.download_button(
-        label="Download predictions as CSV",
-        data=csv_bytes,
-        file_name="predictions.csv",
-        mime="text/csv",
-        key="oss_inf_dl_csv",
-    )
-
     if ttype == "classification":
         conf_pct: np.ndarray | None = None
         if "probability" in result_df.columns:
@@ -1231,6 +1223,14 @@ def render_inference_tab() -> None:
                 st.metric("Mean", f"{float(preds.mean()):.6f}")
             with m3:
                 st.metric("Max", f"{float(preds.max()):.6f}")
+
+    st.download_button(
+        label="⬇ Download Predictions as CSV",
+        data=result_df.to_csv(index=False),
+        file_name="predictions.csv",
+        mime="text/csv",
+        key="download_predictions_csv",
+    )
 
 
 # ── Page chrome ───────────────────────────────────────────────────────────────
@@ -1356,6 +1356,7 @@ with tab_pipeline:
         st.session_state.final_result = None
         st.session_state.log_lines_oss = []
         st.session_state.report_export = None
+        st.session_state.oss_model_pkl_bytes = None
         try:
             with st.spinner("Loading Qwen2.5 — this may take ~30s on first run..."):
                 pipe = get_llm_pipeline()
@@ -1510,6 +1511,8 @@ with tab_pipeline:
                         "md_path": str(md_path.resolve()),
                         "size_kb": html_path.stat().st_size / 1024.0,
                         "n_plots": count_embedded_plots_html(html_text),
+                        "html_content": html_text,
+                        "md_content": md_text,
                     }
                 except Exception as ex:
                     st.error(str(ex))
@@ -1541,15 +1544,48 @@ with tab_pipeline:
                         )
                         st.session_state.saved_model_path = path
                         st.session_state["oss_saved_model_path"] = path
-                        st.success(f"Model saved to `{path}`")
+                        with open(path, "rb") as mf:
+                            st.session_state.oss_model_pkl_bytes = mf.read()
+                        st.success(f"Model saved to `{path}`. Use the download button below to copy it to your computer.")
                 except Exception as ex:
                     st.error(str(ex))
 
         exp = st.session_state.get("report_export")
-        if exp:
+        if exp and exp.get("html_content"):
+            html_content = exp["html_content"]
+            md_content = exp.get("md_content") or ""
+            html_size_kb = len(html_content) / 1024
             st.success(
-                f"Saved reports to `{exp['html_path']}` and `{exp.get('md_path', '')}` — "
-                f"**{exp['size_kb']:.1f} KB** HTML, **{exp['n_plots']}** plot(s) embedded."
+                f"Report generated successfully — "
+                f"{html_size_kb:.1f} KB with all plots embedded. "
+                f"Click the buttons below to download."
+            )
+            dh, dm = st.columns(2)
+            with dh:
+                st.download_button(
+                    label="⬇ Download HTML Report",
+                    data=html_content,
+                    file_name="automl_report.html",
+                    mime="text/html",
+                    key="download_html_report",
+                )
+            with dm:
+                st.download_button(
+                    label="⬇ Download Markdown Report",
+                    data=md_content,
+                    file_name="automl_report.md",
+                    mime="text/markdown",
+                    key="download_md_report",
+                )
+
+        mb = st.session_state.get("oss_model_pkl_bytes")
+        if mb:
+            st.download_button(
+                label="⬇ Download Model (.pkl)",
+                data=mb,
+                file_name="automl_model.pkl",
+                mime="application/octet-stream",
+                key="download_model_pkl",
             )
 
 
