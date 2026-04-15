@@ -5,6 +5,7 @@ LLM orchestrator: fixed sequential ML pipeline + local LLM for plain-English blu
 from __future__ import annotations
 
 import json
+import re
 import time
 from typing import Any, Generator
 
@@ -68,6 +69,77 @@ def _safe_json_snippet(obj: Any, max_len: int = 2000) -> str:
     return s
 
 
+_EXPL_SYSTEM_PROMPT = (
+    "You are a friendly data science assistant explaining "
+    "results to someone who has never studied machine learning. "
+    "Use simple everyday language. Avoid technical jargon. "
+    "If you must use a technical term, explain it immediately "
+    "in parentheses using a simple analogy. "
+    "Keep explanations to 3-4 short sentences maximum. "
+    "Write like you are talking to a smart friend who is "
+    "not a data scientist. "
+    "Never use bullet points or markdown. Just plain "
+    "conversational sentences."
+)
+
+# Terms that confuse beginners if used without a parenthetical gloss in the same text.
+_JARGON_TERMS: list[tuple[str, str]] = [
+    ("gradient boosting", "building many small corrective models one after another to get a strong final guess"),
+    ("cross-validation", "testing the model on several slices of the data so the score is more trustworthy"),
+    ("ROC-AUC", "a score from 0 to 1 that says how well the model ranks positives versus negatives"),
+    ("hyperparameter", "a dial or setting on the model that changes how it learns"),
+    ("imputation", "filling in missing values with guesses from the rest of the data"),
+    ("encoding", "turning categories like colors or city names into numbers the model can use"),
+    ("normalization", "scaling numbers so they sit on a similar range so one huge column does not dominate"),
+    ("SMOTE", "a trick that creates extra examples for rare categories so the model sees them more often"),
+    ("F1", "one number that blends correctness and completeness for class predictions"),
+    ("precision", "out of everything the model labeled positive, how many were truly positive"),
+    ("recall", "out of all real positives, how many the model actually caught"),
+    ("overfitting", "when the model memorizes training data and does worse on new data"),
+    ("ensemble", "combining several models so mistakes cancel out a bit"),
+]
+
+
+def _truncate_to_four_sentences(text: str) -> str:
+    """Keep at most four sentences (split on . ? ! followed by space or end)."""
+    text = (text or "").strip()
+    if not text:
+        return text
+    parts = re.split(r"(?<=[.!?])\s+", text)
+    parts = [p for p in parts if p.strip()]
+    if len(parts) <= 4:
+        return text
+    return " ".join(parts[:4]).strip()
+
+
+def _append_jargon_glossary(text: str) -> str:
+    """If jargon appears without a following '(...)' explanation, append plain notes."""
+    out = text.rstrip()
+    notes: list[str] = []
+    seen_gloss: set[str] = set()
+    for term, plain in _JARGON_TERMS:
+        if term == "ROC-AUC":
+            pat = r"(?i)(?<![a-z0-9_])roc[-_ ]?auc(?![a-z0-9])"
+        elif " " in term:
+            pat = r"(?<![a-z0-9])" + re.escape(term) + r"(?![a-z0-9])"
+        else:
+            pat = r"(?<![a-z0-9])" + re.escape(term) + r"(?![a-z0-9])"
+        if not re.search(pat, text):
+            continue
+        if re.search(rf"(?i){re.escape(term)}\s*\(", text):
+            continue
+        gloss_key = "roc-auc" if term == "ROC-AUC" else term.lower()
+        if gloss_key in seen_gloss:
+            continue
+        seen_gloss.add(gloss_key)
+        note = f"(Note: {term} means {plain}.)"
+        notes.append(note)
+    if notes:
+        sep = " " if out and not out.endswith(" ") else ""
+        out = out + sep + " ".join(notes)
+    return out
+
+
 def generate_explanation(
     pipe: Any,
     prompt: str,
@@ -76,14 +148,7 @@ def generate_explanation(
     """Run chat-style generation; never raises — returns default on failure."""
     mt = max_tokens if max_tokens is not None else MAX_NEW_TOKENS
     messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are a helpful data science assistant. "
-                "Give clear, concise explanations in 2-3 sentences. "
-                "No markdown, no bullet points, just plain English."
-            ),
-        },
+        {"role": "system", "content": _EXPL_SYSTEM_PROMPT},
         {"role": "user", "content": prompt},
     ]
     try:
@@ -104,10 +169,13 @@ def generate_explanation(
             )
             raw = out[0].get("generated_text", "") if isinstance(out[0], dict) else str(out[0])
             if isinstance(raw, str) and raw.startswith(prompt_text):
-                return raw[len(prompt_text) :].strip() or DEFAULT_EXPLANATION
-            if isinstance(raw, list) and raw and isinstance(raw[-1], dict):
-                return str(raw[-1].get("content", "")).strip() or DEFAULT_EXPLANATION
-            return str(raw).strip() or DEFAULT_EXPLANATION
+                gen = raw[len(prompt_text) :].strip() or DEFAULT_EXPLANATION
+            elif isinstance(raw, list) and raw and isinstance(raw[-1], dict):
+                gen = str(raw[-1].get("content", "")).strip() or DEFAULT_EXPLANATION
+            else:
+                gen = str(raw).strip() or DEFAULT_EXPLANATION
+            gen = _truncate_to_four_sentences(gen)
+            return _append_jargon_glossary(gen)
 
         out = pipe(
             messages,
@@ -123,9 +191,13 @@ def generate_explanation(
             if isinstance(gt, list) and gt:
                 last = gt[-1]
                 if isinstance(last, dict) and last.get("content"):
-                    return str(last["content"]).strip()
+                    gen = str(last["content"]).strip()
+                    gen = _truncate_to_four_sentences(gen)
+                    return _append_jargon_glossary(gen)
             if isinstance(gt, str):
-                return gt.strip()
+                gen = gt.strip()
+                gen = _truncate_to_four_sentences(gen)
+                return _append_jargon_glossary(gen)
         return DEFAULT_EXPLANATION
     except Exception:
         return DEFAULT_EXPLANATION
@@ -180,9 +252,19 @@ class OssAutoMLAgent:
         yield {"type": "step_start", "name": "EDA", "step": 1}
         t0 = time.perf_counter()
         eda_result = run_eda(self.df)
+        eda_summary = _safe_json_snippet(
+            {
+                "overview": eda_result.get("overview"),
+                "quality_flags": eda_result.get("quality_flags"),
+                "missing": eda_result.get("missing"),
+            }
+        )
         eda_prompt = (
-            "Explain these dataset statistics in plain English: "
-            + _safe_json_snippet(eda_result.get("overview"))
+            "Explain these dataset facts to a complete beginner "
+            "in 3 simple sentences. Tell them: how big the dataset "
+            "is, what kind of information it contains, and whether "
+            "there are any obvious problems they should know about.\n"
+            f"Dataset info: {eda_summary}"
         )
         eda_result = dict(eda_result)
         eda_result["explanation"] = generate_explanation(self.pipe, eda_prompt)
@@ -195,9 +277,16 @@ class OssAutoMLAgent:
         task_info = detect_task(self.df, user_hint=self.goal)
         elapsed = time.perf_counter() - t0
         task_info = dict(task_info)
+        task_summary = _safe_json_snippet(task_info)
         task_info["explanation"] = generate_explanation(
             self.pipe,
-            "Summarize the detected ML task and target column: " + _safe_json_snippet(task_info),
+            "In 2-3 simple sentences, explain what the computer "
+            "is trying to learn from this data. "
+            "Use an analogy if possible. "
+            'For example if it is classification say something like '
+            '"The agent is trying to learn how to sort things into '
+            'categories, like sorting emails into spam and not spam."\n'
+            f"Task info: {task_summary}",
         )
         yield {"type": "step_done", "name": "Task detection", "step": 2, "result": task_info}
         yield {"type": "log", "content": f"✓ Task detection completed in {elapsed:.1f}s"}
@@ -214,12 +303,21 @@ class OssAutoMLAgent:
                     "query": query,
                     "results": [{"error": f"{type(e).__name__}: {e}"}],
                 }
+            search_summary = _safe_json_snippet(domain_research)
+            domain_expl = generate_explanation(
+                self.pipe,
+                "In 2 simple sentences, explain why the agent searched "
+                "the internet and what useful information it found that "
+                "will help it understand this dataset better.\n"
+                f"Search results: {search_summary}",
+            )
             dr_result = {
                 "domain_research": domain_research,
                 "message": (
                     "The agent searched the web to better understand your dataset. "
                     "Here is what it found:"
                 ),
+                "explanation": domain_expl,
             }
             yield {
                 "type": "step_done",
@@ -243,16 +341,20 @@ class OssAutoMLAgent:
             log = list(prep.get("preprocessing_log") or [])
             prep["preprocessing_log"] = extra + log
             prep["domain_research"] = domain_research
-        prep_ctx = ""
-        if domain_research:
-            prep_ctx = "Web research context (may inform feature handling): " + _safe_json_snippet(
-                domain_research
-            ) + "\n\n"
+        prep_summary = _safe_json_snippet(
+            {
+                "prep": _prep_for_report(prep),
+                "domain_research": domain_research,
+            }
+        )
         prep_explain = generate_explanation(
             self.pipe,
-            "Summarize what preprocessing did and why it matters for modeling, in plain English. "
-            + prep_ctx
-            + _safe_json_snippet(_prep_for_report(prep)),
+            "In 3 simple sentences, explain what the agent did "
+            "to clean and prepare the data before training. "
+            "Use everyday language — for example instead of "
+            "'imputed missing values' say 'filled in the blank "
+            "spots in the data with reasonable guesses'.\n"
+            f"Preprocessing info: {prep_summary}",
         )
         elapsed = time.perf_counter() - t0
         yield {
@@ -266,10 +368,14 @@ class OssAutoMLAgent:
         yield {"type": "step_start", "name": "Training plan", "step": 4}
         t0 = time.perf_counter()
         plan_result = plan_training(eda_result, task_info, prep)
+        plan_summary = _safe_json_snippet(plan_result.get("plan_summary"))
         plan_explain = generate_explanation(
             self.pipe,
-            "Explain this training plan briefly for a practitioner: "
-            + _safe_json_snippet(plan_result.get("plan_summary")),
+            "In 2-3 simple sentences, explain which machine "
+            "learning methods the agent decided to try and why. "
+            "Think of it like choosing which tools to use for "
+            "a job — explain it that way.\n"
+            f"Plan info: {plan_summary}",
         )
         plan_out = dict(plan_result)
         plan_out["explanation"] = plan_explain
@@ -304,11 +410,29 @@ class OssAutoMLAgent:
             skip_reasons=plan_result.get("skip_reasons"),
             primary_metric=plan_result.get("primary_metric"),
         )
+        _cdf = train_result.get("comparison_df")
+        _comp_sample = ""
+        if _cdf is not None and hasattr(_cdf, "head"):
+            try:
+                _comp_sample = _cdf.head(12).to_string()
+            except Exception:
+                _comp_sample = str(_cdf)[:1500]
+        train_summary = _safe_json_snippet(
+            {
+                "best_model": train_result.get("best_name"),
+                "metric_focus": train_result.get("metric_name"),
+                "best_metrics": _sanitize_metrics(train_result.get("best_metrics") or {}),
+                "comparison_sample": _comp_sample[:2000],
+            }
+        )
         train_expl = generate_explanation(
             self.pipe,
-            "Explain briefly why this model may be a reasonable choice given these results "
-            f"(best: {train_result.get('best_name')}): "
-            + _safe_json_snippet(_sanitize_metrics(train_result.get("best_metrics") or {})),
+            "In 3 simple sentences, explain how the different "
+            "methods performed. Tell the reader which method won "
+            "and give them a sense of how good the score is — "
+            "for example 'a score of 0.85 out of 1.0 means the "
+            "model gets it right about 85% of the time'.\n"
+            f"Training results: {train_summary}",
         )
         elapsed = time.perf_counter() - t0
         yield {
@@ -349,10 +473,16 @@ class OssAutoMLAgent:
         )
         tune_result = dict(tune_result)
         tune_result["model_name"] = str(train_result["best_name"])
+        tune_summary = _safe_json_snippet(
+            {k: tune_result.get(k) for k in ("success", "best_score", "improvement", "error")}
+        )
         tune_expl = generate_explanation(
             self.pipe,
-            "In one short paragraph, describe hyperparameter tuning outcome: "
-            + _safe_json_snippet({k: tune_result.get(k) for k in ("success", "best_score", "improvement", "error")}),
+            "In 2-3 simple sentences, explain what hyperparameter "
+            "tuning means in plain English and whether it helped. "
+            "A good analogy: tuning is like adjusting the settings "
+            "on a machine to make it work better.\n"
+            f"Tuning results: {tune_summary}",
         )
         elapsed = time.perf_counter() - t0
         yield {
@@ -390,9 +520,21 @@ class OssAutoMLAgent:
             n_classes=n_classes,
         )
         shap_txt = eval_result.get("shap_explanation_text") or ""
+        eval_summary = _safe_json_snippet(
+            {
+                "metrics": _sanitize_metrics(eval_result.get("metrics") or {}),
+                "explainability_notes": (shap_txt or "")[:1200],
+            }
+        )
         eval_expl = generate_explanation(
             self.pipe,
-            "Interpret these SHAP / explainability notes in plain English: " + (shap_txt or "No SHAP text."),
+            "In 3-4 simple sentences, explain how well the final "
+            "model performs. Make the numbers meaningful — "
+            "for example if accuracy is 0.78 say "
+            "'the model makes the right prediction about 78 times "
+            "out of every 100 — which is pretty good for this "
+            "kind of problem'.\n"
+            f"Evaluation results: {eval_summary}",
         )
         elapsed = time.perf_counter() - t0
         yield {
@@ -405,17 +547,23 @@ class OssAutoMLAgent:
 
         eda_rich = run_eda(self.df, target_col=task_info["target_col"])
 
+        final_summary_payload = _safe_json_snippet(
+            {
+                "goal": self.goal,
+                "best_model": train_result.get("best_name"),
+                "metrics": _sanitize_metrics(eval_result.get("metrics") or {}),
+                "tuning": {k: tune_result.get(k) for k in ("success", "improvement", "best_score")},
+            }
+        )
         final_summary = generate_explanation(
             self.pipe,
-            "Give a short executive summary of this AutoML run: goal, best model, and whether metrics look solid. "
-            + _safe_json_snippet(
-                {
-                    "goal": self.goal,
-                    "best_model": train_result.get("best_name"),
-                    "metrics": _sanitize_metrics(eval_result.get("metrics") or {}),
-                    "tuning": {k: tune_result.get(k) for k in ("success", "improvement", "best_score")},
-                }
-            ),
+            "In 3-4 simple sentences, give a plain English "
+            "summary of what was accomplished. Mention which "
+            "method worked best and why, how confident they "
+            "should feel about the results, and one practical "
+            "thing they could do next with this model. "
+            "Keep it encouraging and clear.\n"
+            f"Final results: {final_summary_payload}",
             max_tokens=400,
         )
 
