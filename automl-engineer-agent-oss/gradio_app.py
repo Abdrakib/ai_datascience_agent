@@ -1084,5 +1084,24 @@ with gr.Blocks(
 
 
 if __name__ == "__main__":
+    # Hugging Face Spaces sets SPACE_ID. Use default launch() so binding, port, and
+    # SpacesReloader match the platform. Local/dev: bind 0.0.0.0 and honor PORT.
+    # Proxies without no_proxy break Gradio's localhost health check (httpx) on Spaces.
+    _hf_space = bool(os.environ.get("SPACE_ID"))
+    if _hf_space:
+        os.environ.setdefault(
+            "NO_PROXY", "localhost,127.0.0.1,127.0.0.1/8,::1"
+        )
+        os.environ.setdefault(
+            "no_proxy", "localhost,127.0.0.1,127.0.0.1/8,::1"
+        )
     demo.queue()
-    demo.launch(server_name="0.0.0.0", server_port=7860, show_error=True)
+    if _hf_space:
+        demo.launch(show_error=True)
+    else:
+        _port = int(os.environ.get("PORT", "7860"))
+        demo.launch(
+            server_name="0.0.0.0",
+            server_port=_port,
+            show_error=True,
+        )
