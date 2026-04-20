@@ -1,1 +1,1 @@
-"""AutoML Engineer Agent package."""
+"""Explainable ML Pipeline Agent package."""

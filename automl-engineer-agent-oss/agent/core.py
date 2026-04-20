@@ -32,10 +32,11 @@ try:
 except ImportError:
     USING_ZEROGPU = False
 
-    def _gpu_noop(func):
+    def _spaces_gpu_noop(func):
+        """No-op decorator when `spaces` is not installed (local / Colab)."""
         return func
 
-    spaces = type("spaces", (), {"GPU": staticmethod(_gpu_noop)})()
+    spaces = type("spaces", (), {"GPU": _spaces_gpu_noop})()
 
 DEFAULT_EXPLANATION = (
     "Explanation unavailable — the model did not return text, but the pipeline step completed successfully."
@@ -140,6 +141,7 @@ def _append_jargon_glossary(text: str) -> str:
     return out
 
 
+@spaces.GPU
 def generate_explanation(
     pipe: Any,
     prompt: str,
@@ -247,7 +249,7 @@ class OssAutoMLAgent:
         self.pipe = pipe
 
     def run(self) -> Generator[dict[str, Any], None, None]:
-        yield {"type": "log", "content": "Pipeline run started — executing fixed AutoML sequence."}
+        yield {"type": "log", "content": "Pipeline run started — executing fixed ML sequence."}
 
         yield {"type": "step_start", "name": "EDA", "step": 1}
         t0 = time.perf_counter()

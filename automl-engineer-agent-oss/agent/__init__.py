@@ -1,1 +1,1 @@
-"""Open-source AutoML agent (Llama + fixed pipeline)."""
+"""Explainable ML Pipeline Agent — local LLM + fixed pipeline."""

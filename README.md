@@ -1,6 +1,6 @@
-# AI Data Science Agent
+# Explainable ML Pipeline Agent
 
-Monorepo with two AutoML-style agents built on the same ML toolchain (EDA → preprocess → train → tune → evaluate).
+Monorepo with two agents (**Explainable ML Pipeline Agent** — Claude and open-source variants) built on the same ML toolchain (EDA → preprocess → train → tune → evaluate).
 
 ## Projects
 

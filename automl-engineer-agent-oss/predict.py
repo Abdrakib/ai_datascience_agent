@@ -366,7 +366,7 @@ def _cli_info(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="AutoML Engineer — model persistence and inference",
+        description="Explainable ML Pipeline Agent — model persistence and inference",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )

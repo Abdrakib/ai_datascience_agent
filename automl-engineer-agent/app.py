@@ -1,5 +1,5 @@
 """
-app.py — AutoML Engineer Agent · Streamlit UI
+app.py — Explainable ML Pipeline Agent · Streamlit UI
 
 Run: streamlit run app.py
 """
@@ -217,7 +217,7 @@ def _pal() -> dict[str, str]:
 
 # ── Page config (must be first Streamlit call) ────────────────────────────────
 st.set_page_config(
-    page_title="AutoML Engineer",
+    page_title="Explainable ML Pipeline Agent",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -1974,7 +1974,7 @@ def _render_inference_tab() -> None:
 with st.sidebar:
     st.markdown(
         f'<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;'
-        f'color:{_pal()["accent_soft"]};padding:12px 0 20px 0;letter-spacing:1px;">⚡ AutoML Engineer</div>',
+        f'color:{_pal()["accent_soft"]};padding:12px 0 20px 0;letter-spacing:1px;">⚡ Explainable ML Pipeline Agent</div>',
         unsafe_allow_html=True,
     )
 

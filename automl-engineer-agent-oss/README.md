@@ -1,35 +1,48 @@
 ---
-title: AutoML Engineer OSS
-emoji: 🤖
+title: Explainable ML Pipeline Agent
+emoji: 🧠
 colorFrom: blue
 colorTo: green
-sdk: streamlit
-sdk_version: 1.55.0
-app_file: app.py
+sdk: gradio
+sdk_version: 4.44.0
+app_file: gradio_app.py
 pinned: true
-short_description: Open source AutoML agent powered by Llama 3.1
+short_description: ML pipeline that explains every step in plain English
 license: mit
+tags:
+  - machine-learning
+  - automl
+  - explainable-ai
+  - gradio
+  - qwen
+  - zerogpu
 ---
 
-# AutoML Engineer (open source)
+# Explainable ML Pipeline Agent
 
-This is the **open source** variant of the [AutoML Engineer Agent](https://github.com/huggingface/spaces) — the same ML toolchain (EDA → preprocess → train → tune → evaluate), but **without the Claude API**.
+**Explainable ML Pipeline Agent** runs a full ML pipeline on any CSV dataset and explains every step in plain English. It uses **Qwen2.5** via `transformers` — **no API key** needed for inference in the hosted app.
 
-- **LLM:** [meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) via `transformers`
-- **Hosting:** intended for [Hugging Face Spaces](https://huggingface.co/spaces) with **ZeroGPU** — no API key for inference in the app (the Space runtime provides the GPU).
-- **Gated weights:** If the base model is gated on Hugging Face, set a `HF_TOKEN` with access in the Space **Secrets** (repository settings), not in user-facing UI.
+- **Gradio UI:** `gradio_app.py` (this Space defaults to it when using the header above).
+- **Streamlit UI:** `app.py` — same agent stack; run locally with `streamlit run app.py`.
+- **Hosting:** [Hugging Face Spaces](https://huggingface.co/spaces) with **ZeroGPU** is supported; set `HF_TOKEN` in **Secrets** if the model weights are gated.
 
-For the **Claude API** interactive agent version (tool-calling), see the sibling project folder [`automl-engineer-agent`](../automl-engineer-agent/).
+For the **Claude API** tool-calling variant, see [`automl-engineer-agent`](../automl-engineer-agent/).
 
-## Run locally
+## Run locally (Gradio)
 
 ```bash
 cd automl-engineer-agent-oss
 pip install -r requirements.txt
-streamlit run app.py
+python gradio_app.py
 ```
 
-Local runs do not use `spaces.ZeroGPU`; the `spaces` package is optional. A GPU is recommended for Llama 3.1 8B.
+Open `http://127.0.0.1:7860`. A GPU is recommended for Qwen2.5. The `spaces` package is optional locally.
+
+## Run locally (Streamlit)
+
+```bash
+streamlit run app.py
+```
 
 ## License
 

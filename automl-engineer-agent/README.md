@@ -1,5 +1,5 @@
 ---
-title: AI Data Science Agent
+title: Explainable ML Pipeline Agent
 emoji: ⚡
 colorFrom: purple
 colorTo: indigo
@@ -7,13 +7,13 @@ sdk: streamlit
 sdk_version: 1.55.0
 app_file: app.py
 pinned: true
-short_description: Claude-powered AutoML agent for any CSV
+short_description: Explainable ML pipeline agent (Claude) for any CSV
 license: mit
 ---
 
 <div align="center">
 
-# AutoML Engineer Agent
+# Explainable ML Pipeline Agent
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![Powered by Claude API](https://img.shields.io/badge/Powered%20by-Claude%20API-8B5CF6.svg?logo=anthropic&logoColor=white)](https://www.anthropic.com/)
@@ -41,7 +41,7 @@ Drop in any CSV, describe your goal in plain English — it runs the full ML pip
 
 ## 📌 What it does
 
-**AutoML Engineer Agent** is an end-to-end machine learning system that combines **Anthropic Claude** (tool use) with **scikit-learn**, **XGBoost**, **LightGBM**, **Optuna**, and **SHAP**. You upload a tabular dataset, describe what you want to predict in natural language, and the agent orchestrates EDA, preprocessing, model comparison with cross-validation, optional tuning, evaluation, explainability, and export — with a **Streamlit** notebook-style UI and a dedicated **Inference** tab for saved models.
+**Explainable ML Pipeline Agent** is an end-to-end machine learning system that combines **Anthropic Claude** (tool use) with **scikit-learn**, **XGBoost**, **LightGBM**, **Optuna**, and **SHAP**. You upload a tabular dataset, describe what you want to predict in natural language, and the agent orchestrates EDA, preprocessing, model comparison with cross-validation, optional tuning, evaluation, explainability, and export — with a **Streamlit** notebook-style UI and a dedicated **Inference** tab for saved models.
 
 | Feature | Description |
 |--------|-------------|
@@ -369,5 +369,5 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE).
 ---
 
 <p align="center">
-  <b>AutoML Engineer Agent</b> · Claude · Streamlit · scikit-learn · XGBoost · LightGBM · SHAP
+  <b>Explainable ML Pipeline Agent</b> · Claude · Streamlit · scikit-learn · XGBoost · LightGBM · SHAP
 </p>
