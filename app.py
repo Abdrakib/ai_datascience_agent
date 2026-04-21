@@ -5,6 +5,23 @@ import types
 audioop_mock = types.ModuleType("audioop")
 sys.modules["audioop"] = audioop_mock
 
+# Fix gradio_client schema bug BEFORE importing gradio
+import gradio_client.utils as _gcu
+
+_orig = _gcu._json_schema_to_python_type
+
+
+def _patched(schema, defs=None):
+    if not isinstance(schema, dict):
+        return "Any"
+    ap = schema.get("additionalProperties")
+    if ap is not None and not isinstance(ap, dict):
+        schema = {**schema, "additionalProperties": {}}
+    return _orig(schema, defs)
+
+
+_gcu._json_schema_to_python_type = _patched
+
 """
 Explainable ML Pipeline Agent — Gradio UI with native tabs and file uploads.
 Pipeline step cards are rendered as HTML inside dedicated output panels.
@@ -1174,5 +1191,5 @@ if __name__ == "__main__":
     demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
-        show_error=True,
+        share=True,
     )
