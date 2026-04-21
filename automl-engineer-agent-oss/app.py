@@ -5,6 +5,11 @@ import types
 audioop_mock = types.ModuleType("audioop")
 sys.modules["audioop"] = audioop_mock
 
+try:
+    import spaces
+except ImportError:
+    spaces = type("spaces", (), {"GPU": lambda f: f})()
+
 """
 Explainable ML Pipeline Agent — Gradio UI with native tabs and file uploads.
 Pipeline step cards are rendered as HTML inside dedicated output panels.
@@ -935,6 +940,11 @@ with gr.Blocks(
 
     def _load_pipeline_gpu():
         return load_llm_pipeline()
+
+    @spaces.GPU
+    def _gpu_warmup():
+        """Dummy function to satisfy ZeroGPU's @spaces.GPU requirement."""
+        pass
 
     def run_pipeline(file, target, df, _ev, _lg):
         print("RUN PIPELINE TRIGGERED")
