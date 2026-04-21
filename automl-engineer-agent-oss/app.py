@@ -30,8 +30,10 @@ try:
     from agent.report import _build_html, _build_markdown
     from predict import save_model, load_model, predict as run_predict
     AGENT_AVAILABLE = True
-except ImportError:
+    print(f"✅ AGENT IMPORT OK")
+except ImportError as e:
     AGENT_AVAILABLE = False
+    print(f"❌ AGENT IMPORT FAILED: {e}")
 
 APP_ROOT = Path(__file__).resolve().parent
 DATASETS_DIR = APP_ROOT / "datasets"
