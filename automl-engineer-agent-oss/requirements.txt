@@ -1,9 +1,8 @@
 streamlit>=1.35.0
-# Gradio 5.25+ uses TemplateResponse(request=..., name=..., context=...), required for
-# Starlette 0.40+ on Hugging Face (legacy (name, dict) causes Jinja2 unhashable type errors).
-# Event handlers use api_visibility=private / api_name=False to avoid fragile public API schemas.
-gradio==5.25.2
-gradio-client==1.8.0
+# Pin Gradio 4.44 + matching gradio-client to avoid gradio_client JSON schema bug:
+# TypeError: argument of type 'bool' is not iterable on /info (newer gradio_client).
+gradio==4.44.1
+gradio-client==0.9.1
 transformers>=4.40.0
 torch>=2.1.0
 huggingface_hub>=0.28.1,<1.0

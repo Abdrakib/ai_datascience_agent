@@ -4,7 +4,7 @@ emoji: 🧠
 colorFrom: blue
 colorTo: green
 sdk: gradio
-sdk_version: 5.25.2
+sdk_version: 4.44.1
 app_file: app.py
 pinned: true
 short_description: ML pipeline that explains every step in plain English

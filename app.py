@@ -1120,7 +1120,7 @@ with gr.Blocks(
             pkl_p_st,
             pred_csv_st,
         ],
-        show_progress="minimal",
+        show_progress=True,
     )
 
     def on_model(path):
@@ -1209,4 +1209,7 @@ demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7860)
+    if os.environ.get("SPACE_ID"):
+        demo.launch()
+    else:
+        demo.launch(server_name="0.0.0.0", server_port=7860)
