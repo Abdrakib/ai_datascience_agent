@@ -1205,6 +1205,21 @@ with gr.Blocks(
     )
 
 
+# Fix gradio_client JSON schema bug with DownloadButton/File components
+import gradio.routes as _gr_routes
+
+_real_api_info = _gr_routes.api_info
+
+
+def _safe_api_info(*args, **kwargs):
+    try:
+        return _real_api_info(*args, **kwargs)
+    except TypeError:
+        pass
+
+
+_gr_routes.api_info = _safe_api_info
+
 demo.queue(max_size=5)
 
 
