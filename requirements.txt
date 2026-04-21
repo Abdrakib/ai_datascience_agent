@@ -19,6 +19,5 @@ seaborn>=0.12.0
 plotly>=5.15.0
 python-dotenv>=1.0.0
 duckduckgo-search>=6.0.0
-fastapi==0.111.1
-starlette<0.38.0,>=0.37.2
+fastapi>=0.115.2
 pydub==0.25.1
