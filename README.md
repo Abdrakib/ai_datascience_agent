@@ -7,6 +7,6 @@ sdk: gradio
 sdk_version: "4.44.0"
 python_version: "3.10"
 
-app_file: automl-engineer-agent-oss/gradio_app.py
+app_file: automl-engineer-agent-oss/app.py
 pinned: false
 ---
