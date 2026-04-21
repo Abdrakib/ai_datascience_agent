@@ -1192,33 +1192,4 @@ demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
-    # Hugging Face Spaces / ZeroGPU sets SPACE_ID. Gradio verifies local_url with httpx;
-    # HTTP(S)_PROXY without a proper bypass often makes that probe fail on the Space image.
-    _hf_space = bool(os.environ.get("SPACE_ID"))
-    if _hf_space:
-        _loop = "localhost,127.0.0.1,127.0.0.1/8,::1"
-        for _key in ("NO_PROXY", "no_proxy"):
-            _cur = os.environ.get(_key, "").strip()
-            if _cur and _loop.split(",")[0] not in _cur:
-                os.environ[_key] = f"{_loop},{_cur}"
-            elif not _cur:
-                os.environ[_key] = _loop
-        for _pk in (
-            "HTTP_PROXY",
-            "http_proxy",
-            "HTTPS_PROXY",
-            "https_proxy",
-            "ALL_PROXY",
-            "all_proxy",
-        ):
-            os.environ.pop(_pk, None)
-
-    _launch_kw: dict = {"show_error": True}
-    if _hf_space:
-        if "_frontend" in inspect.signature(demo.launch).parameters:
-            _launch_kw["_frontend"] = False
-    else:
-        _launch_kw["server_name"] = "0.0.0.0"
-        _launch_kw["server_port"] = int(os.environ.get("PORT", "7860"))
-
-    demo.launch(**_launch_kw)
+    demo.launch()
