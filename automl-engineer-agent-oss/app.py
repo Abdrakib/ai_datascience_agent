@@ -35,6 +35,21 @@ except ImportError as e:
     AGENT_AVAILABLE = False
     print(f"❌ AGENT IMPORT FAILED: {e}")
 
+# ── Patch gradio_client schema bug (bool not iterable) ──────────
+try:
+    import gradio_client.utils as _gcu
+
+    _orig_get_type = _gcu.get_type
+
+    def _patched_get_type(schema):
+        if not isinstance(schema, dict):
+            return "Any"
+        return _orig_get_type(schema)
+
+    _gcu.get_type = _patched_get_type
+except Exception:
+    pass
+
 APP_ROOT = Path(__file__).resolve().parent
 DATASETS_DIR = APP_ROOT / "datasets"
 OUTPUT_DIR = APP_ROOT / "outputs"
@@ -1209,7 +1224,8 @@ demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
-    if os.environ.get("SPACE_ID"):
-        demo.launch()
-    else:
-        demo.launch(server_name="0.0.0.0", server_port=7860)
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        share=os.environ.get("SPACE_ID") is not None,
+    )
