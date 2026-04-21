@@ -1,3 +1,10 @@
+# Fix pydub audioop issue on Python 3.13
+import sys
+import types
+
+audioop_mock = types.ModuleType("audioop")
+sys.modules["audioop"] = audioop_mock
+
 """
 Explainable ML Pipeline Agent — Gradio UI with native tabs and file uploads.
 Pipeline step cards are rendered as HTML inside dedicated output panels.
