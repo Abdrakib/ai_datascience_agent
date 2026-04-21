@@ -146,14 +146,21 @@ def _comp_table(comp_df):
             f'<thead><tr>{heads}</tr></thead><tbody>{rows}</tbody></table></div>')
 
 def _log_html(lines):
+    if lines is None or isinstance(lines, bool):
+        lines = []
+    elif isinstance(lines, (list, tuple)):
+        lines = list(lines)
+    else:
+        lines = [lines]
     items = ""
     for line in lines[-80:]:
-        l = line.lower()
+        line_s = str(line) if not isinstance(line, str) else line
+        l = line_s.lower()
         if any(x in l for x in ["done","saved","complete","✓"]): cls = "ll-ok"
         elif any(x in l for x in ["warning","overfit","⚠"]):     cls = "ll-warn"
         elif any(x in l for x in ["error","failed","✗"]):        cls = "ll-err"
         else:                                                      cls = "ll-info"
-        items += f'<div class="{cls}">{line}</div>'
+        items += f'<div class="{cls}">{line_s}</div>'
     return f'<div class="log-box">{items or "<span class=ll-info>No log lines yet</span>"}</div>'
 
 def _ds_info(df):
@@ -310,16 +317,24 @@ def build_pipeline_html(events):
     fin  = ""
     for ev in events:
         t = ev.get("type")
+        if not isinstance(t, str):
+            t = str(t) if t is not None else ""
         r = ev.get("result",{}) or {}
         e = r.get("explanation","") if r else ""
+        if not isinstance(e, str):
+            e = str(e) if e is not None else ""
         if t=="step_start":
             nm = ev.get("name","Step")
+            if not isinstance(nm, str):
+                nm = str(nm) if nm is not None else "Step"
             st = ev.get("step","")
             html += (_card(st,nm,"running") +
                      '<div class="running-msg">Processing…</div>'
                      '<div class="progress-bar"><div class="progress-fill"></div></div></div>')
         elif t=="step_done":
             nm = ev.get("name","")
+            if not isinstance(nm, str):
+                nm = str(nm) if nm is not None else ""
             st = str(ev.get("step",""))
             if   st=="1"  or "eda"    in nm.lower() or "data an" in nm.lower(): html += render_eda(r,e)
             elif st=="2"  or "task"   in nm.lower():                             html += render_task(r,e)
@@ -358,8 +373,11 @@ def _export_html(show: bool, html_p, md_p, pkl_p) -> str:
     )
 
 
-def _fmt_pipeline_html(ph: str) -> str:
-    body = (ph or "").strip()
+def _fmt_pipeline_html(ph) -> str:
+    if ph is None or ph is False:
+        body = ""
+    else:
+        body = str(ph).strip()
     if not body:
         body = EMPTY_PIPE_HTML.strip()
     return body
@@ -930,6 +948,14 @@ with gr.Blocks(
         logs = []
         target_value = (target or "").strip()
 
+        def _result_text(status):
+            return gr.update(value="" if status is None else str(status))
+
+        def _path_str(p):
+            if p is None:
+                return None
+            return str(p)
+
         def _out(
             ph,
             lg,
@@ -937,24 +963,21 @@ with gr.Blocks(
             hp=None,
             mp=None,
             pp=None,
-            res=None,
-            bundle=None,
-            pc=None,
             status="",
         ):
             return (
                 gr.update(value=_fmt_pipeline_html(ph)),
                 gr.update(value=_log_html(lg) if lg else ""),
-                gr.update(value=_export_html(exp, hp, mp, pp)),
+                gr.update(value=str(_export_html(bool(exp), hp, mp, pp))),
                 list(events),
                 list(logs),
-                res,
-                bundle,
-                hp,
-                mp,
-                pp,
-                pc,
-                gr.update(value=status),
+                None,
+                None,
+                _path_str(hp),
+                _path_str(mp),
+                _path_str(pp),
+                None,
+                _result_text(status),
             )
 
         work_df = df
@@ -993,6 +1016,8 @@ with gr.Blocks(
 
             for ev in agent.run():
                 t = ev.get("type")
+                if not isinstance(t, str):
+                    t = str(t) if t is not None else ""
                 if t == "log":
                     logs.append(ev.get("content", ""))
                     yield _out(build_pipeline_html(events), logs, status=running_msg)
@@ -1027,19 +1052,20 @@ with gr.Blocks(
                         )
                     except Exception:
                         pkl_p = None
+                    print("Function executed successfully")
                     yield (
                         gr.update(value=_fmt_pipeline_html(build_pipeline_html(events))),
-                        gr.update(value=_log_html(logs)),
-                        gr.update(value=_export_html(True, html_p, md_p, pkl_p)),
+                        gr.update(value=_log_html(logs) if logs else ""),
+                        gr.update(value=str(_export_html(True, html_p, md_p, pkl_p))),
                         list(events),
                         list(logs),
-                        final,
                         None,
-                        html_p,
-                        md_p,
-                        pkl_p,
                         None,
-                        gr.update(value="Pipeline complete."),
+                        _path_str(html_p),
+                        _path_str(md_p),
+                        _path_str(pkl_p),
+                        None,
+                        _result_text("Pipeline complete."),
                     )
                     return
         except Exception as ex:
@@ -1049,6 +1075,10 @@ with gr.Blocks(
                 logs,
                 status=str(ex),
             )
+
+    _run_pipeline_kw = {**_no_public_api()}
+    if "api_name" in inspect.signature(gr.Button.click).parameters:
+        _run_pipeline_kw["api_name"] = False
 
     run_btn.click(
         fn=run_pipeline,
@@ -1067,7 +1097,7 @@ with gr.Blocks(
             pred_csv_st,
             output_box,
         ],
-        api_name="run_pipeline",
+        **_run_pipeline_kw,
     )
 
     def on_model(path):
