@@ -21,15 +21,22 @@ tags:
 
 **Explainable ML Pipeline Agent** runs a full ML pipeline on any CSV dataset and explains every step in plain English. It uses **Qwen2.5** via `transformers` — **no API key** needed for inference in the hosted app.
 
-- **Gradio UI:** `app.py` (this Space defaults to it when using the header above).
-- **Streamlit UI:** use the sibling package [`automl-engineer-agent`](../automl-engineer-agent/) (`streamlit run app.py` there).
+- **Gradio UI:** [`app.py`](app.py) at repo root; full monorepo source is [`automl-engineer-agent-oss/app.py`](https://github.com/Abdrakib/ai_datascience_agent/blob/main/automl-engineer-agent-oss/app.py).
+- **Streamlit UI:** [`automl-engineer-agent`](https://github.com/Abdrakib/ai_datascience_agent/tree/main/automl-engineer-agent) (`streamlit run app.py` there).
 - **Hosting:** [Hugging Face Spaces](https://huggingface.co/spaces); set `HF_TOKEN` in **Secrets** if the model weights are gated.
 
-Monorepo root README (GitHub landing page): [`../README.md`](../README.md).
-
-For the **Claude API** tool-calling variant, see [`automl-engineer-agent`](../automl-engineer-agent/).
+For the **Claude API** tool-calling variant, see [`automl-engineer-agent`](https://github.com/Abdrakib/ai_datascience_agent/tree/main/automl-engineer-agent).
 
 ## Run locally (Gradio)
+
+**Space / flat checkout** (this folder is repo root):
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+**GitHub monorepo** (from repository root):
 
 ```bash
 cd automl-engineer-agent-oss
