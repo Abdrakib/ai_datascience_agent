@@ -15,7 +15,6 @@ tags:
   - explainable-ai
   - gradio
   - qwen
-  - zerogpu
 ---
 
 # Explainable ML Pipeline Agent
@@ -24,7 +23,9 @@ tags:
 
 - **Gradio UI:** `app.py` (this Space defaults to it when using the header above).
 - **Streamlit UI:** use the sibling package [`automl-engineer-agent`](../automl-engineer-agent/) (`streamlit run app.py` there).
-- **Hosting:** [Hugging Face Spaces](https://huggingface.co/spaces) with **ZeroGPU** is supported; set `HF_TOKEN` in **Secrets** if the model weights are gated.
+- **Hosting:** [Hugging Face Spaces](https://huggingface.co/spaces); set `HF_TOKEN` in **Secrets** if the model weights are gated.
+
+Monorepo root README (GitHub landing page): [`../README.md`](../README.md).
 
 For the **Claude API** tool-calling variant, see [`automl-engineer-agent`](../automl-engineer-agent/).
 
@@ -36,7 +37,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open `http://127.0.0.1:7860`. A GPU is recommended for Qwen2.5. The `spaces` package is optional locally.
+Open `http://127.0.0.1:7860`. A GPU is recommended for Qwen2.5.
 
 ## License
 
