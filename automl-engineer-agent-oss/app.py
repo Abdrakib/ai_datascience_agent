@@ -12,15 +12,6 @@ import traceback
 import datetime
 from pathlib import Path
 
-try:
-    import spaces  # type: ignore
-except ImportError:
-
-    def _spaces_gpu_noop(func):
-        return func
-
-    spaces = type("spaces", (), {"GPU": _spaces_gpu_noop})()
-
 # ── Agent imports (graceful fallback) ───────────────────────────
 try:
     from agent.core import OssAutoMLAgent, load_llm_pipeline
@@ -31,24 +22,6 @@ try:
 except ImportError as e:
     AGENT_AVAILABLE = False
     print(f"❌ AGENT IMPORT FAILED: {e}")
-
-# ── Patch gradio_client schema bug (additionalProperties=True) ──
-try:
-    import gradio_client.utils as _gcu
-
-    _orig_json_schema = _gcu._json_schema_to_python_type
-
-    def _patched_json_schema(schema, defs=None):
-        if not isinstance(schema, dict):
-            return "Any"
-        ap = schema.get("additionalProperties")
-        if ap is not None and not isinstance(ap, dict):
-            schema = {**schema, "additionalProperties": {}}
-        return _orig_json_schema(schema, defs)
-
-    _gcu._json_schema_to_python_type = _patched_json_schema
-except Exception:
-    pass
 
 APP_ROOT = Path(__file__).resolve().parent
 DATASETS_DIR = APP_ROOT / "datasets"
@@ -953,8 +926,6 @@ with gr.Blocks(
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
     )
 
-    # Model load runs load_llm_pipeline() from core.py, which carries @spaces.GPU
-    # (ZeroGPU cannot allocate from inside a Gradio generator wrapper).
     def _load_pipeline_gpu():
         return load_llm_pipeline()
 

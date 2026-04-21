@@ -25,19 +25,6 @@ from agent.tools.train import _get_primary_score, train_and_compare
 from agent.tools.tune import tune_best_model
 from agent.tools.search import web_search
 
-try:
-    import spaces  # type: ignore
-
-    USING_ZEROGPU = True
-except ImportError:
-    USING_ZEROGPU = False
-
-    def _spaces_gpu_noop(func):
-        """No-op decorator when `spaces` is not installed (local / Colab)."""
-        return func
-
-    spaces = type("spaces", (), {"GPU": _spaces_gpu_noop})()
-
 DEFAULT_EXPLANATION = (
     "Explanation unavailable — the model did not return text, but the pipeline step completed successfully."
 )
@@ -204,9 +191,8 @@ def generate_explanation(
         return DEFAULT_EXPLANATION
 
 
-@spaces.GPU
 def load_llm_pipeline():
-    """Load the instruction-tuned model for text generation (ZeroGPU on Hugging Face Spaces)."""
+    """Load the instruction-tuned model for text generation (GPU recommended)."""
     return pipeline(
         "text-generation",
         model=MODEL_ID,
