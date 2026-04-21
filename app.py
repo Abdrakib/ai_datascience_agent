@@ -8,11 +8,9 @@ import pandas as pd
 import numpy as np
 import os
 import json
-import inspect
 import tempfile
 import traceback
 import datetime
-from collections.abc import Callable
 from pathlib import Path
 
 try:
@@ -785,29 +783,6 @@ setTimeout(() => {
 """
 
 
-def _no_public_api() -> dict:
-    """
-    Keep handlers off the public REST/OpenAPI schema.
-
-    Gradio 6.x on ZeroGPU can emit invalid JSON Schema for some components
-    (e.g. DownloadButton), which crashes /info (TypeError: 'bool' is not iterable
-    in gradio_client). Gradio 4.x skips schema when api_name=False; 5+ uses
-    api_visibility='private'.
-    """
-    sig = inspect.signature(gr.Button.click)
-    if "api_visibility" in sig.parameters:
-        return {"api_visibility": "private"}
-    return {"api_name": False}
-
-
-def _private_event_kw(event_method: Callable[..., object]) -> dict:
-    """Same as _no_public_api plus api_name=False when the binding supports it."""
-    kw = dict(_no_public_api())
-    if "api_name" in inspect.signature(event_method).parameters:
-        kw["api_name"] = False
-    return kw
-
-
 # ════════════════════════════════════════════════════════════════
 # GRADIO BLOCKS
 # ════════════════════════════════════════════════════════════════
@@ -841,7 +816,6 @@ with gr.Blocks(
     theme_btn.click(
         None,
         js="toggleTheme",
-        **_private_event_kw(gr.Button.click),
     )
 
     with gr.Tabs():
@@ -934,7 +908,6 @@ with gr.Blocks(
         on_csv,
         inputs=[csv_file, events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_private_event_kw(gr.File.change),
     )
 
     def on_sample(name, ev, lg, res, hp, mp, pp):
@@ -964,25 +937,21 @@ with gr.Blocks(
         lambda e, l, r, h, m, p: on_sample("titanic", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_private_event_kw(gr.Button.click),
     )
     btn_healthcare.click(
         lambda e, l, r, h, m, p: on_sample("healthcare", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_private_event_kw(gr.Button.click),
     )
     btn_housing.click(
         lambda e, l, r, h, m, p: on_sample("housing", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_private_event_kw(gr.Button.click),
     )
     btn_diabetes.click(
         lambda e, l, r, h, m, p: on_sample("diabetes", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_private_event_kw(gr.Button.click),
     )
 
     @spaces.GPU
@@ -1163,7 +1132,6 @@ with gr.Blocks(
         on_model,
         inputs=[model_upload],
         outputs=[model_info_out, bundle_st],
-        **_private_event_kw(gr.File.change),
     )
 
     def on_predict(bundle, csv_path):
@@ -1219,7 +1187,6 @@ with gr.Blocks(
         on_predict,
         inputs=[bundle_st, infer_csv],
         outputs=[pred_out, pred_dl, pred_csv_st],
-        **_private_event_kw(gr.Button.click),
     )
 
 
