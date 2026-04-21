@@ -965,6 +965,9 @@ with gr.Blocks(
     )
 
     @spaces.GPU
+    def _load_pipeline_gpu():
+        return load_llm_pipeline()
+
     def run_pipeline(file, target, df, _ev, _lg):
         print("RUN PIPELINE TRIGGERED")
         print(f"file={file}")
@@ -1034,7 +1037,7 @@ with gr.Blocks(
         yield _out(load_html, logs)
 
         try:
-            pipe = load_llm_pipeline()
+            pipe = _load_pipeline_gpu()
             agent = OssAutoMLAgent(work_df, target_value, pipe)
             final = None
 
