@@ -874,7 +874,10 @@ with gr.Blocks(
             predict_btn = gr.Button("🔮 Predict", variant="primary")
             with gr.Column(elem_id="infer-pred-wrap"):
                 pred_out = gr.HTML()
-            pred_dl = gr.DownloadButton("⬇ Download predictions CSV", visible=False)
+            pred_dl = gr.File(
+                label="⬇ Download predictions CSV",
+                visible=False,
+            )
 
     def _views_from_data(df, info_html, ev, lg, res, hp, mp, pp):
         pipe = _fmt_pipeline_html(build_pipeline_html(ev))
@@ -1206,4 +1209,4 @@ demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(server_name="0.0.0.0", server_port=7860)
