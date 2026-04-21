@@ -1118,7 +1118,6 @@ with gr.Blocks(
             pred_csv_st,
         ],
         show_progress="minimal",
-        **_private_event_kw(gr.Button.click),
     )
 
     def on_model(path):
