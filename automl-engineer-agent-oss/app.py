@@ -1107,7 +1107,6 @@ with gr.Blocks(
             pkl_p_st,
             pred_csv_st,
         ],
-        show_progress=True,
     )
 
     def on_model(path):
