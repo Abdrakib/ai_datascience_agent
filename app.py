@@ -953,7 +953,8 @@ with gr.Blocks(
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
     )
 
-    @spaces.GPU
+    # Model load runs load_llm_pipeline() from core.py, which carries @spaces.GPU
+    # (ZeroGPU cannot allocate from inside a Gradio generator wrapper).
     def _load_pipeline_gpu():
         return load_llm_pipeline()
 
@@ -1192,4 +1193,8 @@ demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        show_error=True,
+    )
