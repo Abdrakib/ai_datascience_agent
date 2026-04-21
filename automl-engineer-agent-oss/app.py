@@ -1171,4 +1171,4 @@ demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(ssr_mode=False)
