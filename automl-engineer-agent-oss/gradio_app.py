@@ -12,6 +12,7 @@ import inspect
 import tempfile
 import traceback
 import datetime
+from collections.abc import Callable
 from pathlib import Path
 
 # ── Agent imports (graceful fallback) ───────────────────────────
@@ -770,6 +771,14 @@ def _no_public_api() -> dict:
     return {"api_name": False}
 
 
+def _private_event_kw(event_method: Callable[..., object]) -> dict:
+    """Same as _no_public_api plus api_name=False when the binding supports it."""
+    kw = dict(_no_public_api())
+    if "api_name" in inspect.signature(event_method).parameters:
+        kw["api_name"] = False
+    return kw
+
+
 # ════════════════════════════════════════════════════════════════
 # GRADIO BLOCKS
 # ════════════════════════════════════════════════════════════════
@@ -801,7 +810,11 @@ with gr.Blocks(
                 elem_id="theme-toggle-btn",
             )
 
-    theme_btn.click(None, js="toggleTheme")
+    theme_btn.click(
+        None,
+        js="toggleTheme",
+        **_private_event_kw(gr.Button.click),
+    )
 
     with gr.Tabs():
         with gr.Tab("⚡ Pipeline"):
@@ -854,7 +867,7 @@ with gr.Blocks(
     def _views_from_data(df, info_html, ev, lg, res, hp, mp, pp):
         pipe = _fmt_pipeline_html(build_pipeline_html(ev))
         log_v = _log_html(lg) if lg else ""
-        exp_v = _export_html(res is not None, hp, mp, pp)
+        exp_v = str(_export_html(bool(res is not None), hp, mp, pp))
         return (
             gr.update(value=info_html),
             gr.update(value=pipe),
@@ -868,7 +881,7 @@ with gr.Blocks(
                 gr.update(value="<div class='ds-info' style='color:#94a3b8'>No dataset loaded</div>"),
                 gr.update(value=_fmt_pipeline_html(build_pipeline_html(ev))),
                 gr.update(value=_log_html(lg) if lg else ""),
-                gr.update(value=_export_html(res is not None, hp, mp, pp)),
+                gr.update(value=str(_export_html(bool(res is not None), hp, mp, pp))),
                 None,
             )
         try:
@@ -888,7 +901,7 @@ with gr.Blocks(
         on_csv,
         inputs=[csv_file, events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_no_public_api(),
+        **_private_event_kw(gr.File.change),
     )
 
     def on_sample(name, ev, lg, res, hp, mp, pp):
@@ -918,25 +931,25 @@ with gr.Blocks(
         lambda e, l, r, h, m, p: on_sample("titanic", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_no_public_api(),
+        **_private_event_kw(gr.Button.click),
     )
     btn_healthcare.click(
         lambda e, l, r, h, m, p: on_sample("healthcare", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_no_public_api(),
+        **_private_event_kw(gr.Button.click),
     )
     btn_housing.click(
         lambda e, l, r, h, m, p: on_sample("housing", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_no_public_api(),
+        **_private_event_kw(gr.Button.click),
     )
     btn_diabetes.click(
         lambda e, l, r, h, m, p: on_sample("diabetes", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
-        **_no_public_api(),
+        **_private_event_kw(gr.Button.click),
     )
 
     def run_pipeline(file, target, df, _ev, _lg):
@@ -1076,10 +1089,6 @@ with gr.Blocks(
                 status=str(ex),
             )
 
-    _run_pipeline_kw = {**_no_public_api()}
-    if "api_name" in inspect.signature(gr.Button.click).parameters:
-        _run_pipeline_kw["api_name"] = False
-
     run_btn.click(
         fn=run_pipeline,
         inputs=[csv_file, target_text, df_state, events_st, logs_st],
@@ -1097,7 +1106,7 @@ with gr.Blocks(
             pred_csv_st,
             output_box,
         ],
-        **_run_pipeline_kw,
+        **_private_event_kw(gr.Button.click),
     )
 
     def on_model(path):
@@ -1122,7 +1131,7 @@ with gr.Blocks(
         on_model,
         inputs=[model_upload],
         outputs=[model_info_out, bundle_st],
-        **_no_public_api(),
+        **_private_event_kw(gr.File.change),
     )
 
     def on_predict(bundle, csv_path):
@@ -1162,7 +1171,11 @@ with gr.Blocks(
                 )
             pc = str(OUTPUT_DIR / "predictions.csv")
             rdf.to_csv(pc, index=False)
-            return gr.update(value=ph), gr.update(visible=True, value=pc), pc
+            return (
+                gr.update(value=ph),
+                gr.update(visible=True, value=str(pc)),
+                str(pc),
+            )
         except Exception as e:
             return (
                 gr.update(value=_alert("err", f"Prediction error: {e}")),
@@ -1174,7 +1187,7 @@ with gr.Blocks(
         on_predict,
         inputs=[bundle_st, infer_csv],
         outputs=[pred_out, pred_dl, pred_csv_st],
-        **_no_public_api(),
+        **_private_event_kw(gr.Button.click),
     )
 
 
