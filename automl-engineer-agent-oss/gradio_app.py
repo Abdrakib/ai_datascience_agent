@@ -736,6 +736,22 @@ setTimeout(() => {
 }, 800);
 """
 
+
+def _no_public_api() -> dict:
+    """
+    Keep handlers off the public REST/OpenAPI schema.
+
+    Gradio 6.x on ZeroGPU can emit invalid JSON Schema for some components
+    (e.g. DownloadButton), which crashes /info (TypeError: 'bool' is not iterable
+    in gradio_client). Gradio 4.x skips schema when api_name=False; 5+ uses
+    api_visibility='private'.
+    """
+    sig = inspect.signature(gr.Button.click)
+    if "api_visibility" in sig.parameters:
+        return {"api_visibility": "private"}
+    return {"api_name": False}
+
+
 # ════════════════════════════════════════════════════════════════
 # GRADIO BLOCKS
 # ════════════════════════════════════════════════════════════════
@@ -853,6 +869,7 @@ with gr.Blocks(
         on_csv,
         inputs=[gr_csv, events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
+        **_no_public_api(),
     )
 
     def on_sample(name, ev, lg, res, hp, mp, pp):
@@ -882,21 +899,25 @@ with gr.Blocks(
         lambda e, l, r, h, m, p: on_sample("titanic", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
+        **_no_public_api(),
     )
     btn_healthcare.click(
         lambda e, l, r, h, m, p: on_sample("healthcare", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
+        **_no_public_api(),
     )
     btn_housing.click(
         lambda e, l, r, h, m, p: on_sample("housing", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
+        **_no_public_api(),
     )
     btn_diabetes.click(
         lambda e, l, r, h, m, p: on_sample("diabetes", e, l, r, h, m, p),
         inputs=[events_st, logs_st, result_st, html_p_st, md_p_st, pkl_p_st],
         outputs=[preview_out, pipeline_out, log_out, export_out, df_state],
+        **_no_public_api(),
     )
 
     def run_pipe(df, goal, _ev, _lg):
@@ -1010,6 +1031,7 @@ with gr.Blocks(
             pkl_p_st,
             pred_csv_st,
         ],
+        **_no_public_api(),
     )
 
     def on_model(path):
@@ -1030,7 +1052,12 @@ with gr.Blocks(
         except Exception as e:
             return gr.update(value=_alert("err", f"Could not load model: {e}")), None
 
-    model_upload.change(on_model, inputs=[model_upload], outputs=[model_info_out, bundle_st])
+    model_upload.change(
+        on_model,
+        inputs=[model_upload],
+        outputs=[model_info_out, bundle_st],
+        **_no_public_api(),
+    )
 
     def on_predict(bundle, csv_path):
         if bundle is None:
@@ -1081,6 +1108,7 @@ with gr.Blocks(
         on_predict,
         inputs=[bundle_st, infer_csv],
         outputs=[pred_out, pred_dl, pred_csv_st],
+        **_no_public_api(),
     )
 
 
