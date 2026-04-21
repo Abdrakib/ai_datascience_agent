@@ -6,7 +6,6 @@ Pipeline step cards are rendered as HTML inside dedicated output panels.
 import gradio as gr
 import pandas as pd
 import numpy as np
-import os
 import json
 import tempfile
 import traceback
@@ -1193,8 +1192,4 @@ demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
-    demo.launch(
-        server_name="0.0.0.0",
-        server_port=7860,
-        share=os.environ.get("SPACE_ID") is not None,
-    )
+    demo.launch()
