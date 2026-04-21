@@ -15,6 +15,15 @@ import datetime
 from collections.abc import Callable
 from pathlib import Path
 
+try:
+    import spaces  # type: ignore
+except ImportError:
+
+    def _spaces_gpu_noop(func):
+        return func
+
+    spaces = type("spaces", (), {"GPU": _spaces_gpu_noop})()
+
 # ── Agent imports (graceful fallback) ───────────────────────────
 try:
     from agent.core import OssAutoMLAgent, load_llm_pipeline
@@ -953,6 +962,7 @@ with gr.Blocks(
         **_private_event_kw(gr.Button.click),
     )
 
+    @spaces.GPU
     def run_pipeline(file, target, df, _ev, _lg):
         print("RUN PIPELINE TRIGGERED")
         print(f"file={file}")

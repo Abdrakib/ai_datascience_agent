@@ -141,7 +141,6 @@ def _append_jargon_glossary(text: str) -> str:
     return out
 
 
-@spaces.GPU
 def generate_explanation(
     pipe: Any,
     prompt: str,
@@ -609,7 +608,6 @@ class OssAutoMLAgent:
         yield {"type": "done", "result": final_result}
 
 
-@spaces.GPU
 def run_pipeline(pipe: Any, df: pd.DataFrame, goal: str) -> list[dict[str, Any]]:
     """Optional: materialize the full event stream as a list."""
     return list(OssAutoMLAgent(df, goal, pipe).run())
