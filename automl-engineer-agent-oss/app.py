@@ -789,8 +789,6 @@ with gr.Blocks(
     css=APP_CSS,
     js=js,
 ) as demo:
-    demo.queue(max_size=5)
-
     df_state = gr.State(None)
     events_st = gr.State([])
     logs_st = gr.State([])
@@ -1188,6 +1186,9 @@ with gr.Blocks(
         outputs=[pred_out, pred_dl, pred_csv_st],
         **_private_event_kw(gr.Button.click),
     )
+
+
+demo.queue(max_size=5)
 
 
 if __name__ == "__main__":
