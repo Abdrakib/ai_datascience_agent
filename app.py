@@ -35,18 +35,21 @@ except ImportError as e:
     AGENT_AVAILABLE = False
     print(f"❌ AGENT IMPORT FAILED: {e}")
 
-# ── Patch gradio_client schema bug (bool not iterable) ──────────
+# ── Patch gradio_client schema bug (additionalProperties=True) ──
 try:
     import gradio_client.utils as _gcu
 
-    _orig_get_type = _gcu.get_type
+    _orig_json_schema = _gcu._json_schema_to_python_type
 
-    def _patched_get_type(schema):
+    def _patched_json_schema(schema, defs=None):
         if not isinstance(schema, dict):
             return "Any"
-        return _orig_get_type(schema)
+        ap = schema.get("additionalProperties")
+        if ap is not None and not isinstance(ap, dict):
+            schema = {**schema, "additionalProperties": {}}
+        return _orig_json_schema(schema, defs)
 
-    _gcu.get_type = _patched_get_type
+    _gcu._json_schema_to_python_type = _patched_json_schema
 except Exception:
     pass
 
