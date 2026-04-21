@@ -920,7 +920,11 @@ with gr.Blocks(
         **_no_public_api(),
     )
 
-    def run_pipe(df, goal, _ev, _lg):
+    def run_pipe(uploaded_file, df, goal, _ev, _lg):
+        print("Run pipeline button clicked")
+        target_value = goal
+        print("file:", uploaded_file)
+        print("target:", target_value)
         events = []
         logs = []
 
@@ -1017,7 +1021,7 @@ with gr.Blocks(
 
     run_btn.click(
         run_pipe,
-        inputs=[df_state, goal_input, events_st, logs_st],
+        inputs=[gr_csv, df_state, goal_input, events_st, logs_st],
         outputs=[
             pipeline_out,
             log_out,
