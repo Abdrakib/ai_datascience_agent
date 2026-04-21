@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import os
 import json
+import inspect
 import tempfile
 import traceback
 import datetime
@@ -1084,24 +1085,35 @@ with gr.Blocks(
 
 
 if __name__ == "__main__":
-    # Hugging Face Spaces sets SPACE_ID. Use default launch() so binding, port, and
-    # SpacesReloader match the platform. Local/dev: bind 0.0.0.0 and honor PORT.
-    # Proxies without no_proxy break Gradio's localhost health check (httpx) on Spaces.
+    # Hugging Face Spaces / ZeroGPU sets SPACE_ID. Gradio verifies local_url with httpx;
+    # HTTP(S)_PROXY without a proper bypass often makes that probe fail on the Space image.
     _hf_space = bool(os.environ.get("SPACE_ID"))
     if _hf_space:
-        os.environ.setdefault(
-            "NO_PROXY", "localhost,127.0.0.1,127.0.0.1/8,::1"
-        )
-        os.environ.setdefault(
-            "no_proxy", "localhost,127.0.0.1,127.0.0.1/8,::1"
-        )
+        _loop = "localhost,127.0.0.1,127.0.0.1/8,::1"
+        for _key in ("NO_PROXY", "no_proxy"):
+            _cur = os.environ.get(_key, "").strip()
+            if _cur and _loop.split(",")[0] not in _cur:
+                os.environ[_key] = f"{_loop},{_cur}"
+            elif not _cur:
+                os.environ[_key] = _loop
+        for _pk in (
+            "HTTP_PROXY",
+            "http_proxy",
+            "HTTPS_PROXY",
+            "https_proxy",
+            "ALL_PROXY",
+            "all_proxy",
+        ):
+            os.environ.pop(_pk, None)
+
     demo.queue()
+
+    _launch_kw: dict = {"show_error": True}
     if _hf_space:
-        demo.launch(show_error=True)
+        if "_frontend" in inspect.signature(demo.launch).parameters:
+            _launch_kw["_frontend"] = False
     else:
-        _port = int(os.environ.get("PORT", "7860"))
-        demo.launch(
-            server_name="0.0.0.0",
-            server_port=_port,
-            show_error=True,
-        )
+        _launch_kw["server_name"] = "0.0.0.0"
+        _launch_kw["server_port"] = int(os.environ.get("PORT", "7860"))
+
+    demo.launch(**_launch_kw)
