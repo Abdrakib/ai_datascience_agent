@@ -2,7 +2,7 @@ streamlit>=1.35.0
 # Pin Gradio 4.44 + matching gradio-client to avoid gradio_client JSON schema bug:
 # TypeError: argument of type 'bool' is not iterable on /info (newer gradio_client).
 gradio==4.44.1
-gradio-client==0.9.3
+gradio-client==0.9.0
 transformers>=4.40.0
 torch>=2.1.0
 huggingface_hub>=0.28.1,<1.0
