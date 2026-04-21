@@ -789,6 +789,7 @@ with gr.Blocks(
     css=APP_CSS,
     js=js,
 ) as demo:
+    demo.queue(max_size=5)
 
     df_state = gr.State(None)
     events_st = gr.State([])
@@ -838,8 +839,10 @@ with gr.Blocks(
                         placeholder='e.g. "predict whether a patient will be readmitted"',
                         lines=3,
                     )
-                    run_btn = gr.Button("Run pipeline", variant="primary")
-                    output_box = gr.Textbox(label="Result")
+                    run_btn = gr.Button(
+                        "▶ Run pipeline",
+                        variant="primary",
+                    )
 
                 with gr.Column(scale=1):
                     pipeline_out = gr.HTML(value=EMPTY_PIPE_HTML, elem_id="pipeline-output")
@@ -961,9 +964,6 @@ with gr.Blocks(
         logs = []
         target_value = (target or "").strip()
 
-        def _result_text(status):
-            return gr.update(value="" if status is None else str(status))
-
         def _path_str(p):
             if p is None:
                 return None
@@ -976,7 +976,6 @@ with gr.Blocks(
             hp=None,
             mp=None,
             pp=None,
-            status="",
         ):
             return (
                 gr.update(value=_fmt_pipeline_html(ph)),
@@ -990,7 +989,6 @@ with gr.Blocks(
                 _path_str(mp),
                 _path_str(pp),
                 None,
-                _result_text(status),
             )
 
         work_df = df
@@ -999,28 +997,31 @@ with gr.Blocks(
                 work_df = pd.read_csv(file)
             except Exception as e:
                 msg = f"Could not read CSV: {e}"
-                yield _out(_alert("err", msg), logs, status=msg)
+                yield _out(_alert("err", msg), logs)
                 return
 
         if work_df is None:
-            msg = "Please upload a CSV file."
-            yield _out(_alert("err", "Please upload a dataset or pick a sample first."), logs, status=msg)
+            yield _out(
+                _alert("err", "Please upload a dataset or pick a sample first."),
+                logs,
+            )
             return
         if not target_value:
-            msg = "Please enter a target."
-            yield _out(_alert("err", "Please describe what you want to predict."), logs, status=msg)
+            yield _out(
+                _alert("err", "Please describe what you want to predict."),
+                logs,
+            )
             return
         if not AGENT_AVAILABLE:
-            yield _out(_alert("err", "Agent modules not found."), logs, status="Agent modules not found.")
+            yield _out(_alert("err", "Agent modules not found."), logs)
             return
 
-        running_msg = f"Running pipeline with target: {target_value}"
         load_html = (
             _card("…", "Loading Qwen2.5", "running")
             + '<div class="running-msg">Loading model — first run ~30 s…</div>'
             + '<div class="progress-bar"><div class="progress-fill"></div></div></div>'
         )
-        yield _out(load_html, logs, status=running_msg)
+        yield _out(load_html, logs)
 
         try:
             pipe = load_llm_pipeline()
@@ -1033,10 +1034,10 @@ with gr.Blocks(
                     t = str(t) if t is not None else ""
                 if t == "log":
                     logs.append(ev.get("content", ""))
-                    yield _out(build_pipeline_html(events), logs, status=running_msg)
+                    yield _out(build_pipeline_html(events), logs)
                 elif t in ("step_start", "step_done"):
                     events.append(ev)
-                    yield _out(build_pipeline_html(events), logs, status=running_msg)
+                    yield _out(build_pipeline_html(events), logs)
                 elif t == "done":
                     final = ev.get("result", {})
                     events.append(ev)
@@ -1078,7 +1079,6 @@ with gr.Blocks(
                         _path_str(md_p),
                         _path_str(pkl_p),
                         None,
-                        _result_text("Pipeline complete."),
                     )
                     return
         except Exception as ex:
@@ -1086,7 +1086,6 @@ with gr.Blocks(
             yield _out(
                 build_pipeline_html(events) + _alert("err", str(ex)),
                 logs,
-                status=str(ex),
             )
 
     run_btn.click(
@@ -1104,8 +1103,8 @@ with gr.Blocks(
             md_p_st,
             pkl_p_st,
             pred_csv_st,
-            output_box,
         ],
+        show_progress="minimal",
         **_private_event_kw(gr.Button.click),
     )
 
@@ -1212,8 +1211,6 @@ if __name__ == "__main__":
             "all_proxy",
         ):
             os.environ.pop(_pk, None)
-
-    demo.queue()
 
     _launch_kw: dict = {"show_error": True}
     if _hf_space:
