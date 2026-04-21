@@ -325,40 +325,62 @@ def render_final(r,e):
             f'<div class="final-explain">{e or ""}</div></div>')
 
 def build_pipeline_html(events):
-    html = ""
-    fin  = ""
+    steps = {}
+    fin = ""
     for ev in events:
         t = ev.get("type")
         if not isinstance(t, str):
             t = str(t) if t is not None else ""
-        r = ev.get("result",{}) or {}
-        e = r.get("explanation","") if r else ""
+        r = ev.get("result", {}) or {}
+        e = r.get("explanation", "") if r else ""
         if not isinstance(e, str):
             e = str(e) if e is not None else ""
-        if t=="step_start":
-            nm = ev.get("name","Step")
+
+        if t == "step_start":
+            nm = ev.get("name", "Step")
             if not isinstance(nm, str):
                 nm = str(nm) if nm is not None else "Step"
-            st = ev.get("step","")
-            html += (_card(st,nm,"running") +
-                     '<div class="running-msg">Processing…</div>'
-                     '<div class="progress-bar"><div class="progress-fill"></div></div></div>')
-        elif t=="step_done":
-            nm = ev.get("name","")
+            st = ev.get("step", "")
+            st_key = str(st)
+            steps[st_key] = (
+                _card(st, nm, "running")
+                + '<div class="running-msg">Processing…</div>'
+                + '<div class="progress-bar"><div class="progress-fill"></div></div></div>'
+            )
+        elif t == "step_done":
+            nm = ev.get("name", "")
             if not isinstance(nm, str):
                 nm = str(nm) if nm is not None else ""
-            st = str(ev.get("step",""))
-            if   st=="1"  or "eda"    in nm.lower() or "data an" in nm.lower(): html += render_eda(r,e)
-            elif st=="2"  or "task"   in nm.lower():                             html += render_task(r,e)
-            elif st=="2b" or "domain" in nm.lower():                             html += render_domain(r,e)
-            elif st=="3"  or "prep"   in nm.lower():                             html += render_prep(r,e)
-            elif st=="4"  and "plan"  in nm.lower():                             html += render_plan(r,e)
-            elif st=="5"  or ("train" in nm.lower() and "plan" not in nm.lower()):html += render_train(r,e)
-            elif st=="6"  or "tun"    in nm.lower():                             html += render_tune(r,e)
-            elif st=="7"  or "eval"   in nm.lower():                             html += render_eval(r,e)
-            elif st=="8"  or "final"  in nm.lower() or "recommend" in nm.lower():fin   = render_final(r,e)
-            else:                                                                 html += render_eda(r,e)
-    return html + fin
+            st = str(ev.get("step", ""))
+            if st == "8" or "final" in nm.lower() or "recommend" in nm.lower():
+                steps.pop(st, None)
+                fin = render_final(r, e)
+            elif st == "1" or "eda" in nm.lower() or "data an" in nm.lower():
+                steps[st] = render_eda(r, e)
+            elif st == "2" or "task" in nm.lower():
+                steps[st] = render_task(r, e)
+            elif st == "2b" or "domain" in nm.lower():
+                steps[st] = render_domain(r, e)
+            elif st == "3" or "prep" in nm.lower():
+                steps[st] = render_prep(r, e)
+            elif st == "4" and "plan" in nm.lower():
+                steps[st] = render_plan(r, e)
+            elif st == "5" or ("train" in nm.lower() and "plan" not in nm.lower()):
+                steps[st] = render_train(r, e)
+            elif st == "6" or "tun" in nm.lower():
+                steps[st] = render_tune(r, e)
+            elif st == "7" or "eval" in nm.lower():
+                steps[st] = render_eval(r, e)
+            else:
+                steps[st] = render_eda(r, e)
+        elif t == "done":
+            r2 = ev.get("result", {}) or {}
+            e2 = r2.get("final_summary", "")
+            if not isinstance(e2, str):
+                e2 = str(e2) if e2 is not None else ""
+            fin = render_final(r2, e2)
+
+    return "".join(steps.values()) + fin
 
 # ════════════════════════════════════════════════════════════════
 # UI CSS + empty state (pipeline HTML uses #pipeline-output wrapper in DOM)
