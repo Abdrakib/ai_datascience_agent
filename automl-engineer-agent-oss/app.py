@@ -10,6 +10,51 @@ try:
 except ImportError:
     spaces = type("spaces", (), {"GPU": lambda f: f})()
 
+# ── AWS S3 integration ───────────────────────────────────────────
+import os
+
+import boto3
+from botocore.exceptions import ClientError
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_BUCKET_NAME = os.environ.get("AWS_BUCKET_NAME")
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-2")
+
+
+def _get_s3_client():
+    if not AWS_ACCESS_KEY_ID or not AWS_SECRET_ACCESS_KEY:
+        return None
+    return boto3.client(
+        "s3",
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+        region_name=AWS_REGION,
+    )
+
+
+def _upload_to_s3(local_path, s3_key):
+    """Upload a file to S3 and return the S3 URL."""
+    try:
+        s3 = _get_s3_client()
+        if (
+            s3 is None
+            or not AWS_BUCKET_NAME
+            or not local_path
+            or not Path(local_path).exists()
+        ):
+            return None
+        s3.upload_file(local_path, AWS_BUCKET_NAME, s3_key)
+        url = f"https://{AWS_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{s3_key}"
+        print(f"✅ Uploaded to S3: {url}")
+        return url
+    except ClientError as e:
+        print(f"⚠ S3 upload failed: {e}")
+        return None
+    except Exception as e:
+        print(f"⚠ S3 upload failed: {e}")
+        return None
+
 """
 Explainable ML Pipeline Agent — Gradio UI with native tabs and file uploads.
 Pipeline step cards are rendered as HTML inside dedicated output panels.
@@ -1080,6 +1125,11 @@ with gr.Blocks(
                     except Exception:
                         pkl_p = None
                     print("Function executed successfully")
+                    rid_s3 = rid.replace("run_", "")
+                    _upload_to_s3(html_p, f"reports/{rid_s3}/report.html")
+                    _upload_to_s3(md_p, f"reports/{rid_s3}/report.md")
+                    _upload_to_s3(pkl_p, f"models/{rid_s3}/model.pkl")
+                    print("✅ Files uploaded to S3")
                     yield (
                         gr.update(value=_fmt_pipeline_html(build_pipeline_html(events))),
                         gr.update(value=_log_html(logs) if logs else ""),
