@@ -440,15 +440,29 @@ EMPTY_PIPE_HTML = """
 """
 
 
-def _export_html(show: bool, html_p, md_p, pkl_p) -> str:
+def _export_html(show: bool, html_p, md_p, pkl_p, s3_report_url=None, s3_model_url=None) -> str:
     if not show:
         return ""
     dl_h = f'<a class="export-btn" href="file={html_p}" download>⬇ HTML report</a>' if html_p else ""
     dl_m = f'<a class="export-btn" href="file={md_p}" download>⬇ Markdown</a>' if md_p else ""
     dl_p = f'<a class="export-btn" href="file={pkl_p}" download>⬇ Model .pkl</a>' if pkl_p else ""
+    s3_section = ""
+    if s3_report_url or s3_model_url:
+        s3_links = ""
+        if s3_report_url:
+            s3_links += f'<div class="s3-link">📄 <a href="{s3_report_url}" target="_blank">Report on S3</a></div>'
+        if s3_model_url:
+            s3_links += f'<div class="s3-link">🤖 <a href="{s3_model_url}" target="_blank">Model on S3</a></div>'
+        s3_section = (
+            f'<div class="s3-section">'
+            f'<div class="s3-title">☁ Stored on AWS S3</div>'
+            f'{s3_links}'
+            f'</div>'
+        )
     return (
         f'<div class="export-section"><div class="export-title">Export results</div>'
-        f'<div class="export-btns">{dl_h}{dl_m}{dl_p}</div></div>'
+        f'<div class="export-btns">{dl_h}{dl_m}{dl_p}</div>'
+        f'{s3_section}</div>'
     )
 
 
@@ -757,6 +771,29 @@ footer { display: none !important; }
   text-decoration: none; display: inline-block;
 }
 #export-output .export-btn:hover { background: rgba(99, 102, 241, 0.2); border-color: rgba(139, 92, 246, 0.45); color: #c4b5fd; }
+#export-output .s3-section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.14);
+}
+#export-output .s3-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ff9900;
+  margin-bottom: 6px;
+}
+#export-output .s3-link {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 3px 0;
+}
+#export-output .s3-link a {
+  color: #ff9900;
+  text-decoration: none;
+}
+#export-output .s3-link a:hover {
+  text-decoration: underline;
+}
 
 #infer-pred-wrap .model-info-card {
   background: #1e293b; border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 8px; padding: 11px 13px;
@@ -1125,15 +1162,20 @@ with gr.Blocks(
                     except Exception:
                         pkl_p = None
                     print("Function executed successfully")
-                    rid_s3 = rid.replace("run_", "")
-                    _upload_to_s3(html_p, f"reports/{rid_s3}/report.html")
-                    _upload_to_s3(md_p, f"reports/{rid_s3}/report.md")
-                    _upload_to_s3(pkl_p, f"models/{rid_s3}/model.pkl")
-                    print("✅ Files uploaded to S3")
+                    s3_report_url = None
+                    s3_model_url = None
+                    try:
+                        rid_s3 = rid.replace("run_", "")
+                        s3_report_url = _upload_to_s3(html_p, f"reports/{rid_s3}/report.html")
+                        _upload_to_s3(md_p, f"reports/{rid_s3}/report.md")
+                        s3_model_url = _upload_to_s3(pkl_p, f"models/{rid_s3}/model.pkl")
+                        print("✅ Files uploaded to S3")
+                    except Exception as s3_err:
+                        print(f"⚠ S3 upload error: {s3_err}")
                     yield (
                         gr.update(value=_fmt_pipeline_html(build_pipeline_html(events))),
                         gr.update(value=_log_html(logs) if logs else ""),
-                        gr.update(value=str(_export_html(True, html_p, md_p, pkl_p))),
+                        gr.update(value=str(_export_html(True, html_p, md_p, pkl_p, s3_report_url, s3_model_url))),
                         list(events),
                         list(logs),
                         None,
